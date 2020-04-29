@@ -75,8 +75,7 @@ RE = list(~ 1 | Reference,~1|ID, ~1|SPID, ~1| Binomial)
 
 #mammals####
 phylocor<-list(Binomial= mam_phylo_cor)
-metamam<-rma.mv(RR~logmass,V=Vmam,  data=mamdata, random= RE,  R = phylocor,
-              control=list(optimizer= "bobyqa")) 
+metamam<-rma.mv(RR~logmass,V=Vmam,  data=mamdata, random= RE,  R = phylocor)
 summary(metamam)
 mR2.func(metamam)
 
@@ -103,7 +102,7 @@ M<-ggplot(mamdata)+ geom_hline(yintercept= 0, size=1.2, linetype="dashed", color
 #birds#### 
 phylocor<-list(Binomial= bird_phylo_cor)
 metabird<-rma.mv(RR~logmass,V=Vbird,  data=birddata, random= RE, 
-                   R = phylocor, control=list(optimizer= "bobyqa")) 
+                   R = phylocor) 
 summary(metabird)
 mR2.func(metabird)
 
@@ -131,7 +130,7 @@ B<-ggplot(birddata)+ geom_hline(yintercept= 0, size=1.2, linetype="dashed", colo
 phylocor<-list(Binomial= rept_phylo_cor)
 metarept<-rma.mv(RR~logmass,V=Vrept,  data=reptdata,  random= RE, R=phylocor) 
 summary(metarept)
-mR2.func(metarept)#Order sqrt: 0.0001
+mR2.func(metarept)
 
 logmass <- seq(from = min(reptdata$logmass), to = max(reptdata$logmass), length.out = 1000)
 
