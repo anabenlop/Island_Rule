@@ -1,11 +1,12 @@
 ##############################################################
 # Authors: 
-# Ana Ben铆tez-L贸pez (@anabenlop)
+# Ana Benitez-Lopez (@anabenlop)
 # Scholar Profile: https://scholar.google.com/citations?user=HC_j51sAAAAJ&hl=es
-# Department of Integrative Ecology, Estaci贸n Biol贸gica de Do帽ana (EBD-CSIC, ESP) 
+# Department of Integrative Ecology, Estacion Biologica de Do馻na (EBD-CSIC, Spain) 
 # Email: abenitez81@gmail.com
 
-# Script first created on the 1th of October 2019
+# Script first created on the 11th of November 2019
+# Last modification April 2020
 
 ##############################################################
 # Description of script and instructions                  ####
@@ -14,7 +15,7 @@
 # This script runs the phylogenetic meta-regressions to produce the results 
 # in the paper: 
 
-# Ben铆tez-L贸pez et al.The island rule explains consistent patterns of 
+# Benitez-Lopez et al.The island rule explains consistent patterns of 
 # body size evolution across terrestrial vertebrates. 
 
 
