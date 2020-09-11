@@ -6,6 +6,7 @@
 # Email: abenitez81@gmail.com
 
 # Script first created on the 17th of September 2019
+# Modifeied August 2020
 
 ##############################################################
 # Description of script and instructions
@@ -29,7 +30,7 @@ library(janitor)
 library(dplyr)
 
 # Clear memory
- # rm(list=ls())
+ rm(list=ls())
 
 ##############################################################
 # Importing datasets
@@ -38,7 +39,7 @@ library(dplyr)
 #load data
 mamdata<-read.csv("Data/mamdata.csv", header = TRUE, stringsAsFactors = FALSE)
 allometry<-read.csv("Data/allometric_relationships.csv", header = TRUE, stringsAsFactors = FALSE)
-diet<-read.csv("Data/Diet/M_Traits_guild.csv", stringsAsFactors = FALSE) #Mammal traits Elton
+diet<-read.csv("Data/M_Traits_guild.csv", stringsAsFactors = FALSE) #Mammal traits Elton
 
 # create observation level identifier
 mamdata$ID<-paste0("ES",1:nrow(mamdata))
@@ -102,7 +103,7 @@ mamdata$var_allom<-ifelse(is.na(mamdata$sd_m_allom) | is.na(mamdata$sd_i_allom),
 ##Data imputation             ####
 ##################################
 #impute SD
-impute_missingness(mamdata) #20.9% sd_m 21.9% sd_i
+impute_missingness(mamdata) #21.01% sd_m 21.97% sd_i
 data_imp<-impute_SD(mamdata,columnSDnames= c("sd_m_allom", "sd_i_allom"),columnXnames=c("Mass_m_allom2", "Mass_i_allom2"), method="Bracken1992")
 
 # summary(data_imp$sd_i_allom)
@@ -137,7 +138,7 @@ mamdata_temp$sd_i<-mamdata_temp$sd_i_allom #change names to simplify stuff
 mamdata_def<-mamdata_temp[,c("Reference", "ID","CommonControl", "Mainland","Island", "Class", "Order","Family",  
                              "Binomial","Species_main","Species_island", "guild", "Sex", "Measure",
                              "Mean_m","Mean_i","sd_m","sd_i","N_m", "N_i", 
-                             "RR","var", "Long_i", "Lat_i", "logmass", "logmass_morph", "Island_km2", 
+                             "RR","var", "Long_i", "Lat_i", "logmass", "Island_km2", 
                              "Dist_near_mainland", "NDVI", "SDNDVI", "tmean", "tseas", "prec","Phylogeny", "Data_source_type")]
 
 # save data
