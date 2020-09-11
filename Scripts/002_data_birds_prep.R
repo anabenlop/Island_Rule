@@ -29,13 +29,13 @@ library(janitor)
 library(dplyr)
 
 # Clear memory
-# rm(list=ls())
+ rm(list=ls())
 
 #load data
-birddata<-read.csv("~/New projects/Island rule/Data/birddata.csv", header = TRUE, stringsAsFactors = FALSE)
-allometry<-read.csv("~/New projects/Island rule/Data/allometric_relationships.csv", header = TRUE, stringsAsFactors = FALSE)
-diet<-read.csv("~/New projects/Island rule/Data/Diet/B_traits2019.csv", stringsAsFactors = FALSE) #Bird traits Elton
-mig_status<-read.csv("C:/Users/anyta/Documents/DATASETS/Migratory_database_V2/Migratory_database_V2/SpeciesList3_1_migbehav_v2_0.csv", stringsAsFactors = FALSE) #Bird migratory status
+birddata<-read.csv("Data/birddata.csv", header = TRUE, stringsAsFactors = FALSE)
+allometry<-read.csv("Data/allometric_relationships.csv", header = TRUE, stringsAsFactors = FALSE)
+diet<-read.csv("Data/Diet/B_traits_guild.csv", stringsAsFactors = FALSE) #Bird traits Elton
+mig_status<-read.csv("Data/SpeciesList3_1_migbehav_v2_0.csv", stringsAsFactors = FALSE) #Bird migratory status
 mig_status$Binomial <- paste0(mig_status$IOC3_1_Genus," ", mig_status$IOC3_1_Species)
 
 # create observation level identifier
@@ -189,9 +189,11 @@ birddata_def<-birddata_temp[,c("Reference", "ID","CommonControl", "Mainland","Is
                                "Dist_near_mainland", "NDVI", "SDNDVI", "tmean", "tseas", "prec", "Migratory_status", "Migratory_status_3",
                                "Phylogeny", "Data_source_type")]
 
-write.csv(birddata_def,file= "~/New projects/Island rule/Data/birddata_def.csv", row.names = FALSE) #727 rows
+write.csv(birddata_def,file= "Data/birddata_def.csv", row.names = FALSE) #727 rows
 
 # saving session information with all packages versions for reproducibility purposes
-sink("~/New projects/Island rule/Data/Final data/data_birdprep_R_session.txt")
+sink("Data/Final data/data_birdprep_R_session.txt")
 sessionInfo()
 sink()
+
+# End of script  ####
