@@ -36,12 +36,12 @@ library(raster)
 ##############################################################
 
 #load data
-data<-read.csv("C:/Users/anyta/Documents/New projects/Island rule/Data/islandrule_clean.csv", stringsAsFactors = FALSE)
+data<-read.csv("Data/islandrule_clean.csv", stringsAsFactors = FALSE)
 
 #load environmental variables
-env.var_0.1<-stack("~/New projects/Island rule/Spatial/env.var_0.1.tif")
-env.var_0.5<-stack("~/New projects/Island rule/Spatial/env.var_0.5.tif")
-env.var_1<- stack("~/New projects/Island rule/Spatial/env.var_1.tif")
+env.var_0.1<-stack("Spatial/env.var_0.1.tif")
+env.var_0.5<-stack("Spatial/env.var_0.5.tif")
+env.var_1<- stack("Spatial/env.var_1.tif")
 names(env.var_0.1)<-c("NDVI_0.1", "SDNDVI_0.1","tmean_0.1", "tseas_0.1","prec_0.1")
 names(env.var_0.5)<-c("NDVI_0.5", "SDNDVI_0.5","tmean_0.5", "tseas_0.5","prec_0.5")
 names(env.var_1)<-c("NDVI_1", "SDNDVI_1", "tmean_1", "tseas_1","prec_1")
@@ -200,10 +200,10 @@ amphdata<-subset(data, Class == "Amphibians")
 reptdata<-subset(data, Class == "Reptiles")
 
 # save data
-write.csv(mamdata,file= "~/New projects/Island rule/Data/mamdata.csv", row.names = FALSE)
-write.csv(birddata,file= "~/New projects/Island rule/Data/birddata.csv",  row.names = FALSE)
-write.csv(amphdata,file= "~/New projects/Island rule/Data/amphdata.csv",  row.names = FALSE)
-write.csv(reptdata,file= "~/New projects/Island rule/Data/reptdata.csv",  row.names = FALSE)
+write.csv(mamdata,file= "Data/mamdata.csv", row.names = FALSE)
+write.csv(birddata,file= "Data/birddata.csv",  row.names = FALSE)
+write.csv(amphdata,file= "Data/amphdata.csv",  row.names = FALSE)
+write.csv(reptdata,file= "Data/reptdata.csv",  row.names = FALSE)
 
 # saving session information with all packages versions for reproducibility purposes
 sink("~/New projects/Island rule/Data/Final data/data_prep_R_session.txt")
