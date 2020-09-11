@@ -36,9 +36,9 @@ library(dplyr)
 ##############################################################
 
 #load data
-mamdata<-read.csv("~/New projects/Island rule/Data/mamdata.csv", header = TRUE, stringsAsFactors = FALSE)
-allometry<-read.csv("~/New projects/Island rule/Data/allometric_relationships.csv", header = TRUE, stringsAsFactors = FALSE)
-diet<-read.csv("~/New projects/Island rule/Data/Diet/M_Traits_guild.csv", stringsAsFactors = FALSE) #Mammal traits Elton
+mamdata<-read.csv("Data/mamdata.csv", header = TRUE, stringsAsFactors = FALSE)
+allometry<-read.csv("Data/allometric_relationships.csv", header = TRUE, stringsAsFactors = FALSE)
+diet<-read.csv("Data/Diet/M_Traits_guild.csv", stringsAsFactors = FALSE) #Mammal traits Elton
 
 # create observation level identifier
 mamdata$ID<-paste0("ES",1:nrow(mamdata))
@@ -98,7 +98,9 @@ mamdata$var_allom<-ifelse(is.na(mamdata$sd_m_allom) | is.na(mamdata$sd_i_allom),
                          (mamdata$sd_m_allom)^2/(mamdata$N_m*(mamdata$Mass_m_allom2)^2) +
                            (mamdata$sd_i_allom)^2/(mamdata$N_i*(mamdata$Mass_i_allom2)^2)) 
 
-##DATA IMPUTATION####
+##################################
+##Data imputation             ####
+##################################
 #impute SD
 impute_missingness(mamdata) #20.9% sd_m 21.9% sd_i
 data_imp<-impute_SD(mamdata,columnSDnames= c("sd_m_allom", "sd_i_allom"),columnXnames=c("Mass_m_allom2", "Mass_i_allom2"), method="Bracken1992")
@@ -124,18 +126,6 @@ mamdata_temp[mamdata_temp$Binomial == "Oncifelis guigna", "guild"] <- "Carn" # L
 mamdata_temp[mamdata_temp$Binomial == "Galeopterus variegatus", "guild"] <- "Herb" #assign diet based on literature: Agoramoorthy, G., Sha, C. M., & Hsu, M. J. (2006). Population, diet and conservation of Malayan flying lemurs in altered and fragmented habitats in Singapore. Biodiversity & Conservation, 15(7), 2177-2185.
 mamdata_temp[mamdata_temp$guild=="Frug","guild"] <- "Herb" # assign frugivores to herbivores category
 
-#species average mass
-mamdata_temp$logmass_morph <- log10(mamdata_temp$BM*1000)
-mamdata_temp[mamdata_temp$Binomial == "Oncifelis guigna", "logmass_morph"] <- log10(diet[diet$Species == "Leopardus guigna", "BM"]*1000) #assign body mass of species with other binomial names
-mamdata_temp[mamdata_temp$Binomial == "Galeopterus variegatus", "logmass_morph"] <- log10(diet[diet$Species == "Galeopterus variegates", "BM"]*1000) #assign body mass of species with other binomial names
-
-t <-ggplot(mamdata_temp) +
-  aes(x = logmass_morph, y = logmass) +
-  geom_point() + geom_smooth(method= "lm") + geom_abline(intercept= 0, slope = 1, colour ="red")
-ggplotly(t)
-
-# summary(lm(logmass~logmass_morph, data=mamdata_temp))
-
 #keep only what we need
 mamdata_temp$RR<-mamdata_temp$RR_allom #change names to simplify stuff
 mamdata_temp$var<-mamdata_temp$var_imp #change names to simplify stuff
@@ -151,10 +141,11 @@ mamdata_def<-mamdata_temp[,c("Reference", "ID","CommonControl", "Mainland","Isla
                              "Dist_near_mainland", "NDVI", "SDNDVI", "tmean", "tseas", "prec","Phylogeny", "Data_source_type")]
 
 # save data
-write.csv(mamdata_def,file= "~/New projects/Island rule/Data/mamdata_def.csv", row.names = FALSE) #1047rows
+write.csv(mamdata_def,file= "Data/mamdata_def.csv", row.names = FALSE) #1047rows
 
 # saving session information with all packages versions for reproducibility purposes
-sink("~/New projects/Island rule/Data/Final data/data_mamprep_R_session.txt")
+sink("Data/Final data/data_mamprep_R_session.txt")
 sessionInfo()
 sink()
 
+# End of script ####

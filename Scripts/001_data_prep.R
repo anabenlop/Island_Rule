@@ -206,7 +206,7 @@ write.csv(amphdata,file= "Data/amphdata.csv",  row.names = FALSE)
 write.csv(reptdata,file= "Data/reptdata.csv",  row.names = FALSE)
 
 # saving session information with all packages versions for reproducibility purposes
-sink("~/New projects/Island rule/Data/Final data/data_prep_R_session.txt")
+sink("Data/Final data/data_prep_R_session.txt")
 sessionInfo()
 sink()
 
