@@ -204,12 +204,12 @@ phylocor<-list(Binomial=mam_phylo_cor)
 logmass <- seq(from = min(mamdata$logmass), to = max(mamdata$logmass), length.out = 1000)
 
 #island area ####
-# metamam2<-rma.mv(RR~logmass*Island_km2,V = Vmam, data=mamdata, random= RE,
-#               R = phylocor,method = "REML") 
-# summary(metamam2) 
-# 
-# saveRDS(metamam2, file = "Data/Final data/metamam2.Rdata")
-# 
+metamam2<-rma.mv(RR~logmass*Island_km2,V = Vmam, data=mamdata, random= RE,
+              R = phylocor,method = "REML")
+summary(metamam2)
+
+saveRDS(metamam2, file = "Data/Final data/metamam2.Rdata")
+
 
 metamam2 <- readRDS(file = "Data/Final data/metamam2.Rdata")
 

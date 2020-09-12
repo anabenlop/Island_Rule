@@ -26,17 +26,17 @@ library(dplyr)
 library(stringr)
 
 #clean memory
-# rm(list=ls())
+rm(list=ls())
 
 ##############################################################
 # Importing datasets and functions                        ####
 ##############################################################
 
 #Load data
-mamdata<-read.csv("~/New projects/Island rule/Data/Final data/mamdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
-birddata<-read.csv("~/New projects/Island rule/Data/Final data/birddata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
-reptdata<-read.csv("~/New projects/Island rule/Data/Final data/reptdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
-amphdata<-read.csv("~/New projects/Island rule/Data/Final data/amphdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+mamdata<-read.csv("Data/Final data/mamdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+birddata<-read.csv("Data/Final data/birddata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+reptdata<-read.csv("Data/Final data/reptdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+amphdata<-read.csv("Data/Final data/amphdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
 
 ###############################################################
 # Calculate sample sizes (comparisons, species, specimens) ####
@@ -233,5 +233,10 @@ length(unique(amph_subsp_all[amph_subsp_all$Conspecific == "no",]$Species_Island
   nrow(rept_subsp_all[rept_subsp_all$Conspecific == "no",]) +
   nrow(amph_subsp_all[amph_subsp_all$Conspecific == "no",]) )/
   (nrow(mamdata) + nrow(birddata) + nrow(reptdata) + nrow(amphdata))*100
+
+# saving session information with all packages versions for reproducibility purposes
+sink("Data/Final data/basic_stats_R_session.txt")
+sessionInfo()
+sink()
 
 ### End of script ####

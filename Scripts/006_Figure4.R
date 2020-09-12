@@ -35,19 +35,19 @@ library(ggpubr)
 ##############################################################
 
 #Load data
-mamdata<-read.csv("~/New projects/Island rule/Data/Final data/mamdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
-birddata<-read.csv("~/New projects/Island rule/Data/Final data/birddata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
-reptdata<-read.csv("~/New projects/Island rule/Data/Final data/reptdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
-amphdata<-read.csv("~/New projects/Island rule/Data/Final data/amphdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+mamdata<-read.csv("Data/Final data/mamdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+birddata<-read.csv("Data/Final data/birddata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+reptdata<-read.csv("Data/Final data/reptdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+amphdata<-read.csv("Data/Final data/amphdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
 
 # Load models
-meta4 <- readRDS(file = "~/New projects/Island rule/Data/Final data/meta4.Rdata")
-metabird4 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metabird4.Rdata")
-metarept4 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metarept4.Rdata")
-metaamph4 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metaamph4.Rdata")
+meta4 <- readRDS(file = "Data/Final data/meta4.Rdata")
+metabird4 <- readRDS(file = "Data/Final data/metabird4.Rdata")
+metarept4 <- readRDS(file = "Data/Final data/metarept4.Rdata")
+metaamph4 <- readRDS(file = "Data/Final data/metaamph4.Rdata")
 
 # load necessary functions
-source("~/New projects/Island rule/Scripts/000_Functions.R")
+source("Scripts/000_Functions.R")
 
 #Island area and remoteness##### 
 #MAMMALS####
@@ -202,7 +202,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-prednames
 
-# write.csv(Qm_tot, "~/New projects/Island rule/Results/Reptiles/Coef/anova_dist_area.csv")
+# write.csv(Qm_tot, "Results/Reptiles/Coef/anova_dist_area.csv")
 
 Qm <- paste0("QM(df = 2) = ", round(as.numeric(test_int3[1]), digits = 3), ", p-val = ", round(as.numeric(test_int3[2]), digits = 3))
 
@@ -269,7 +269,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-# write.csv(Qm_tot, "~/New projects/Island rule/Results/Amphibians/Coef/anova_dist_area.csv")
+# write.csv(Qm_tot, "Results/Amphibians/Coef/anova_dist_area.csv")
 
 Qm <- paste0("QM(df = 2) = ", round(as.numeric(test_int3[1]), digits = 3), ", p-val = ", round(as.numeric(test_int3[2]), digits = 3))
 
@@ -316,8 +316,14 @@ Ac
 
 ####FIGURE 4 ####
 fig4<-ggarrange(Mc,Bc,Rc,Ac, ncol = 2, nrow = 2, align = "v")
-tiff('~/New projects/Island rule/Results/Figures/Figure4.tif', res=300, width=3100, height=3000)
+tiff('Results/Figures/Figure4.tif', res=300, width=3100, height=3000)
 fig4
 dev.off()
+
+# saving session information with all packages versions for reproducibility purposes
+sink("Data/Final data/figure_4_R_session.txt")
+sessionInfo()
+sink()
+
 
 ### End of script ####

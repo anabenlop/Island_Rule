@@ -24,6 +24,7 @@
 library(metafor)
 library(ggplot2)
 library(ggpubr)
+library(car)
 
 #clean memory
 # rm(list=ls())
@@ -33,20 +34,19 @@ library(ggpubr)
 ##############################################################
 
 #Load data
-mamdata<-read.csv("~/New projects/Island rule/Data/Final data/mamdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
-birddata<-read.csv("~/New projects/Island rule/Data/Final data/birddata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
-reptdata<-read.csv("~/New projects/Island rule/Data/Final data/reptdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
-amphdata<-read.csv("~/New projects/Island rule/Data/Final data/amphdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+mamdata<-read.csv("Data/Final data/mamdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+birddata<-read.csv("Data/Final data/birddata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+reptdata<-read.csv("Data/Final data/reptdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+amphdata<-read.csv("Data/Final data/amphdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
 
 # loading phylogenetic matrixes 
-load("~/New projects/Island rule/Data/Final data/mam_phylo_cor.Rdata") #mam_phylo_cor
-load("~/New projects/Island rule/Data/Final data/bird_phylo_cor.Rdata") #bird_phylo_cor
-load("~/New projects/Island rule/Data/Final data/rept_phylo_cor.Rdata") #rept_phylo_cor
-load("~/New projects/Island rule/Data/Final data/amph_phylo_cor.Rdata") #amph_phylo_cor
+load("Data/Final data/mam_phylo_cor.Rdata") #mam_phylo_cor
+load("Data/Final data/bird_phylo_cor.Rdata") #bird_phylo_cor
+load("Data/Final data/rept_phylo_cor.Rdata") #rept_phylo_cor
+load("Data/Final data/amph_phylo_cor.Rdata") #amph_phylo_cor
 
 # load functions
-# source(file= "~/New projects/Island rule/Scripts/phyloglmm-v1.0.0/wzmli-phyloglmm-e7aee53/lme4_phylo_setup.R")
-source("~/New projects/Island rule/Scripts/000_Functions.R")
+source("Scripts/000_Functions.R")
 
 # Transform data and calculate sampling variances
 mamdata$logMean_i <- log(mamdata$Mean_i)
@@ -80,10 +80,6 @@ metamam_alt <- rma.mv(logMean_i ~ logMean_m, V= var_i, subset = sd_i != 0, data=
                       R = phylocor, method = "REML")
 summary(metamam_alt)
 
-metamam_alt_comb <- rma.mv(logMean_i ~ logMean_m, V= var_i + var_m, subset = sd_i != 0, data=mamdata, random= RE,
-                           R = phylocor, method = "REML")
-summary(metamam_alt_comb) # double variance
-
 # Compute t-student H0: slope=1.Seen in:  https://stackoverflow.com/questions/33060601/test-if-the-slope-in-simple-linear-regression-equals-to-a-given-constant-in-r  
 tstats <- (1-metamam_alt$beta[2,1])/metamam_alt$se[2]
 # Calculates two tailed probability
@@ -111,9 +107,7 @@ df_m$Mean_i_pred<-exp(df_m$pred)/1000
 
 Malt<-ggplot(mamdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+ 
   theme_bw(base_size=18) +
-  # geom_point(aes(logMean_m,logMean_i), colour= "#0072B2",size = size,shape=20, alpha=I(.3)) +scale_shape_identity()+
   geom_line(data=df_m,aes(logMean_m, pred),color="#0072B2", size = 1)+
-  # geom_ribbon(data=df_m, aes(x=logmass, ymin=ci.lb,ymax=ci.ub), fill = "#0072B2", alpha=I(.4))+
   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("ln(mass mainland (g))")+ ylab("ln(mass island (g))")+ 
   scale_x_continuous(breaks=seq(1,13,2), limits= c(1,13)) +
   scale_y_continuous(breaks=seq(1,13,2), limits= c(1,13)) +
@@ -125,20 +119,18 @@ Malt
 # int_text<-annotate(geom="text", x= 200, y= 12, label= int, size = 4)
 # slo_text<-annotate(geom="text", x= 200, y= 1, label= slo, size = 4)
 # 
-# Malt<-ggplot(mamdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+ 
+# Malt_bt<-ggplot(mamdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+
 #   theme_bw(base_size=18) +
-#   geom_point(aes(exp(logMean_m)/1000,exp(logMean_i)/1000), colour= "#0072B2",size = size,shape=1, alpha=I(.3)) +scale_shape_identity()+
-#   geom_line(data=df_m,aes(Mean_m, Mean_i_pred),color="#0072B2", size = 20)+
-#   # geom_ribbon(data=df_m, aes(x=logmass, ymin=ci.lb,ymax=ci.ub), fill = "#0072B2", alpha=I(.4))+
-#   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("Mass mainland (kg))")+ ylab("Mass island (kg))")+ 
-#   scale_x_continuous(breaks=seq(0,250,50), limits= c(0,250)) +
-#   scale_y_continuous(breaks=seq(0,250,50), limits= c(0,250)) +
+#   geom_line(data=df_m,aes(Mean_m, Mean_i_pred),color="#0072B2", size = 1)+
+#   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("Mass mainland (kg))")+ ylab("Mass island (kg))")+
+#   scale_x_continuous(breaks=seq(0,100,10), limits= c(0,100)) +
+#   scale_y_continuous(breaks=seq(0,100,10), limits= c(0,100)) +
 #   int_text + slo_text +
 #   labs(tag = "a")
-# Malt
-
+# Malt_bt
+# 
 # require(plotly)
-# ggplotly(Malt)
+# ggplotly(Malt_bt)
 
 #birds ####
 phylocor<-list(Binomial= bird_phylo_cor)
@@ -173,9 +165,7 @@ df_m$Mean_i_pred<-exp(df_m$pred)/1000
 
 Balt<-ggplot(birddata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+ 
   theme_bw(base_size=18) +
-  # geom_point(aes(logmass,yi), colour= "#0072B2",size = size,shape=20, alpha=I(.3)) +scale_shape_identity()+
   geom_line(data=df_m,aes(logMean_m, pred),color="#CC0000", size = 1.2)+
-  # geom_ribbon(data=df_m, aes(x=logMean_m, ymin=ci.lb,ymax=ci.ub), fill = "#CC0000", alpha=I(.4))+
   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("ln(mass mainland (g))")+ ylab("ln(mass island (g))")+ 
   scale_x_continuous(breaks=seq(1,9,2),limits= c(1,9)) + 
   scale_y_continuous(breaks=seq(1,9,2),limits= c(1,9)) + 
@@ -189,9 +179,7 @@ Balt
 # 
 # Balt<-ggplot(birddata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+ 
 #   theme_bw(base_size=18) +
-#   geom_point(aes(exp(logMean_m)/1000,exp(logMean_i)/1000), colour= "#CC0000", size = size,shape=20, alpha=I(.3)) +scale_shape_identity()+
 #   geom_line(data=df_m,aes(Mean_m, Mean_i_pred),color="#CC0000", size = 1)+
-#   # geom_ribbon(data=df_m, aes(x=logmass, ymin=ci.lb,ymax=ci.ub), fill = "#0072B2", alpha=I(.4))+
 #   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("Mass mainland (kg))")+ ylab("Mass island (kg))")+ 
 #   scale_x_continuous(breaks=seq(0,4,1), limits= c(0,4.1)) +
 #   scale_y_continuous(breaks=seq(0,4,1), limits= c(0,4.1)) +
@@ -234,9 +222,7 @@ df_m$Mean_i_pred<-exp(df_m$pred)/1000
 
 Ralt<-ggplot(reptdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+ 
   theme_bw(base_size=18) +
-  # geom_point(aes(logmass,yi), colour= "#0072B2",size = size,shape=20, alpha=I(.3)) +scale_shape_identity()+
   geom_line(data=df_m,aes(logMean_m, pred),color="#E69F00", size = 1.2)+
-  # geom_ribbon(data=df_m, aes(x=logMean_m, ymin=ci.lb,ymax=ci.ub), fill = "#CC0000", alpha=I(.4))+
   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("ln(mass mainland (g))")+ ylab("ln(mass island (g))")+ 
   scale_x_continuous(breaks=seq(-2,12,2),limits= c(-2,12)) +
   scale_y_continuous(breaks=seq(-2,12,2),limits= c(-2,12)) +
@@ -254,9 +240,7 @@ Ralt
 # 
 # Ralt<-ggplot(reptdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+ 
 #   theme_bw(base_size=18) +
-#   geom_point(aes(exp(logMean_m)/1000,exp(logMean_i)/1000), colour= "#E69F00", size = size,shape=20, alpha=I(.3)) +scale_shape_identity()+
 #   geom_line(data=df_m,aes(Mean_m, Mean_i_pred),color="#E69F00", size = 1)+
-#   # geom_ribbon(data=df_m, aes(x=logmass, ymin=ci.lb,ymax=ci.ub), fill = "#0072B2", alpha=I(.4))+
 #   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("Mass mainland (kg))")+ ylab("Mass island (kg))")+ 
 #   scale_x_continuous(breaks=seq(0,30,5), limits= c(0,30)) +
 #   scale_y_continuous(breaks=seq(0,30,5), limits= c(0,30)) +
@@ -299,9 +283,7 @@ df_m$Mean_i_pred<-exp(df_m$pred)
 
 Aalt<-ggplot(reptdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+ 
   theme_bw(base_size=18) +
-  # geom_point(aes(logmass,yi), colour= "#0072B2",size = size,shape=20, alpha=I(.3)) +scale_shape_identity()+
   geom_line(data=df_m,aes(logMean_m, pred),color="#009E73", size = 1.2)+
-  # geom_ribbon(data=df_m, aes(x=logMean_m, ymin=ci.lb,ymax=ci.ub), fill = "#CC0000", alpha=I(.4))+
   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("ln(mass mainland (g))")+ ylab("ln(mass island (g))")+ 
   scale_x_continuous(breaks=seq(-2,4,1),limits= c(-1.5,4)) +
   scale_y_continuous(breaks=seq(-2,4,1),limits= c(-1.5,4)) +
@@ -319,9 +301,7 @@ Aalt
 # 
 # Aalt<-ggplot(amphdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+ 
 #   theme_bw(base_size=18) +
-#   geom_point(aes(exp(logMean_m),exp(logMean_i)), colour= "#009E73", size = size, shape=20, alpha=I(.3)) +scale_shape_identity()+
 #   geom_line(data=df_m,aes(Mean_m, Mean_i_pred),color="#009E73", size = 1)+
-#   # geom_ribbon(data=df_m, aes(x=logmass, ymin=ci.lb,ymax=ci.ub), fill = "#0072B2", alpha=I(.4))+
 #   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("Mass mainland (g))")+ ylab("Mass island (g))")+ 
 #   scale_x_continuous(breaks=seq(0,120,20), limits= c(0,120)) +
 #   scale_y_continuous(breaks=seq(0,120,20), limits= c(0,120)) +
@@ -331,14 +311,18 @@ Aalt
 # ggplotly(Aalt)
 
 multi_alt<-ggarrange(Malt, Balt, Ralt, Aalt, ncol = 2, nrow = 2, align = "hv")
-tiff('~/New projects/Island rule/Results/Figures/Figure_altmodels.tif', res=300, width=3000, height=3000, compression = "lzw")
+tiff('Results/Figures/Figure_altmodels.tif', res=300, width=3000, height=3000, compression = "lzw")
 multi_alt
 dev.off()
 
-saveRDS(metamam_alt, file = "~/New projects/Island rule/Data/Final data/metamam_alt.Rdata")
-saveRDS(metabird_alt, file = "~/New projects/Island rule/Data/Final data/metabird_alt.Rdata")
-saveRDS(metarept_alt, file = "~/New projects/Island rule/Data/Final data/metarept_alt.Rdata")
-saveRDS(metaamph_alt, file = "~/New projects/Island rule/Data/Final data/metaamph_alt.Rdata")
+saveRDS(metamam_alt, file = "Data/Final data/metamam_alt.Rdata")
+saveRDS(metabird_alt, file = "Data/Final data/metabird_alt.Rdata")
+saveRDS(metarept_alt, file = "Data/Final data/metarept_alt.Rdata")
+saveRDS(metaamph_alt, file = "Data/Final data/metaamph_alt.Rdata")
+
+# saving session information with all packages versions for reproducibility purposes
+sink("Data/Final data/alternative_models_R_session.txt")
+sessionInfo()
+sink()
 
 ### End of script ####
-

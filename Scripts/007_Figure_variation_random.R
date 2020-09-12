@@ -28,26 +28,26 @@ library(dplyr)
 library(RColorBrewer)
 
 #clean memory
-# rm(list=ls())
+ rm(list=ls())
 
 ##############################################################
 # Importing datasets and functions                        ####
 ##############################################################
 
 #Load data
-mamdata<-read.csv("~/New projects/Island rule/Data/Final data/mamdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
-birddata<-read.csv("~/New projects/Island rule/Data/Final data/birddata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
-reptdata<-read.csv("~/New projects/Island rule/Data/Final data/reptdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
-amphdata<-read.csv("~/New projects/Island rule/Data/Final data/amphdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+mamdata<-read.csv("Data/Final data/mamdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+birddata<-read.csv("Data/Final data/birddata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+reptdata<-read.csv("Data/Final data/reptdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+amphdata<-read.csv("Data/Final data/amphdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
 
 # Load models
-metamam <- readRDS(file = "~/New projects/Island rule/Data/Final data/metamam.Rdata")
-metabird <- readRDS(file = "~/New projects/Island rule/Data/Final data/metabird.Rdata")
-metarept <- readRDS(file = "~/New projects/Island rule/Data/Final data/metarept.Rdata")
-metaamph <- readRDS(file = "~/New projects/Island rule/Data/Final data/metaamph.Rdata")
+metamam <- readRDS(file = "Data/Final data/metamam.Rdata")
+metabird <- readRDS(file = "Data/Final data/metabird.Rdata")
+metarept <- readRDS(file = "Data/Final data/metarept.Rdata")
+metaamph <- readRDS(file = "Data/Final data/metaamph.Rdata")
 
 # load necessary functions
-source("~/New projects/Island rule/Scripts/000_Functions.R")
+source("Scripts/000_Functions.R")
 
 # Mammals ####
 # var exp by moderators
@@ -138,7 +138,13 @@ varexp_island<-ggplot(vardata_t) + geom_bar(aes(Class, value, fill = variable), 
   guides(fill=guide_legend(title=" "))+ ylab("Variation accounted by random factors (%)")+
   xlab(" ") 
 
-tiff('~/New projects/Island rule/Results/Figures/Fig S3_var_RE.tif', res=300, width=3100, height=3000)
+tiff('Results/Figures/Fig S3_var_RE.tif', res=300, width=3100, height=3000)
 varexp_island
 dev.off()
 
+# saving session information with all packages versions for reproducibility purposes
+sink("Data/Final data/variance_expl_RE_R_session.txt")
+sessionInfo()
+sink()
+
+# End of script ####
