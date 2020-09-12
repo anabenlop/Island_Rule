@@ -2,3 +2,5 @@
  Scrips to run the analyses for the paper: 
  
  Benítez-López et al. The island rule explains consistent patterns of body size evolution across terrestrial vertebrates.
+ 
+ All data are available at: https://figshare.com/account/home#/projects/89102
