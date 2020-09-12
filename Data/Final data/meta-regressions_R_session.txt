@@ -1,0 +1,22 @@
+R version 3.5.3 (2019-03-11)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 18362)
+
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252
+[4] LC_NUMERIC=C                            LC_TIME=English_United Kingdom.1252    
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] corpcor_1.6.9        tictoc_1.0           ggpubr_0.1.8         magrittr_1.5         ggplot2_3.3.0.9000   metafor_2.0-0        Matrix_1.2-17       
+[8] RevoUtils_11.0.3     RevoUtilsMath_11.0.0
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.1       rstudioapi_0.10  cowplot_0.9.3    tidyselect_0.2.5 munsell_0.5.0    colorspace_1.4-1 lattice_0.20-38  R6_2.4.0        
+ [9] rlang_0.3.4      dplyr_0.8.0.1    tools_3.5.3      grid_3.5.3       gtable_0.3.0     nlme_3.1-137     withr_2.1.2      digest_0.6.18   
+[17] assertthat_0.2.1 tibble_2.1.1     crayon_1.3.4     purrr_0.3.2      glue_1.3.1       labeling_0.3     compiler_3.5.3   pillar_1.3.1    
+[25] scales_1.0.0     pkgconfig_2.0.2 

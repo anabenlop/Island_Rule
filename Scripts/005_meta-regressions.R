@@ -210,7 +210,6 @@ summary(metamam2)
 
 saveRDS(metamam2, file = "Data/Final data/metamam2.Rdata")
 
-
 metamam2 <- readRDS(file = "Data/Final data/metamam2.Rdata")
 
 coef<-data.frame(b =metamam2$b, lci = metamam2$ci.lb, uci =  metamam2$ci.ub)
@@ -279,11 +278,11 @@ Ma
 dev.off()
 
 ##distance####
-# metamam3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vmam,  data=mamdata,  random= RE,
-#               R = phylocor,method = "REML")  
-# summary(metamam3) #QM(df = 3) = 22.9852, p-val < .0001
-# 
-# saveRDS(metamam3, file = "Data/Final data/metamam3.Rdata")
+metamam3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vmam,  data=mamdata,  random= RE,
+              R = phylocor,method = "REML")
+summary(metamam3) #QM(df = 3) = 22.9852, p-val < .0001
+
+saveRDS(metamam3, file = "Data/Final data/metamam3.Rdata")
 
 metamam3 <- readRDS(file = "Data/Final data/metamam3.Rdata")
 
@@ -352,11 +351,11 @@ Mb
 dev.off()
 
 ##Island area and remoteness####
-# metamam4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vmam,  data=mamdata, random= RE,
-#               R = phylocor, method = "REML")  
-# summary(metamam4)
-# 
-# saveRDS(metamam4, file = "Data/Final data/metamam4.Rdata")
+metamam4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vmam,  data=mamdata, random= RE,
+              R = phylocor, method = "REML")
+summary(metamam4)
+
+saveRDS(metamam4, file = "Data/Final data/metamam4.Rdata")
 
 coef<-data.frame(b =metamam4$b, lci = metamam4$ci.lb, uci =  metamam4$ci.ub)
 write.csv(coef, "Results/Mammals/Coef/coef_dist_area.csv")
@@ -433,13 +432,13 @@ Mc
 dev.off()
 
 # diet ####
-# mamdata$guild2<- ifelse(mamdata$guild == "Carn", "Carn", "No Carn")
-# mamdata$guild2<- factor(mamdata$guild2)
-# metamam5<-rma.mv(RR~logmass*guild2,V=Vmam,  data=mamdata,  random= RE,  
-#               R = phylocor, method = "REML")  
-# summary(metamam5)
-# 
-# saveRDS(metamam5, file = "Data/Final data/metamam5.Rdata")
+mamdata$guild2<- ifelse(mamdata$guild == "Carn", "Carn", "No Carn")
+mamdata$guild2<- factor(mamdata$guild2)
+metamam5<-rma.mv(RR~logmass*guild2,V=Vmam,  data=mamdata,  random= RE,
+              R = phylocor, method = "REML")
+summary(metamam5)
+
+saveRDS(metamam5, file = "Data/Final data/metamam5.Rdata")
 
 coef<-data.frame(b =metamam5$b, lci = metamam5$ci.lb, uci =  metamam5$ci.ub)
 write.csv(coef, "Results/Mammals/Coef/coef_diet.csv")
@@ -503,11 +502,11 @@ Md
 dev.off()
 
 # temperature####
-# metamam6<-rma.mv(RR~logmass*tmean,V=Vmam,  data=mamdata,random= RE,  
-#                R = phylocor,method = "REML")  
-# summary(metamam6) 
-# 
-# saveRDS(metamam6, file = "Data/Final data/metamam6.Rdata")
+metamam6<-rma.mv(RR~logmass*tmean,V=Vmam,  data=mamdata,random= RE,
+               R = phylocor,method = "REML")
+summary(metamam6)
+
+saveRDS(metamam6, file = "Data/Final data/metamam6.Rdata")
 
 coef<-data.frame(b =metamam6$b, lci = metamam6$ci.lb, uci =  metamam6$ci.ub)
 write.csv(coef, "Results/Mammals/Coef/coef_tmean.csv")
@@ -575,11 +574,11 @@ Me
 dev.off()
 
 # temperature intercept####
-# metamam6b<-rma.mv(RR~logmass + tmean,V=Vmam,  data=mamdata,random= RE,  
-#               R = phylocor,method = "REML")  
-# summary(metamam6b)
-# 
-# saveRDS(metamam6b, file = "Data/Final data/metamam6b.Rdata")
+metamam6b<-rma.mv(RR~logmass + tmean,V=Vmam,  data=mamdata,random= RE,
+              R = phylocor,method = "REML")
+summary(metamam6b)
+
+saveRDS(metamam6b, file = "Data/Final data/metamam6b.Rdata")
 
 coef<-data.frame(b =metamam6b$b, lci = metamam6b$ci.lb, uci =  metamam6b$ci.ub)
 write.csv(coef, "Results/Mammals/Coef/coef_tmean_int.csv")
@@ -647,11 +646,11 @@ Me2
 dev.off()
 
 # temp seas####
-# metamam7<-rma.mv(RR~logmass*tseas,V=Vmam,  data=mamdata,  random= RE,  
-#                R = phylocor,method = "REML")  
-# summary(metamam7) 
-# 
-# saveRDS(metamam7, file = "Data/Final data/metamam7.Rdata")
+metamam7<-rma.mv(RR~logmass*tseas,V=Vmam,  data=mamdata,  random= RE,
+               R = phylocor,method = "REML")
+summary(metamam7)
+
+saveRDS(metamam7, file = "Data/Final data/metamam7.Rdata")
 
 coef<-data.frame(b =metamam7$b, lci = metamam7$ci.lb, uci =  metamam7$ci.ub)
 write.csv(coef, "Results/Mammals/Coef/coef_tseas.csv")
@@ -719,12 +718,12 @@ Mf
 dev.off()
 
 # resource availability####
-# metamam8<-rma.mv(RR~logmass*NDVI,V=Vmam,  data=mamdata,  random= RE,  
-#               R = phylocor,method = "REML")  
-# summary(metamam8)
-# 
-# saveRDS(metamam8, file = "Data/Final data/metamam8.Rdata")
-# 
+metamam8<-rma.mv(RR~logmass*NDVI,V=Vmam,  data=mamdata,  random= RE,
+              R = phylocor,method = "REML")
+summary(metamam8)
+
+saveRDS(metamam8, file = "Data/Final data/metamam8.Rdata")
+
 coef<-data.frame(b =metamam8$b, lci = metamam8$ci.lb, uci =  metamam8$ci.ub)
 write.csv(coef, "Results/Mammals/Coef/coef_ndvi.csv")
 
@@ -789,11 +788,11 @@ Mg
 dev.off()
 
 # seasonality in resources####
-# metamam9<-rma.mv(RR~logmass*SDNDVI,V=Vmam,  data=mamdata,  random= RE,  
-#                R = phylocor,method = "REML")  
-# summary(metamam9)
-# 
-# saveRDS(metamam9, file = "Data/Final data/metamam9.Rdata")
+metamam9<-rma.mv(RR~logmass*SDNDVI,V=Vmam,  data=mamdata,  random= RE,
+               R = phylocor,method = "REML")
+summary(metamam9)
+
+saveRDS(metamam9, file = "Data/Final data/metamam9.Rdata")
 
 coef<-data.frame(b =metamam9$b, lci = metamam9$ci.lb, uci =  metamam9$ci.ub)
 write.csv(coef, "Results/Mammals/Coef/coef_sdndvi.csv")
@@ -873,11 +872,11 @@ phylocor<-list(Binomial=bird_phylo_cor)
 logmass <- seq(from = min(birddata$logmass), to = max(birddata$logmass), length.out = 1000)
 
 #island area ####
-# metabird2<-rma.mv(RR~logmass*Island_km2,V = Vbird, data=birddata, random= RE,
-#               R = phylocor,method = "REML") 
-# summary(metabird2) 
-# 
-# saveRDS(metabird2, file = "Data/Final data/metabird2.Rdata")
+metabird2<-rma.mv(RR~logmass*Island_km2,V = Vbird, data=birddata, random= RE,
+              R = phylocor,method = "REML")
+summary(metabird2)
+
+saveRDS(metabird2, file = "Data/Final data/metabird2.Rdata")
 
 coef<-data.frame(b =metabird2$b, lci = metabird2$ci.lb, uci =  metabird2$ci.ub)
 write.csv(coef, "Results/Birds/Coef/coef_area.csv")
@@ -945,11 +944,11 @@ Ba
 dev.off()
 
 ##distance####
-# metabird3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vbird,  data=birddata,  random= RE,
-#               R = phylocor,method = "REML")  
-# summary(metabird3) 
-# 
-# saveRDS(metabird3, file = "Data/Final data/metabird3.Rdata")
+metabird3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vbird,  data=birddata,  random= RE,
+              R = phylocor,method = "REML")
+summary(metabird3)
+
+saveRDS(metabird3, file = "Data/Final data/metabird3.Rdata")
 
 metabird3 <- readRDS(file = "Data/Final data/metabird3.Rdata")
 
@@ -1018,11 +1017,11 @@ Bb
 dev.off()
 
 ##Island area and remoteness####
-# metabird4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vbird,  data=birddata, random= RE,
-#               R = phylocor, method = "REML")  
-# summary(metabird4)
-# 
-# saveRDS(metabird4, file = "Data/Final data/metabird4.Rdata")
+metabird4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vbird,  data=birddata, random= RE,
+              R = phylocor, method = "REML")
+summary(metabird4)
+
+saveRDS(metabird4, file = "Data/Final data/metabird4.Rdata")
 
 metabird4 <- readRDS(file = "Data/Final data/metabird4.Rdata")
 
@@ -1101,13 +1100,13 @@ Bc
 dev.off()
 
 # diet ####
-# birddata$guild2<- ifelse(birddata$guild == "VertFishScav", "Carn", "No Carn")
-# birddata$guild2<- factor(birddata$guild2)
-# metabird5<-rma.mv(RR~logmass*guild2,V=Vbird,  data=birddata,  random= RE,  
-#               R = phylocor, method = "REML")  
-# summary(metabird5)
-# 
-# saveRDS(metabird5, file = "Data/Final data/metabird5.Rdata")
+birddata$guild2<- ifelse(birddata$guild == "VertFishScav", "Carn", "No Carn")
+birddata$guild2<- factor(birddata$guild2)
+metabird5<-rma.mv(RR~logmass*guild2,V=Vbird,  data=birddata,  random= RE,
+              R = phylocor, method = "REML")
+summary(metabird5)
+
+saveRDS(metabird5, file = "Data/Final data/metabird5.Rdata")
 
 coef<-data.frame(b =metabird5$b, lci = metabird5$ci.lb, uci =  metabird5$ci.ub)
 write.csv(coef, "Results/Birds/Coef/coef_diet.csv")
@@ -1171,11 +1170,11 @@ Bd
 dev.off()
 
 # temperature####
-# metabird6<-rma.mv(RR~logmass*tmean,V=Vbird,  data=birddata,random= RE,  
-#               R = phylocor,method = "REML")  
-# summary(metabird6) 
-# 
-# saveRDS(metabird6, file = "Data/Final data/metabird6.Rdata")
+metabird6<-rma.mv(RR~logmass*tmean,V=Vbird,  data=birddata,random= RE,
+              R = phylocor,method = "REML")
+summary(metabird6)
+
+saveRDS(metabird6, file = "Data/Final data/metabird6.Rdata")
 
 coef<-data.frame(b =metabird6$b, lci = metabird6$ci.lb, uci =  metabird6$ci.ub)
 write.csv(coef, "Results/Birds/Coef/coef_tmean.csv")
@@ -1243,11 +1242,11 @@ Be
 dev.off()
 
 # temperature intercept####
-# metabird6b<-rma.mv(RR~logmass + tmean,V=Vbird,  data=birddata,random= RE,  
-#                R = phylocor,method = "REML")  
-# summary(metabird6b)
-# 
-# saveRDS(metabird6b, file = "Data/Final data/metabird6b.Rdata")
+metabird6b<-rma.mv(RR~logmass + tmean,V=Vbird,  data=birddata,random= RE,
+               R = phylocor,method = "REML")
+summary(metabird6b)
+
+saveRDS(metabird6b, file = "Data/Final data/metabird6b.Rdata")
 
 metabird6b <- readRDS(file = "Data/Final data/metabird6b.Rdata")
 
@@ -1317,11 +1316,11 @@ Be2
 dev.off()
 
 # temp seas####
-# metabird7<-rma.mv(RR~logmass*tseas,V=Vbird,  data=birddata,  random= RE,  
-#               R = phylocor,method = "REML")  
-# summary(metabird7) 
-# 
-# saveRDS(metabird7, file = "Data/Final data/metabird7.Rdata")
+metabird7<-rma.mv(RR~logmass*tseas,V=Vbird,  data=birddata,  random= RE,
+              R = phylocor,method = "REML")
+summary(metabird7)
+
+saveRDS(metabird7, file = "Data/Final data/metabird7.Rdata")
 
 coef<-data.frame(b =metabird7$b, lci = metabird7$ci.lb, uci =  metabird7$ci.ub)
 write.csv(coef, "Results/Birds/Coef/coef_tseas.csv")
@@ -1388,11 +1387,11 @@ Bf
 dev.off()
 
 # resource availability####
-# metabird8<-rma.mv(RR~logmass*NDVI,V=Vbird,  data=birddata,  random= RE,  
-#               R = phylocor,method = "REML")  
-# summary(metabird8)
-# 
-# saveRDS(metabird8, file = "Data/Final data/metabird8.Rdata")
+metabird8<-rma.mv(RR~logmass*NDVI,V=Vbird,  data=birddata,  random= RE,
+              R = phylocor,method = "REML")
+summary(metabird8)
+
+saveRDS(metabird8, file = "Data/Final data/metabird8.Rdata")
 
 coef<-data.frame(b =metabird8$b, lci = metabird8$ci.lb, uci =  metabird8$ci.ub)
 write.csv(coef, "Results/Birds/Coef/coef_ndvi.csv")
@@ -1458,11 +1457,11 @@ Bg
 dev.off()
 
 # seasonality in resources####
-# metabird9<-rma.mv(RR~logmass*SDNDVI,V=Vbird,  data=birddata,  random= RE,  
-#               R = phylocor,method = "REML")  
-# summary(metabird9)
-# 
-# saveRDS(metabird9, file = "Data/Final data/metabird9.Rdata")
+metabird9<-rma.mv(RR~logmass*SDNDVI,V=Vbird,  data=birddata,  random= RE,
+              R = phylocor,method = "REML")
+summary(metabird9)
+
+saveRDS(metabird9, file = "Data/Final data/metabird9.Rdata")
 
 metabird9 <- readRDS(file = "Data/Final data/metabird9.Rdata")
 
@@ -1543,11 +1542,11 @@ phylocor<-list(Binomial=rept_phylo_cor)
 logmass <- seq(from = min(reptdata$logmass), to = max(reptdata$logmass), length.out = 1000)
 
 #island area ####
-# metarept2<-rma.mv(RR~logmass*Island_km2,V = Vrept, data=reptdata, random= RE,
-#                   R = phylocor,method = "REML") 
-# summary(metarept2) 
-# 
-# saveRDS(metarept2, file = "Data/Final data/metarept2.Rdata")
+metarept2<-rma.mv(RR~logmass*Island_km2,V = Vrept, data=reptdata, random= RE,
+                  R = phylocor,method = "REML")
+summary(metarept2)
+
+saveRDS(metarept2, file = "Data/Final data/metarept2.Rdata")
 
 metarept2 <- readRDS(file = "Data/Final data/metarept2.Rdata")
 
@@ -1617,11 +1616,11 @@ Ra
 dev.off()
 
 ##distance####
-# metarept3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vrept,  data=reptdata,  random= RE,
-#                   R = phylocor,method = "REML")  
-# summary(metarept3) #QM(df = 3) = 22.9852, p-val < .0001
-# 
-# saveRDS(metarept3, file = "Data/Final data/metarept3.Rdata")
+metarept3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vrept,  data=reptdata,  random= RE,
+                  R = phylocor,method = "REML")
+summary(metarept3) #QM(df = 3) = 22.9852, p-val < .0001
+
+saveRDS(metarept3, file = "Data/Final data/metarept3.Rdata")
 
 metarept3 <- readRDS(file = "Data/Final data/metarept3.Rdata")
 
@@ -1690,11 +1689,11 @@ Rb
 dev.off()
 
 ##Island area and remoteness####
-# metarept4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vrept,  data=reptdata, random= RE,
-#                   R = phylocor, method = "REML")  
-# summary(metarept4)
-# 
-# saveRDS(metarept4, file = "Data/Final data/metarept4.Rdata")
+metarept4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vrept,  data=reptdata, random= RE,
+                  R = phylocor, method = "REML")
+summary(metarept4)
+
+saveRDS(metarept4, file = "Data/Final data/metarept4.Rdata")
 
 metarept4 <- readRDS(file = "Data/Final data/metarept4.Rdata")
 
@@ -1773,13 +1772,13 @@ Rc
 dev.off()
 
 # diet ####
-# reptdata$guild2<- ifelse(reptdata$guild == "Carnivorous", "Carn", "No Carn")
-# reptdata$guild2<- factor(reptdata$guild2)
-# metarept5<-rma.mv(RR~logmass*guild2,V=Vrept,  data=reptdata,  random= RE,  
-#                   R = phylocor, method = "REML")  
-# summary(metarept5)
-# 
-# saveRDS(metarept5, file = "Data/Final data/metarept5.Rdata")
+reptdata$guild2<- ifelse(reptdata$guild == "Carnivorous", "Carn", "No Carn")
+reptdata$guild2<- factor(reptdata$guild2)
+metarept5<-rma.mv(RR~logmass*guild2,V=Vrept,  data=reptdata,  random= RE,
+                  R = phylocor, method = "REML")
+summary(metarept5)
+
+saveRDS(metarept5, file = "Data/Final data/metarept5.Rdata")
 
 metarept5 <- readRDS(file = "Data/Final data/metarept5.Rdata")
 
@@ -1845,11 +1844,11 @@ Rd
 dev.off()
 
 # temperature####
-# metarept6<-rma.mv(RR~logmass*tmean,V=Vrept,  data=reptdata,random= RE,  
-#                   R = phylocor,method = "REML")  
-# summary(metarept6) 
-# 
-# saveRDS(metarept6, file = "Data/Final data/metarept6.Rdata")
+metarept6<-rma.mv(RR~logmass*tmean,V=Vrept,  data=reptdata,random= RE,
+                  R = phylocor,method = "REML")
+summary(metarept6)
+
+saveRDS(metarept6, file = "Data/Final data/metarept6.Rdata")
 
 metarept6 <- readRDS(file = "Data/Final data/metarept6.Rdata")
 
@@ -1919,11 +1918,11 @@ Re
 dev.off()
 
 # temperature intercept####
-# metarept6b<-rma.mv(RR~logmass + tmean,V=Vrept,  data=reptdata,random= RE,  
-#                    R = phylocor,method = "REML")  
-# summary(metarept6b)
-# 
-# saveRDS(metarept6b, file = "Data/Final data/metarept6b.Rdata")
+metarept6b<-rma.mv(RR~logmass + tmean,V=Vrept,  data=reptdata,random= RE,
+                   R = phylocor,method = "REML")
+summary(metarept6b)
+
+saveRDS(metarept6b, file = "Data/Final data/metarept6b.Rdata")
 
 metarept6b <- readRDS(file = "Data/Final data/metarept6b.Rdata")
 
@@ -1993,11 +1992,11 @@ Re2
 dev.off()
 
 # temp seas####
-# metarept7<-rma.mv(RR~logmass*tseas,V=Vrept,  data=reptdata,  random= RE,  
-#                   R = phylocor,method = "REML")  
-# summary(metarept7) 
-# 
-# saveRDS(metarept7, file = "Data/Final data/metarept7.Rdata")
+metarept7<-rma.mv(RR~logmass*tseas,V=Vrept,  data=reptdata,  random= RE,
+                  R = phylocor,method = "REML")
+summary(metarept7)
+
+saveRDS(metarept7, file = "Data/Final data/metarept7.Rdata")
 
 metarept7 <- readRDS(file = "Data/Final data/metarept7.Rdata")
 
@@ -2066,11 +2065,11 @@ Rf
 dev.off()
 
 # resource availability####
-# metarept8<-rma.mv(RR~logmass*NDVI,V=Vrept,  data=reptdata,  random= RE,  
-#                   R = phylocor,method = "REML")  
-# summary(metarept8)
-# 
-# saveRDS(metarept8, file = "Data/Final data/metarept8.Rdata")
+metarept8<-rma.mv(RR~logmass*NDVI,V=Vrept,  data=reptdata,  random= RE,
+                  R = phylocor,method = "REML")
+summary(metarept8)
+
+saveRDS(metarept8, file = "Data/Final data/metarept8.Rdata")
 # 
 
 metarept8 <- readRDS(file = "Data/Final data/metarept8.Rdata")
@@ -2139,11 +2138,11 @@ Rg
 dev.off()
 
 # seasonality in resources####
-# metarept9<-rma.mv(RR~logmass*SDNDVI,V=Vrept,  data=reptdata,  random= RE,  
-#                   R = phylocor,method = "REML")  
-# summary(metarept9)
-# 
-# saveRDS(metarept9, file = "Data/Final data/metarept9.Rdata")
+metarept9<-rma.mv(RR~logmass*SDNDVI,V=Vrept,  data=reptdata,  random= RE,
+                  R = phylocor,method = "REML")
+summary(metarept9)
+
+saveRDS(metarept9, file = "Data/Final data/metarept9.Rdata")
 
 metarept9 <- readRDS(file = "Data/Final data/metarept9.Rdata")
 
@@ -2224,11 +2223,11 @@ phylocor<-list(Binomial=amph_phylo_cor)
 logmass <- seq(from = min(amphdata$logmass), to = max(amphdata$logmass), length.out = 1000)
 
 #island area ####
-# metaamph2<-rma.mv(RR~logmass*Island_km2,V = Vamph, data=amphdata, random= RE,
-#                   R = phylocor,method = "REML") 
-# summary(metaamph2) 
-# 
-# saveRDS(metaamph2, file = "Data/Final data/metaamph2.Rdata")
+metaamph2<-rma.mv(RR~logmass*Island_km2,V = Vamph, data=amphdata, random= RE,
+                  R = phylocor,method = "REML")
+summary(metaamph2)
+
+saveRDS(metaamph2, file = "Data/Final data/metaamph2.Rdata")
 
 metaamph2 <- readRDS(file = "Data/Final data/metaamph2.Rdata")
 
@@ -2296,11 +2295,11 @@ Aa
 dev.off()
 
 ##distance####
-# metaamph3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vamph,  data=amphdata,  random= RE,
-#                   R = phylocor,method = "REML")  
-# summary(metaamph3) 
-# 
-# saveRDS(metaamph3, file = "Data/Final data/metaamph3.Rdata")
+metaamph3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vamph,  data=amphdata,  random= RE,
+                  R = phylocor,method = "REML")
+summary(metaamph3)
+
+saveRDS(metaamph3, file = "Data/Final data/metaamph3.Rdata")
 
 metaamph3 <- readRDS(file = "Data/Final data/metaamph3.Rdata")
 
@@ -2367,11 +2366,11 @@ Ab
 dev.off()
 
 ##island area and remoteness####
-# metaamph4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vamph,  data=amphdata, random= RE,
-#                   R = phylocor,method = "REML")  
-# summary(metaamph4)
-# 
-# saveRDS(metaamph4, file = "Data/Final data/metaamph4.Rdata")
+metaamph4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vamph,  data=amphdata, random= RE,
+                  R = phylocor,method = "REML")
+summary(metaamph4)
+
+saveRDS(metaamph4, file = "Data/Final data/metaamph4.Rdata")
 # 
 
 metaamph4 <- readRDS(file = "Data/Final data/metaamph4.Rdata")
@@ -2451,11 +2450,10 @@ Ac
 dev.off()
 
 # prec ####
-# metaamph5<-rma.mv(RR~logmass*prec ,V=Vamph,  data=amphdata,  random= RE,  
-#                   R = phylocor,method = "REML")  
-# summary(metaamph5)
-
-# saveRDS(metaamph5, file = "Data/Final data/metaamph5.Rdata")
+metaamph5<-rma.mv(RR~logmass*prec ,V=Vamph,  data=amphdata,  random= RE,
+                  R = phylocor,method = "REML")
+summary(metaamph5)
+saveRDS(metaamph5, file = "Data/Final data/metaamph5.Rdata")
 
 metaamph5 <- readRDS(file = "Data/Final data/metaamph5.Rdata")
 
@@ -2524,11 +2522,11 @@ Ad
 dev.off()
 
 # island temperature ####
-# metaamph6<-rma.mv(RR~logmass*tmean,V=Vamph,  data=amphdata,random= RE,  
-#                    R = phylocor,method = "REML")  
-# summary(metaamph6)
-# 
-# saveRDS(metaamph6, file = "Data/Final data/metaamph6.Rdata")
+metaamph6<-rma.mv(RR~logmass*tmean,V=Vamph,  data=amphdata,random= RE,
+                   R = phylocor,method = "REML")
+summary(metaamph6)
+
+saveRDS(metaamph6, file = "Data/Final data/metaamph6.Rdata")
 
 metaamph6 <- readRDS(file = "Data/Final data/metaamph6.Rdata")
 
@@ -2596,11 +2594,11 @@ Ae
 dev.off()
 
 # temperature intercept####
-# metaamph6b<-rma.mv(RR~logmass + tmean,V=Vamph,  data=amphdata,random= RE,  
-#                   R = phylocor,method = "REML")  
-# summary(metaamph6b)
-# 
-# saveRDS(metaamph6b, file = "Data/Final data/metaamph6b.Rdata")
+metaamph6b<-rma.mv(RR~logmass + tmean,V=Vamph,  data=amphdata,random= RE,
+                  R = phylocor,method = "REML")
+summary(metaamph6b)
+
+saveRDS(metaamph6b, file = "Data/Final data/metaamph6b.Rdata")
 
 metaamph6b <- readRDS(file = "Data/Final data/metaamph6b.Rdata")
 
@@ -2670,11 +2668,11 @@ Ae2
 dev.off()
 
 # temp seas####
-# metaamph7<-rma.mv(RR~logmass*tseas,V=Vamph,  data=amphdata,  random= RE,  
-#                    R = phylocor,method = "REML")  
-# summary(metaamph7) 
-# 
-# saveRDS(metaamph7, file = "Data/Final data/metaamph7.Rdata")
+metaamph7<-rma.mv(RR~logmass*tseas,V=Vamph,  data=amphdata,  random= RE,
+                   R = phylocor,method = "REML")
+summary(metaamph7)
+
+saveRDS(metaamph7, file = "Data/Final data/metaamph7.Rdata")
 
 metaamph7 <- readRDS(file = "Data/Final data/metaamph7.Rdata")
 
@@ -2743,11 +2741,11 @@ Af
 dev.off()
 
 # resource availability####
-# metaamph8<-rma.mv(RR~logmass*NDVI,V=Vamph,  data=amphdata,  random= RE,  
-#                    R = phylocor, method = "REML")  
-# summary(metaamph8)
-# 
-# saveRDS(metaamph8, file = "Data/Final data/metaamph8.Rdata")
+metaamph8<-rma.mv(RR~logmass*NDVI,V=Vamph,  data=amphdata,  random= RE,
+                   R = phylocor, method = "REML")
+summary(metaamph8)
+
+saveRDS(metaamph8, file = "Data/Final data/metaamph8.Rdata")
 
 metaamph8 <- readRDS(file = "Data/Final data/metaamph8.Rdata")
 
@@ -2815,11 +2813,11 @@ Ag
 dev.off()
 
 # seasonality in resources####
-# metaamph9<-rma.mv(RR~logmass*SDNDVI,V=Vamph,  data= amphdata,  random= RE,  
-#                    R = phylocor, method = "REML")  
-# summary(metaamph9)
-# 
-# saveRDS(metaamph9, file = "Data/Final data/metaamph9.Rdata")
+metaamph9<-rma.mv(RR~logmass*SDNDVI,V=Vamph,  data= amphdata,  random= RE,
+                   R = phylocor, method = "REML")
+summary(metaamph9)
+
+saveRDS(metaamph9, file = "Data/Final data/metaamph9.Rdata")
 
 metaamph9 <- readRDS(file = "Data/Final data/metaamph9.Rdata")
 
@@ -2887,11 +2885,11 @@ Ah
 dev.off()
 
 #### seasonality in resources intercept ####
-# metaamph10<-rma.mv(RR~logmass + SDNDVI,V=Vamph,  data= amphdata,  random= RE,  
-#                    R = phylocor, method = "REML")  
-# summary(metaamph10)
-# 
-# saveRDS(metaamph10, file = "Data/Final data/metaamph10.Rdata")
+metaamph10<-rma.mv(RR~logmass + SDNDVI,V=Vamph,  data= amphdata,  random= RE,
+                   R = phylocor, method = "REML")
+summary(metaamph10)
+
+saveRDS(metaamph10, file = "Data/Final data/metaamph10.Rdata")
 
 metaamph10 <- readRDS(file = "Data/Final data/metaamph10.Rdata")
 
