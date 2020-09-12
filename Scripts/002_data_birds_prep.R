@@ -107,16 +107,6 @@ data_imp$var_imp<-ifelse(c(is.na(data_imp$sd_m_allom) | is.na(data_imp$sd_i_allo
 
 impute_missingness(data_imp)
 
-#check allometry for tarsus vs wing (not run)
-# data_imp$logmass_morph<-log10(data_imp$SpMass_g)
-# b<-data_imp%>% 
-#   filter(Measure != "Tarsus Length")%>% #change to check Tarsus or Wing length
-#   ggplot() +
-#   aes(x = logmass, y = logmass_morph) +
-#   geom_point() + geom_smooth(method="lm")
-# b
-# ggplotly(b) #wing length approximates better the binomial species size as reported in EltonTraits and Amniotes
-
 #remove species for which both tarsus and wing has been measured, remove only the tarsus measures except for Apteryx
 data_imp_temp<-data_imp[!(data_imp$Reference == "Pigot et al. 2020" & data_imp$Measure == "Tarsus Length"),]
 data_imp_temp<-rbind(data_imp_temp, data_imp[data_imp$Binomial == "Apteryx australis",])
