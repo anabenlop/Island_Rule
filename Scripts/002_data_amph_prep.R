@@ -31,11 +31,11 @@ library(janitor)
 library(dplyr)
 
 # Clear memory
-# rm(list=ls())
+ rm(list=ls())
 
 #load data
-amphdata<-read.csv("~/New projects/Island rule/Data/amphdata.csv", header = TRUE, stringsAsFactors = FALSE)
-allometry<-read.csv("~/New projects/Island rule/Data/allometric_relationships.csv", header = TRUE, stringsAsFactors = FALSE)
+amphdata<-read.csv("Data/amphdata.csv", header = TRUE, stringsAsFactors = FALSE)
+allometry<-read.csv("Data/allometric_relationships.csv", header = TRUE, stringsAsFactors = FALSE)
 #no diet data
 
 amphdata$ID<-paste0("ES",1:nrow(amphdata))
@@ -128,9 +128,11 @@ amphdata_def<-amphdata_temp[,c("Reference", "ID","CommonControl", "Mainland","Is
                                "RR","var", "Long_i", "Lat_i", "logmass", "Island_km2", 
                                "Dist_near_mainland", "NDVI", "SDNDVI", "tmean", "tseas", "prec", "Phylogeny", "Data_source_type")] 
 
-write.csv(amphdata_def,file= "~/New projects/Island rule/Data/amphdata_def.csv", row.names = FALSE)
+write.csv(amphdata_def,file= "Data/amphdata_def.csv", row.names = FALSE)
 
 # saving session information with all packages versions for reproducibility purposes
-sink("~/New projects/Island rule/Data/Final data/data_prep_amph_R_session.txt")
+sink("Data/Final data/data_prep_amph_R_session.txt")
 sessionInfo()
 sink()
+
+# End of script ####

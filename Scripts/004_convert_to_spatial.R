@@ -37,10 +37,10 @@ library(mapview)
 ##############################################################
 
 #load data
-mamdata<-read.csv("~/New projects/Island rule/Data/Final data/mamdata_ph.csv", header = TRUE) 
-birddata<-read.csv("~/New projects/Island rule/Data/Final data/birddata_ph.csv", header = TRUE)
-reptdata<-read.csv("~/New projects/Island rule/Data/Final data/reptdata_ph.csv", header = TRUE)
-amphdata<-read.csv("~/New projects/Island rule/Data/Final data/amphdata_ph.csv", header = TRUE)
+mamdata<-read.csv("Data/Final data/mamdata_ph.csv", header = TRUE) 
+birddata<-read.csv("Data/Final data/birddata_ph.csv", header = TRUE)
+reptdata<-read.csv("Data/Final data/reptdata_ph.csv", header = TRUE)
+amphdata<-read.csv("Data/Final data/amphdata_ph.csv", header = TRUE)
 
 mamdata<-mamdata[,c("Class", "Island", "Long_i", "Lat_i")]
 birddata<-birddata[,c("Class", "Island", "Long_i", "Lat_i")]
@@ -51,7 +51,7 @@ amphdata<-amphdata[,c("Class", "Island", "Long_i", "Lat_i")]
 data<-rbind(mamdata,birddata, reptdata,amphdata)
 
 # save full dataset
-# write.csv(data, file=" ~/New projects/Island rule/Data/Final data/islanddata_ms.csv")
+# write.csv(data, file=" Data/Final data/islanddata_ms.csv")
 
 ##############################################################
 # Converting data to SpatialPointsDataFrame               ####
@@ -63,11 +63,11 @@ spdata <- SpatialPointsDataFrame(coords = xy, data = data,
 spdata <- st_as_sf(data, coords = c('Long_i', 'Lat_i'),crs = "+init=epsg:4326")
 
 #import countries
-# country<-st_read("~/New projects/Island rule/Spatial/country1mVMAP_un2008.shp")
+# country<-st_read("Spatial/country1mVMAP_un2008.shp")
 # mapview(spdata, zcol = "Class", legend = TRUE)+ mapview(country)
 
 #save spatialpoints dataframe --> island locations, give full path
-st_write(spdata, "C:/Users/anyta/Documents/New projects/Island rule/Spatial/spdata.shp", update=TRUE)
+st_write(spdata, "Spatial/spdata.shp", update=TRUE)
 
 #############################################################################################
 # Make points of different size depending on the number of insular populations included ####
@@ -110,16 +110,16 @@ spdata_group <- SpatialPointsDataFrame(coords = xy, data = data_group,
                                  proj4string = CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
 
 #import countries
-# country<-st_read("~/New projects/Island rule/Spatial/country1mVMAP_un2008.shp")
+# country<-st_read("Spatial/country1mVMAP_un2008.shp")
 # mapview(spdata_group, zcol = "Class", legend = TRUE)+ mapview(country)
 
 spdata_group <- st_as_sf(data_group, coords = c('Long_i', 'Lat_i'),crs = "+init=epsg:4326")
 
 #save spatialpoints dataframe --> island locations, give full path
-st_write(spdata_group, "C:/Users/anyta/Documents/New projects/Island rule/Spatial/spdata_group.shp")
+st_write(spdata_group, "Spatial/spdata_group.shp")
 
 # saving session information with all packages versions for reproducibility purposes
-sink("~/New projects/Island rule/Data/Final data/convert_to_spatial_data_R_session.txt")
+sink("Data/Final data/convert_to_spatial_data_R_session.txt")
 sessionInfo()
 sink()
 

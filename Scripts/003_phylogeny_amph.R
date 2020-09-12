@@ -30,14 +30,14 @@ library(rotl)
 library(diagram)
 
 # Clear memory
-# rm(list=ls())
+rm(list=ls())
 
 ##############################################################
 # Importing datasets
 ##############################################################
 
 # final and clean database 
-amphdata<-read.csv("~/New projects/Island rule/Data/amphdata_def.csv", header = TRUE, stringsAsFactors = FALSE)
+amphdata<-read.csv("Data/amphdata_def.csv", header = TRUE, stringsAsFactors = FALSE)
 
 # generating list of species
 species <- sort(unique(as.character(amphdata$Binomial)))
@@ -137,7 +137,7 @@ intersect(as.character(tree_random$tip.label), as.character(species))
 species[!species %in% as.character(tree_random$tip.label)] #listed in our database but not in the tree, 0 species!
 tree_random$tip.label[!as.character(tree_random$tip.label) %in% species] # listed in the tree but not in our database. 0 species!
 
-tiff("~/New projects/Island rule/Results/Amphibians/Phylogeny/amph_phylogenetic_tree_pruned.tiff",
+tiff("Results/Amphibians/Phylogeny/amph_phylogenetic_tree_pruned.tiff",
      height=20, width=10,
      units='cm', compression="lzw", res=800)
 
@@ -146,7 +146,7 @@ plot(tree_random, cex=.5, label.offset =.1, no.margin = TRUE)
 dev.off()
 
 # we can now save the tree
-save(tree_random, file = "~/New projects/Island rule/Data/Final data/amph_tree_random.Rdata")
+save(tree_random, file = "Data/Final data/amph_tree_random.Rdata")
 
 
 ##############################################################
@@ -166,18 +166,14 @@ setdiff(as.character(tree_random$tip.label),amphdata$Binomial)
 drops <- tree_random$tip.label[!tree_random$tip.label %in% amphdata$Binomial]
 amph.tree_random.fixed <- drop.tip(tree_random, drops)
 
-
 # save the new tree
-write.tree(amph.tree_random.fixed, file = "~/New projects/Island rule/Data/Final data/amph.tree_random.fixed.tre")
+write.tree(amph.tree_random.fixed, file = "Data/Final data/amph.tree_random.fixed.tre")
 
 # compute branch lengths of tree
 phylo_branch <- compute.brlen(amph.tree_random.fixed, method = "Grafen", power = 1)
 
 # check tree is ultrametric
 is.ultrametric(phylo_branch) # TRUE
-
-# save the new tree
-write.tree(phylo_branch, file = "~/New projects/Island rule/Data/Final data/amph_tree.tre")
 
 ##############################################################
 # Phylogenetic matrix
@@ -196,14 +192,16 @@ amphdata_ph<-inner_join(amphdata_ph,SpID, by = "Binomial")
 
 
 # finally, save matrix for future analyses
-save(amph_phylo_cor, file = "~/New projects/Island rule/Data/Final data/amph_phylo_cor.Rdata")
+save(amph_phylo_cor, file = "Data/Final data/amph_phylo_cor.Rdata")
 
 
 # exporting fixed dataset for analyses
 write.csv(amphdata_ph, 
-          "~/New projects/Island rule/Data/Final data/amphdata_ph.csv", row.names = FALSE)
+          "Data/Final data/amphdata_ph.csv", row.names = FALSE)
 
 # saving session information with all packages versions for reproducibility purposes
-sink("~/New projects/Island rule/Data/Final data/amph_phylogeny_R_session.txt")
+sink("Data/Final data/amph_phylogeny_R_session.txt")
 sessionInfo()
 sink()
+
+# End of script ####

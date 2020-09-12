@@ -29,14 +29,14 @@ library(rotl)
 library(diagram)
 
 # Clear memory
-# rm(list=ls())
+ rm(list=ls())
 
 ##############################################################
 # Importing datasets
 ##############################################################
 
 # final and clean database 
-birddata<-read.csv("~/New projects/Island rule/Data/birddata_def.csv", header = TRUE, stringsAsFactors = FALSE) #use birddatadef2 for tarsus
+birddata<-read.csv("Data/birddata_def.csv", header = TRUE, stringsAsFactors = FALSE) #use birddatadef2 for tarsus
 birddata <- birddata[birddata$Binomial != "Emberiza calandra", ] #Remove Emberiza calandra, not available in OpenTreeofLife
 
 # generating list of species
@@ -199,7 +199,7 @@ tree_random$tip.label[!as.character(tree_random$tip.label) %in% species.r] #  "m
 # we fix it here
 tree_random$tip.label[tree_random$tip.label =="mrcaott165615ott165621"] <-"Amazona ochrocephala"
 
-tiff("~/New projects/Island rule/Results/Birds/Phylogeny/bird_phylogenetic_tree_pruned2.tiff",
+tiff("Results/Birds/Phylogeny/bird_phylogenetic_tree_pruned2.tiff",
      height=80, width=10,
      units='cm', compression="lzw", res=1200)
 
@@ -208,7 +208,7 @@ plot(tree_random, cex=.5, label.offset =.1, no.margin = TRUE)
 dev.off()
 
 # we can now save the tree
-save(tree_random, file = "~/New projects/Island rule/Data/Final data/bird_tree_random.Rdata")
+save(tree_random, file = "Data/Final data/bird_tree_random.Rdata")
 
 
 ##############################################################
@@ -229,8 +229,7 @@ drops <- tree_random$tip.label[!tree_random$tip.label %in% birddata$Binomial]
 bird.tree_random.fixed <- drop.tip(tree_random, drops)
 
 # save the new tree
-write.tree(bird.tree_random.fixed, file = "~/New projects/Island rule/Data/Final data/bird.tree_random.fixed.tre")
-
+write.tree(bird.tree_random.fixed, file = "Data/Final data/bird.tree_random.fixed.tre")
 
 # compute branch lengths of tree
 phylo_branch <- compute.brlen(bird.tree_random.fixed, method = "Grafen", power = 1)
@@ -255,13 +254,15 @@ SpID$Binomial<-as.character(SpID$Binomial)
 birddata_ph<-inner_join(birddata_ph,SpID, by = "Binomial") #706 rows
 
 # finally, save matrix for future analyses
-save(bird_phylo_cor, file = "~/New projects/Island rule/Data/Final data/bird_phylo_cor.Rdata")
+save(bird_phylo_cor, file = "Data/Final data/bird_phylo_cor.Rdata")
 
 # exporting fixed dataset for analyses
 write.csv(birddata_ph, 
-           "~/New projects/Island rule/Data/Final data/birddata_ph.csv", row.names = FALSE)
+           "Data/Final data/birddata_ph.csv", row.names = FALSE)
 
 # saving session information with all packages versions for reproducibility purposes
-sink("~/New projects/Island rule/Data/Final data/bird_phylogeny_R_session.txt")
+sink("Data/Final data/bird_phylogeny_R_session.txt")
 sessionInfo()
 sink()
+
+# End of script ####

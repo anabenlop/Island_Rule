@@ -6,6 +6,7 @@
 # Email: abenitez81@gmail.com
 
 # Script first created on the 17th of September 2019
+# Modified August 2020
 
 ##############################################################
 # Description of script and instructions
@@ -34,8 +35,8 @@ library(dplyr)
 #load data
 birddata<-read.csv("Data/birddata.csv", header = TRUE, stringsAsFactors = FALSE)
 allometry<-read.csv("Data/allometric_relationships.csv", header = TRUE, stringsAsFactors = FALSE)
-diet<-read.csv("Data/Diet/B_traits_guild.csv", stringsAsFactors = FALSE) #Bird traits Elton
-mig_status<-read.csv("Data/SpeciesList3_1_migbehav_v2_0.csv", stringsAsFactors = FALSE) #Bird migratory status
+diet<-read.csv("Data/B_traits_guild.csv", stringsAsFactors = FALSE) #Bird traits Elton
+mig_status<-read.csv("Data/SpeciesList3_1_migbehav_v2_0.csv", stringsAsFactors = FALSE) #Bird migratory status:  Eyres et al. 2017 https://onlinelibrary.wiley.com/doi/pdf/10.1111/jav.01308
 mig_status$Binomial <- paste0(mig_status$IOC3_1_Genus," ", mig_status$IOC3_1_Species)
 
 # create observation level identifier

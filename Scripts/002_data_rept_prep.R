@@ -31,13 +31,13 @@ library(janitor)
 library(dplyr)
 
 # Clear memory
-# rm(list=ls())
+ rm(list=ls())
 
 #load data
-reptdata<-read.csv("~/New projects/Island rule/Data/reptdata.csv", header = TRUE, stringsAsFactors = F)
-allometry<-read.csv("~/New projects/Island rule/Data/allometric_relationships.csv", header = TRUE, stringsAsFactors = F)
-diet1<-read.csv("~/New projects/Island rule/Data/Diet/R_Traits_1.csv", stringsAsFactors = F) #Reptile traits 
-diet2<-read.csv("~/New projects/Island rule/Data/Diet/R_Traits_2.csv", stringsAsFactors = F) #Reptile traits 
+reptdata<-read.csv("Data/reptdata.csv", header = TRUE, stringsAsFactors = F)
+allometry<-read.csv("Data/allometric_relationships.csv", header = TRUE, stringsAsFactors = F)
+diet1<-read.csv("Data/R_Traits_1.csv", stringsAsFactors = F) #Reptile traits 
+diet2<-read.csv("Data/R_Traits_2.csv", stringsAsFactors = F) #Reptile traits 
 
 # create observation level identifier
 reptdata$ID<-paste0("ES",1:nrow(reptdata))
@@ -151,8 +151,8 @@ reptdata_temp[reptdata_temp$Binomial=="Oocatochus rufodorsatus", "Diet"] <- "Car
 reptdata_temp[reptdata_temp$Binomial=="Ptyas korros", "Diet"] <- "Carnivorous"
 reptdata_temp[reptdata_temp$Binomial=="Gloydius saxatilis", "Diet"] <- "Carnivorous"
 
-reptdata_temp$guild<-reptdata_temp$Diet #change name to common term across databases, 
-                                        #guild not very well balanced (250 carniv, 19 Herb, 54 Omniv)
+reptdata_temp$guild<-reptdata_temp$Diet #change name to common term across databases
+                                       
 
 #keep only what we need
 reptdata_temp$RR<-reptdata_temp$RR_allom #change names to simplify stuff
@@ -169,10 +169,10 @@ reptdata_def<-reptdata_temp[,c("Reference", "ID","CommonControl", "Mainland","Is
                                "Dist_near_mainland", "NDVI", "SDNDVI", "tmean", "tseas", "prec", "Phylogeny", "Data_source_type")]
 
 
-write.csv(reptdata_def,file= "~/New projects/Island rule/Data/reptdata_def.csv", row.names = FALSE) #455 rows
+write.csv(reptdata_def,file= "Data/reptdata_def.csv", row.names = FALSE) #455 rows
 
 # saving session information with all packages versions for reproducibility purposes
-sink("~/New projects/Island rule/Data/Final data/data_prep_rept_R_session.txt")
+sink("Data/Final data/data_prep_rept_R_session.txt")
 sessionInfo()
 sink()
 

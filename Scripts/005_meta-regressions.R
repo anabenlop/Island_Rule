@@ -28,26 +28,26 @@ library(ggpubr)
 library(tictoc)
 
 #clean memory
-# rm(list=ls())
+ rm(list=ls())
 
 ##############################################################
 # Importing datasets and functions                        ####
 ##############################################################
 
 #Load data
-mamdata<-read.csv("~/New projects/Island rule/Data/Final data/mamdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
-birddata<-read.csv("~/New projects/Island rule/Data/Final data/birddata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
-reptdata<-read.csv("~/New projects/Island rule/Data/Final data/reptdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
-amphdata<-read.csv("~/New projects/Island rule/Data/Final data/amphdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+mamdata<-read.csv("Data/Final data/mamdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+birddata<-read.csv("Data/Final data/birddata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+reptdata<-read.csv("Data/Final data/reptdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
+amphdata<-read.csv("Data/Final data/amphdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
 
 # loading phylogenetic matrixes 
-load("~/New projects/Island rule/Data/Final data/mam_phylo_cor.Rdata") #mam_phylo_cor
-load("~/New projects/Island rule/Data/Final data/bird_phylo_cor.Rdata") #bird_phylo_cor
-load("~/New projects/Island rule/Data/Final data/rept_phylo_cor.Rdata") #rept_phylo_cor
-load("~/New projects/Island rule/Data/Final data/amph_phylo_cor.Rdata") #amph_phylo_cor
+load("Data/Final data/mam_phylo_cor.Rdata") #mam_phylo_cor
+load("Data/Final data/bird_phylo_cor.Rdata") #bird_phylo_cor
+load("Data/Final data/rept_phylo_cor.Rdata") #rept_phylo_cor
+load("Data/Final data/amph_phylo_cor.Rdata") #amph_phylo_cor
 
 # load necessary functions
-source("~/New projects/Island rule/Scripts/000_Functions.R")
+source("Scripts/000_Functions.R")
 
 # Calculate varcovar matrix
 Vmam<- bldiag(lapply(split(mamdata, mamdata$CommonControl), calc.v))
@@ -68,7 +68,9 @@ is.positive.definite(Vrept) # TRUE
 Vamph<- bldiag(lapply(split(amphdata, amphdata$CommonControl), calc.v))
 is.positive.definite(Vamph) # TRUE
 
-#ISLAND RULE PLOTS####
+################################################
+# Testing insular size shifts: Island rule  ####
+################################################
 RE = list(~ 1 | Reference,~1|ID, ~1|SPID, ~1| Binomial)
 
 #mammals####
@@ -77,9 +79,6 @@ metamam<-rma.mv(RR~logmass,V=Vmam, data=mamdata, random= RE,  R = phylocor)
 summary(metamam)
 mR2.func(metamam)
 cR2.func(metamam)
-
-# ggplot(mamdata) + geom_point(aes(logmass, RR)) + geom_hline(yintercept = 0, col = "red")+
-#   geom_smooth(aes(logmass, RR), method ="lm")
 
 logmass <- seq(from = min(mamdata$logmass), to = max(mamdata$logmass), length.out = 1000)
 
@@ -185,68 +184,70 @@ A<-ggplot(amphdata)+ geom_hline(yintercept= 0, size=1.2, linetype="dashed", colo
   scale_y_continuous(breaks=seq(-1.6,1.6,0.4), limits =c(-1.6,1.6)) +
   labs(tag = "d")
 
-saveRDS(metamam, file = "~/New projects/Island rule/Data/Final data/metamam.Rdata")
-saveRDS(metabird, file = "~/New projects/Island rule/Data/Final data/metabird.Rdata")
-saveRDS(metarept, file = "~/New projects/Island rule/Data/Final data/metarept.Rdata")
-saveRDS(metaamph, file = "~/New projects/Island rule/Data/Final data/metaamph.Rdata")
+saveRDS(metamam, file = "Data/Final data/metamam.Rdata")
+saveRDS(metabird, file = "Data/Final data/metabird.Rdata")
+saveRDS(metarept, file = "Data/Final data/metarept.Rdata")
+saveRDS(metaamph, file = "Data/Final data/metaamph.Rdata")
 
 #### FIGURE 3 ####
 multiplot<-ggarrange(M,B,R,A, ncol = 2, nrow = 2, align = "v")
-tiff('~/New projects/Island rule/Results/Figures/Figure3.tif', res=300, width=3100, height=3000)
+tiff('Results/Figures/Figure3.tif', res=300, width=3100, height=3000)
 multiplot
 dev.off()
 
-###ECOLOGICAL HYPOTHESIS ANALYSES#####
+############################################################################
+# Testing several ecological hypotheses underlying insular size shifts #####
+############################################################################
 # MAMMALS####
 tic("Run all models for mammals")
 phylocor<-list(Binomial=mam_phylo_cor)
 logmass <- seq(from = min(mamdata$logmass), to = max(mamdata$logmass), length.out = 1000)
 
 #island area ####
-# meta2<-rma.mv(RR~logmass*Island_km2,V = Vmam, data=mamdata, random= RE,
+# metamam2<-rma.mv(RR~logmass*Island_km2,V = Vmam, data=mamdata, random= RE,
 #               R = phylocor,method = "REML") 
-# summary(meta2) 
+# summary(metamam2) 
 # 
-# saveRDS(meta2, file = "~/New projects/Island rule/Data/Final data/meta2.Rdata")
+# saveRDS(metamam2, file = "Data/Final data/metamam2.Rdata")
 # 
 
-meta2 <- readRDS(file = "~/New projects/Island rule/Data/Final data/meta2.Rdata")
+metamam2 <- readRDS(file = "Data/Final data/metamam2.Rdata")
 
-coef<-data.frame(b =meta2$b, lci = meta2$ci.lb, uci =  meta2$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Mammals/Coef/coef_area.csv")
+coef<-data.frame(b =metamam2$b, lci = metamam2$ci.lb, uci =  metamam2$ci.ub)
+write.csv(coef, "Results/Mammals/Coef/coef_area.csv")
 
 #extract Qm
-prednames<-row.names(meta2$beta)[-1]
+prednames<-row.names(metamam2$beta)[-1]
 
-test_1pred<-anova(meta2, btt = 2) 
-test_2pred<-anova(meta2, btt = 3) 
-test_int<-anova(meta2, btt = 4) 
+test_1pred<-anova(metamam2, btt = 2) 
+test_2pred<-anova(metamam2, btt = 3) 
+test_int<-anova(metamam2, btt = 4) 
 
-Qm_df<-t(data.frame(test_1pred[1],test_2pred[1], test_int[1], meta2$QM))
-Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2], test_int[2], meta2$QMp))
+Qm_df<-t(data.frame(test_1pred[1],test_2pred[1], test_int[1], metamam2$QM))
+Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2], test_int[2], metamam2$QMp))
 
 Qm_tot<-cbind(Qm_df,Qmp_df)
 
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Mammals/Coef/anova_area.csv")
+write.csv(Qm_tot, "Results/Mammals/Coef/anova_area.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
 Qmtext<-annotate(geom="text", x= 2.5, y= -0.8, label= Qm, size = 6)
 
 # Calculation R2
-mR2.func(meta2) #11.75
+mR2.func(metamam2) #11.75
 
 # island area 
 logmass <- seq(from = min(mamdata$logmass), to = max(mamdata$logmass), length.out = 1000)
 
 Island_km2<-quantile(mamdata$Island_km2, prob = 0.1) #63 km2
-s<-predict(meta2, newmods = cbind(logmass,Island_km2, logmass*Island_km2), addx=TRUE)
+s<-predict(metamam2, newmods = cbind(logmass,Island_km2, logmass*Island_km2), addx=TRUE)
 
 Island_km2<-quantile(mamdata$Island_km2, prob = 0.9) #147910.8
-l<-predict(meta2, newmods = cbind(logmass,Island_km2, logmass*Island_km2), addx=TRUE)
+l<-predict(metamam2, newmods = cbind(logmass,Island_km2, logmass*Island_km2), addx=TRUE)
 
 ### merge data frames and plot all together
 s<-data.frame(s)
@@ -273,51 +274,51 @@ Ma<-ggplot(mamdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-0.8,0.8, by=0.4), limits= c(-0.8,0.8))+
   ggtitle("") + labs(tag = "a")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Mammals/Hyp/area.tif")
+tiff(filename = "Results/Mammals/Hyp/area.tif")
 Ma
 dev.off()
 
 ##distance####
-# meta3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vmam,  data=mamdata,  random= RE,
+# metamam3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vmam,  data=mamdata,  random= RE,
 #               R = phylocor,method = "REML")  
-# summary(meta3) #QM(df = 3) = 22.9852, p-val < .0001
+# summary(metamam3) #QM(df = 3) = 22.9852, p-val < .0001
 # 
-# saveRDS(meta3, file = "~/New projects/Island rule/Data/Final data/meta3.Rdata")
+# saveRDS(metamam3, file = "Data/Final data/metamam3.Rdata")
 
-meta3 <- readRDS(file = "~/New projects/Island rule/Data/Final data/meta3.Rdata")
+metamam3 <- readRDS(file = "Data/Final data/metamam3.Rdata")
 
-coef<-data.frame(b =meta3$b, lci = meta3$ci.lb, uci =  meta3$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Mammals/Coef/coef_dist.csv")
+coef<-data.frame(b =metamam3$b, lci = metamam3$ci.lb, uci =  metamam3$ci.ub)
+write.csv(coef, "Results/Mammals/Coef/coef_dist.csv")
 
 #extract Qm
-prednames<-row.names(meta3$beta)[-1]
+prednames<-row.names(metamam3$beta)[-1]
 
-test_1pred<-anova(meta3, btt = 2) 
-test_2pred<-anova(meta3, btt = 3) 
-test_int<-anova(meta3, btt = 4) 
+test_1pred<-anova(metamam3, btt = 2) 
+test_2pred<-anova(metamam3, btt = 3) 
+test_int<-anova(metamam3, btt = 4) 
 
-Qm_df<-t(data.frame(test_1pred[1],test_2pred[1], test_int[1], meta3$QM))
-Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2], test_int[2], meta3$QMp))
+Qm_df<-t(data.frame(test_1pred[1],test_2pred[1], test_int[1], metamam3$QM))
+Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2], test_int[2], metamam3$QMp))
 
 Qm_tot<-cbind(Qm_df,Qmp_df)
 
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Mammals/Coef/anova_dist.csv")
+write.csv(Qm_tot, "Results/Mammals/Coef/anova_dist.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
 # Calculation R2
-mR2.func(meta3) 
+mR2.func(metamam3) 
 
 logmass <- seq(from = min(mamdata$logmass), to = max(mamdata$logmass), length.out = 1000)
 
 Dist_near_mainland<-quantile(mamdata$Dist_near_mainland, prob = 0.1) #63 km2
-s<-predict(meta2, newmods = cbind(logmass,Dist_near_mainland, logmass*Dist_near_mainland), addx=TRUE)
+s<-predict(metamam2, newmods = cbind(logmass,Dist_near_mainland, logmass*Dist_near_mainland), addx=TRUE)
 
 Dist_near_mainland<-quantile(mamdata$Dist_near_mainland, prob = 0.9) #147910.8
-l<-predict(meta2, newmods = cbind(logmass,Dist_near_mainland, logmass*Dist_near_mainland), addx=TRUE)
+l<-predict(metamam2, newmods = cbind(logmass,Dist_near_mainland, logmass*Dist_near_mainland), addx=TRUE)
 
 ### merge data frames and plot all together
 s<-data.frame(s)
@@ -346,45 +347,45 @@ Mb<-ggplot(mamdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-0.8,0.8, by=0.4), limits= c(-0.8,0.8))+
   ggtitle("") + labs(tag = "b")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Mammals/Hyp/distance.tif")
+tiff(filename = "Results/Mammals/Hyp/distance.tif")
 Mb
 dev.off()
 
 ##Island area and remoteness####
-# meta4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vmam,  data=mamdata, random= RE,
+# metamam4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vmam,  data=mamdata, random= RE,
 #               R = phylocor, method = "REML")  
-# summary(meta4)
+# summary(metamam4)
 # 
-# saveRDS(meta4, file = "~/New projects/Island rule/Data/Final data/meta4.Rdata")
+# saveRDS(metamam4, file = "Data/Final data/metamam4.Rdata")
 
-coef<-data.frame(b =meta4$b, lci = meta4$ci.lb, uci =  meta4$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Mammals/Coef/coef_dist_area.csv")
+coef<-data.frame(b =metamam4$b, lci = metamam4$ci.lb, uci =  metamam4$ci.ub)
+write.csv(coef, "Results/Mammals/Coef/coef_dist_area.csv")
 
 #extract Qm
-prednames<-row.names(meta4$beta)[-1]
+prednames<-row.names(metamam4$beta)[-1]
 prednames<-c(prednames,"logmass:dist & logmass:area")
 
-test_1pred<-anova(meta4, btt = 2) 
-test_2pred<-anova(meta4, btt = 3) 
-test_3pred<-anova(meta4, btt = 4) 
-test_int<-anova(meta4, btt = 5) 
-test_int2<-anova(meta4, btt = 6) 
-test_int3<-anova(meta4, btt = c(5,6)) 
+test_1pred<-anova(metamam4, btt = 2) 
+test_2pred<-anova(metamam4, btt = 3) 
+test_3pred<-anova(metamam4, btt = 4) 
+test_int<-anova(metamam4, btt = 5) 
+test_int2<-anova(metamam4, btt = 6) 
+test_int3<-anova(metamam4, btt = c(5,6)) 
 
-Qm_df<- t(data.frame(test_1pred[1],test_2pred[1],test_3pred[1],test_int[1], test_int2[1], test_int3[1], meta4$QM))
-Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2],test_3pred[2],test_int[2], test_int2[2], test_int3[2], meta4$QMp))
+Qm_df<- t(data.frame(test_1pred[1],test_2pred[1],test_3pred[1],test_int[1], test_int2[1], test_int3[1], metamam4$QM))
+Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2],test_3pred[2],test_int[2], test_int2[2], test_int3[2], metamam4$QMp))
 
 Qm_tot<-cbind(Qm_df,Qmp_df)
 
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Mammals/Coef/anova_dist_area.csv")
+write.csv(Qm_tot, "Results/Mammals/Coef/anova_dist_area.csv")
 
 Qm <- paste0("QM(df = 2) = ", round(as.numeric(test_int3[1]), digits = 3), ", p-val = ", round(as.numeric(test_int3[2]), digits = 3))
 
 # Calculation R2
-mR2.func(meta4) #12.3
+mR2.func(metamam4) #12.3
 
 logmass <- seq(from = min(mamdata$logmass), to = max(mamdata$logmass), length.out = 1000)
 
@@ -394,9 +395,9 @@ large_distance<-quantile(mamdata$Dist_near_mainland, prob = 0.9,names =FALSE) #1
 large_island<-quantile(mamdata$Island_km2, prob = 0.9, names =FALSE) #32900
 small_distance<-quantile(mamdata$Dist_near_mainland, prob = 0.1, names =FALSE) #1.5km
 
-l<-predict(meta4, newmods = cbind(logmass, large_distance, small_island,
+l<-predict(metamam4, newmods = cbind(logmass, large_distance, small_island,
                                   logmass*large_distance, logmass*small_island), addx=TRUE) 
-h<-predict(meta4, newmods = cbind(logmass,small_distance, large_island,
+h<-predict(metamam4, newmods = cbind(logmass,small_distance, large_island,
                                     logmass*small_distance, logmass*large_island), addx=TRUE)
 
 ### merge data frames and plot all together
@@ -427,46 +428,46 @@ Mc<-ggplot(mamdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-0.8,0.8, by=0.4), limits= c(-0.8,0.8))+
   ggtitle("") + labs(tag = "c")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Mammals/Hyp/distance_area.tif")
+tiff(filename = "Results/Mammals/Hyp/distance_area.tif")
 Mc
 dev.off()
 
 # diet ####
 # mamdata$guild2<- ifelse(mamdata$guild == "Carn", "Carn", "No Carn")
 # mamdata$guild2<- factor(mamdata$guild2)
-# meta5<-rma.mv(RR~logmass*guild2,V=Vmam,  data=mamdata,  random= RE,  
+# metamam5<-rma.mv(RR~logmass*guild2,V=Vmam,  data=mamdata,  random= RE,  
 #               R = phylocor, method = "REML")  
-# summary(meta5)
+# summary(metamam5)
 # 
-# saveRDS(meta5, file = "~/New projects/Island rule/Data/Final data/meta5.Rdata")
+# saveRDS(metamam5, file = "Data/Final data/metamam5.Rdata")
 
-coef<-data.frame(b =meta5$b, lci = meta5$ci.lb, uci =  meta5$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Mammals/Coef/coef_diet.csv")
+coef<-data.frame(b =metamam5$b, lci = metamam5$ci.lb, uci =  metamam5$ci.ub)
+write.csv(coef, "Results/Mammals/Coef/coef_diet.csv")
 
 #extract Qm
-prednames<-row.names(meta5$beta)[-1]
+prednames<-row.names(metamam5$beta)[-1]
 
-test_1pred<-anova(meta5, btt = 2) 
-test_2pred<-anova(meta5, btt = 3) 
-test_int<-anova(meta5, btt = 4) 
+test_1pred<-anova(metamam5, btt = 2) 
+test_2pred<-anova(metamam5, btt = 3) 
+test_int<-anova(metamam5, btt = 4) 
 
-Qm_df<-t(data.frame(test_1pred[1],test_2pred[1], test_int[1], meta5$QM))
-Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2], test_int[2], meta5$QMp))
+Qm_df<-t(data.frame(test_1pred[1],test_2pred[1], test_int[1], metamam5$QM))
+Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2], test_int[2], metamam5$QMp))
 
 Qm_tot<-cbind(Qm_df,Qmp_df)
 
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Mammals/Coef/anova_diet.csv")
+write.csv(Qm_tot, "Results/Mammals/Coef/anova_diet.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
 # Calculation R2
-mR2.func(meta5) #9.93
+mR2.func(metamam5) #9.93
 
-c<-predict(meta5, newmods = cbind(logmass, 0, 0), addx=TRUE)
-nc<-predict(meta5, newmods = cbind(logmass, 1, logmass), addx=TRUE)
+c<-predict(metamam5, newmods = cbind(logmass, 0, 0), addx=TRUE)
+nc<-predict(metamam5, newmods = cbind(logmass, 1, logmass), addx=TRUE)
 
 ### merge data frames and plot all together
 c<-data.frame(c)
@@ -497,48 +498,48 @@ Md<-ggplot(mamdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-0.8,0.8, by=0.4), limits= c(-0.8,0.8))+
   ggtitle("")+ labs(tag = "d")+ Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Mammals/Hyp/diet.tif")
+tiff(filename = "Results/Mammals/Hyp/diet.tif")
 Md
 dev.off()
 
 # temperature####
-# meta6<-rma.mv(RR~logmass*tmean,V=Vmam,  data=mamdata,random= RE,  
+# metamam6<-rma.mv(RR~logmass*tmean,V=Vmam,  data=mamdata,random= RE,  
 #                R = phylocor,method = "REML")  
-# summary(meta6) 
+# summary(metamam6) 
 # 
-# saveRDS(meta6, file = "~/New projects/Island rule/Data/Final data/meta6.Rdata")
+# saveRDS(metamam6, file = "Data/Final data/metamam6.Rdata")
 
-coef<-data.frame(b =meta6$b, lci = meta6$ci.lb, uci =  meta6$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Mammals/Coef/coef_tmean.csv")
+coef<-data.frame(b =metamam6$b, lci = metamam6$ci.lb, uci =  metamam6$ci.ub)
+write.csv(coef, "Results/Mammals/Coef/coef_tmean.csv")
 
 #extract Qm
-prednames<-row.names(meta6$beta)[-1]
+prednames<-row.names(metamam6$beta)[-1]
 
-test_1pred<-anova(meta6, btt = 2) 
-test_2pred<-anova(meta6, btt = 3) 
-test_int<-anova(meta6, btt = 4) 
+test_1pred<-anova(metamam6, btt = 2) 
+test_2pred<-anova(metamam6, btt = 3) 
+test_int<-anova(metamam6, btt = 4) 
 
-Qm_df<-t(data.frame(test_1pred[1],test_2pred[1], test_int[1], meta6$QM))
-Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2], test_int[2], meta6$QMp))
+Qm_df<-t(data.frame(test_1pred[1],test_2pred[1], test_int[1], metamam6$QM))
+Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2], test_int[2], metamam6$QMp))
 
 Qm_tot<-cbind(Qm_df,Qmp_df)
 
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Mammals/Coef/anova_tmean.csv")
+write.csv(Qm_tot, "Results/Mammals/Coef/anova_tmean.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
 # Calculation R2
-mR2.func(meta6) 
+mR2.func(metamam6) 
 
 #temperature
 tmean<-quantile(mamdata$tmean, prob = 0.9, names = FALSE) #27 degrees
-w<-predict(meta6, newmods = cbind(logmass, tmean, logmass*tmean), addx=TRUE) 
+w<-predict(metamam6, newmods = cbind(logmass, tmean, logmass*tmean), addx=TRUE) 
 
 tmean<-quantile(mamdata$tmean, prob = 0.1, names =FALSE) #6.1 degrees
-c<-predict(meta6, newmods = cbind(logmass, tmean,logmass*tmean), addx=TRUE) 
+c<-predict(metamam6, newmods = cbind(logmass, tmean,logmass*tmean), addx=TRUE) 
 
 ### merge data frames and plot all together
 w<-data.frame(w)
@@ -569,48 +570,48 @@ Me<-ggplot(mamdata)+ #geom_point(aes(logmass,RR), color = "grey",
   # ylim(-0.7,0.7)+
   ggtitle("") + labs(tag = "e")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Mammals/Hyp/tmean.tif") #interactive effect
+tiff(filename = "Results/Mammals/Hyp/tmean.tif") #interactive effect
 Me
 dev.off()
 
 # temperature intercept####
-# meta6b<-rma.mv(RR~logmass + tmean,V=Vmam,  data=mamdata,random= RE,  
+# metamam6b<-rma.mv(RR~logmass + tmean,V=Vmam,  data=mamdata,random= RE,  
 #               R = phylocor,method = "REML")  
-# summary(meta6b)
+# summary(metamam6b)
 # 
-# saveRDS(meta6b, file = "~/New projects/Island rule/Data/Final data/meta6b.Rdata")
+# saveRDS(metamam6b, file = "Data/Final data/metamam6b.Rdata")
 
-coef<-data.frame(b =meta6b$b, lci = meta6b$ci.lb, uci =  meta6b$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Mammals/Coef/coef_tmean_int.csv")
+coef<-data.frame(b =metamam6b$b, lci = metamam6b$ci.lb, uci =  metamam6b$ci.ub)
+write.csv(coef, "Results/Mammals/Coef/coef_tmean_int.csv")
 
 #extract Qm
-prednames<-row.names(meta6b$beta)[-1]
+prednames<-row.names(metamam6b$beta)[-1]
 
-test_1pred<-anova(meta6b, btt = 2) 
-test_2pred<-anova(meta6b, btt = 3) 
-# test_int<-anova(meta6b, btt = 4) 
+test_1pred<-anova(metamam6b, btt = 2) 
+test_2pred<-anova(metamam6b, btt = 3) 
+# test_int<-anova(metamam6b, btt = 4) 
 
-Qm_df<-t(data.frame(test_1pred[1],test_2pred[1], meta6b$QM))
-Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2], meta6b$QMp))
+Qm_df<-t(data.frame(test_1pred[1],test_2pred[1], metamam6b$QM))
+Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2], metamam6b$QMp))
 
 Qm_tot<-cbind(Qm_df,Qmp_df)
 
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Mammals/Coef/anova_tmean_int.csv")
+write.csv(Qm_tot, "Results/Mammals/Coef/anova_tmean_int.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_2pred[1]), digits = 3), ", p-val = ", round(as.numeric(test_2pred[2]), digits = 3))
 
 # Calculation R2
-mR2.func(meta6b) 
+mR2.func(metamam6b) 
 
 #temperature
 tmean<-quantile(mamdata$tmean, prob = 0.9, names = FALSE) #27 degrees
-w<-predict(meta6b, newmods = cbind(logmass, tmean), addx=TRUE) 
+w<-predict(metamam6b, newmods = cbind(logmass, tmean), addx=TRUE) 
 
 tmean<-quantile(mamdata$tmean, prob = 0.1, names =FALSE) #6.1 degrees
-c<-predict(meta6b, newmods = cbind(logmass, tmean), addx=TRUE) 
+c<-predict(metamam6b, newmods = cbind(logmass, tmean), addx=TRUE) 
 
 ### merge data frames and plot all together
 w<-data.frame(w)
@@ -641,48 +642,48 @@ Me2<-ggplot(mamdata)+ #geom_point(aes(logmass,RR), color = "grey",
   # ylim(-0.7,0.7)+
   ggtitle("") + labs(tag = "e")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Mammals/Hyp/tmean_int.tif") #interactive effect
+tiff(filename = "Results/Mammals/Hyp/tmean_int.tif") #interactive effect
 Me2
 dev.off()
 
 # temp seas####
-# meta7<-rma.mv(RR~logmass*tseas,V=Vmam,  data=mamdata,  random= RE,  
+# metamam7<-rma.mv(RR~logmass*tseas,V=Vmam,  data=mamdata,  random= RE,  
 #                R = phylocor,method = "REML")  
-# summary(meta7) 
+# summary(metamam7) 
 # 
-# saveRDS(meta7, file = "~/New projects/Island rule/Data/Final data/meta7.Rdata")
+# saveRDS(metamam7, file = "Data/Final data/metamam7.Rdata")
 
-coef<-data.frame(b =meta7$b, lci = meta7$ci.lb, uci =  meta7$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Mammals/Coef/coef_tseas.csv")
+coef<-data.frame(b =metamam7$b, lci = metamam7$ci.lb, uci =  metamam7$ci.ub)
+write.csv(coef, "Results/Mammals/Coef/coef_tseas.csv")
 
 #extract Qm
-prednames<-row.names(meta7$beta)[-1]
+prednames<-row.names(metamam7$beta)[-1]
 
-test_1pred<-anova(meta7, btt = 2) 
-test_2pred<-anova(meta7, btt = 3) 
-test_int<-anova(meta7, btt = 4) 
+test_1pred<-anova(metamam7, btt = 2) 
+test_2pred<-anova(metamam7, btt = 3) 
+test_int<-anova(metamam7, btt = 4) 
 
-Qm_df<-t(data.frame(test_1pred[1],test_2pred[1], test_int[1], meta7$QM))
-Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2], test_int[2], meta7$QMp))
+Qm_df<-t(data.frame(test_1pred[1],test_2pred[1], test_int[1], metamam7$QM))
+Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2], test_int[2], metamam7$QMp))
 
 Qm_tot<-cbind(Qm_df,Qmp_df)
 
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Mammals/Coef/anova_tseas.csv")
+write.csv(Qm_tot, "Results/Mammals/Coef/anova_tseas.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
 
 # Calculation R2
-mR2.func(meta7) 
+mR2.func(metamam7) 
 
 tseas<-quantile(mamdata$tseas, prob = 0.1, names=FALSE) #1.7
-l<-predict(meta7, newmods = cbind(logmass, tseas, logmass*tseas), addx=TRUE)
+l<-predict(metamam7, newmods = cbind(logmass, tseas, logmass*tseas), addx=TRUE)
 
 tseas<-quantile(mamdata$tseas, prob = 0.9, names=FALSE) #81.79
-h<-predict(meta7, newmods = cbind(logmass, tseas, logmass*tseas), addx=TRUE)
+h<-predict(metamam7, newmods = cbind(logmass, tseas, logmass*tseas), addx=TRUE)
 
 ### merge data frames and plot all together
 l<-data.frame(l)
@@ -713,47 +714,47 @@ Mf<-ggplot(mamdata)+ #geom_point(aes(logmass,RR), color = "grey",
   # ylim(-0.7,0.7)+
   ggtitle("")+ labs(tag = "f")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Mammals/Hyp/tseas.tif")
+tiff(filename = "Results/Mammals/Hyp/tseas.tif")
 Mf
 dev.off()
 
 # resource availability####
-# meta8<-rma.mv(RR~logmass*NDVI,V=Vmam,  data=mamdata,  random= RE,  
+# metamam8<-rma.mv(RR~logmass*NDVI,V=Vmam,  data=mamdata,  random= RE,  
 #               R = phylocor,method = "REML")  
-# summary(meta8)
+# summary(metamam8)
 # 
-# saveRDS(meta8, file = "~/New projects/Island rule/Data/Final data/meta8.Rdata")
+# saveRDS(metamam8, file = "Data/Final data/metamam8.Rdata")
 # 
-coef<-data.frame(b =meta8$b, lci = meta8$ci.lb, uci =  meta8$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Mammals/Coef/coef_ndvi.csv")
+coef<-data.frame(b =metamam8$b, lci = metamam8$ci.lb, uci =  metamam8$ci.ub)
+write.csv(coef, "Results/Mammals/Coef/coef_ndvi.csv")
 
 #extract Qm
-prednames<-row.names(meta8$beta)[-1]
+prednames<-row.names(metamam8$beta)[-1]
 
-test_1pred<-anova(meta8, btt = 2) 
-test_2pred<-anova(meta8, btt = 3) 
-test_int<-anova(meta8, btt = 4) 
+test_1pred<-anova(metamam8, btt = 2) 
+test_2pred<-anova(metamam8, btt = 3) 
+test_int<-anova(metamam8, btt = 4) 
 
-Qm_df<-t(data.frame(test_1pred[1],test_2pred[1], test_int[1], meta8$QM))
-Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2], test_int[2], meta8$QMp))
+Qm_df<-t(data.frame(test_1pred[1],test_2pred[1], test_int[1], metamam8$QM))
+Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2], test_int[2], metamam8$QMp))
 
 Qm_tot<-cbind(Qm_df,Qmp_df)
 
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Mammals/Coef/anova_ndvi.csv")
+write.csv(Qm_tot, "Results/Mammals/Coef/anova_ndvi.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
 # Calculation R2
-mR2.func(meta8)
+mR2.func(metamam8)
 
 NDVI<-quantile(mamdata$NDVI, prob = 0.1, names=FALSE) #22.38
-l<-predict(meta8, newmods = cbind(logmass, NDVI, logmass*NDVI), addx=TRUE)
+l<-predict(metamam8, newmods = cbind(logmass, NDVI, logmass*NDVI), addx=TRUE)
 
 NDVI<-quantile(mamdata$NDVI, prob = 0.9, names=FALSE) #87.09
-h<-predict(meta8, newmods = cbind(logmass, NDVI, logmass*NDVI), addx=TRUE)
+h<-predict(metamam8, newmods = cbind(logmass, NDVI, logmass*NDVI), addx=TRUE)
 
 ### merge data frames and plot all together
 l<-data.frame(l)
@@ -783,48 +784,48 @@ Mg<-ggplot(mamdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-0.8,0.8, by=0.4), limits= c(-0.8,0.8))+
   ggtitle("")+ labs(tag = "g")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Mammals/Hyp/ndvi.tif")
+tiff(filename = "Results/Mammals/Hyp/ndvi.tif")
 Mg
 dev.off()
 
 # seasonality in resources####
-# meta9<-rma.mv(RR~logmass*SDNDVI,V=Vmam,  data=mamdata,  random= RE,  
+# metamam9<-rma.mv(RR~logmass*SDNDVI,V=Vmam,  data=mamdata,  random= RE,  
 #                R = phylocor,method = "REML")  
-# summary(meta9)
+# summary(metamam9)
 # 
-# saveRDS(meta9, file = "~/New projects/Island rule/Data/Final data/meta9.Rdata")
+# saveRDS(metamam9, file = "Data/Final data/metamam9.Rdata")
 
-coef<-data.frame(b =meta9$b, lci = meta9$ci.lb, uci =  meta9$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Mammals/Coef/coef_sdndvi.csv")
+coef<-data.frame(b =metamam9$b, lci = metamam9$ci.lb, uci =  metamam9$ci.ub)
+write.csv(coef, "Results/Mammals/Coef/coef_sdndvi.csv")
 
 #extract Qm
-prednames<-row.names(meta9$beta)[-1]
+prednames<-row.names(metamam9$beta)[-1]
 
-test_1pred<-anova(meta9, btt = 2) 
-test_2pred<-anova(meta9, btt = 3) 
-test_int<-anova(meta9, btt = 4) 
+test_1pred<-anova(metamam9, btt = 2) 
+test_2pred<-anova(metamam9, btt = 3) 
+test_int<-anova(metamam9, btt = 4) 
 
-Qm_df<-t(data.frame(test_1pred[1],test_2pred[1], test_int[1], meta9$QM))
-Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2], test_int[2], meta9$QMp))
+Qm_df<-t(data.frame(test_1pred[1],test_2pred[1], test_int[1], metamam9$QM))
+Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2], test_int[2], metamam9$QMp))
 
 Qm_tot<-cbind(Qm_df,Qmp_df)
 
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Mammals/Coef/anova_sdndvi.csv")
+write.csv(Qm_tot, "Results/Mammals/Coef/anova_sdndvi.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
 
 # Calculation R2
-mR2.func(meta9)
+mR2.func(metamam9)
 
 SDNDVI<-quantile(mamdata$SDNDVI, prob = 0.1, names=FALSE) #22.38
-l<-predict(meta9, newmods = cbind(logmass, SDNDVI, logmass*SDNDVI), addx=TRUE)
+l<-predict(metamam9, newmods = cbind(logmass, SDNDVI, logmass*SDNDVI), addx=TRUE)
 
 SDNDVI<-quantile(mamdata$SDNDVI, prob = 0.9, names=FALSE) #87.09
-h<-predict(meta9, newmods = cbind(logmass, SDNDVI, logmass*SDNDVI), addx=TRUE)
+h<-predict(metamam9, newmods = cbind(logmass, SDNDVI, logmass*SDNDVI), addx=TRUE)
 
 ### merge data frames and plot all together
 l<-data.frame(l)
@@ -854,83 +855,13 @@ Mh<-ggplot(mamdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-0.8,0.8, by=0.4), limits= c(-0.8,0.8))+
   ggtitle("")+ labs(tag = "h")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Mammals/Hyp/sdndvi.tif")
+tiff(filename = "Results/Mammals/Hyp/sdndvi.tif")
 Mh
-dev.off()
-
-#### seasonality in resources intercept ####
-# metamam10<-rma.mv(RR~logmass + SDNDVI,V=Vmam,  data= mamdata,  random= RE,  
-#                    R = phylocor, method = "REML")  
-# summary(metamam10)
-# 
-# saveRDS(metamam10, file = "~/New projects/Island rule/Data/Final data/metamam10.Rdata")
-
-coef<-data.frame(b =metamam10$b, lci = metamam10$ci.lb, uci =  metamam10$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Mammals/Coef/coef_sdndvi_int.csv", row.names = FALSE)
-
-#extract Qm
-prednames<-row.names(metamam10$beta)[-1]
-
-test_1pred<-anova(metamam10, btt = 2) 
-test_2pred<-anova(metamam10, btt = 3) 
-# test_int<-anova(meta6, btt = 4) 
-
-Qm_df<-t(data.frame(test_1pred[1],test_2pred[1], metamam10$QM))
-Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2], metamam10$QMp))
-
-Qm_tot<-cbind(Qm_df,Qmp_df)
-
-colnames(Qm_tot)<-c("Qm", "p")
-rownames(Qm_tot)<-c(prednames, "fullmodel")
-
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Mammals/Coef/anova_sdndvi_int.csv")
-
-Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_2pred[1]), digits = 3), ", p-val = ", round(as.numeric(test_2pred[2]), digits = 3))
-
-Qmtext<- annotate(geom="text", x= 0.2, y= -1.6, label= Qm, size = 6)
-
-# Calculation R2
-mR2.func(metamam10) 
-
-SDNDVI<-quantile(mamdata$SDNDVI, prob = 0.1, names=FALSE) 
-l<-predict(metamam10, newmods = cbind(logmass, SDNDVI), addx=TRUE)
-
-SDNDVI<-quantile(mamdata$SDNDVI, prob = 0.9, names=FALSE) 
-h<-predict(metamam10, newmods = cbind(logmass, SDNDVI), addx=TRUE)
-
-### merge data frames and plot all together
-l<-data.frame(l)
-l$Islandtype<-rep("Low", nrow(l))
-h<-data.frame(h)
-h$Islandtype<-rep("High", nrow(h))
-
-df<-rbind(l,h) #all islands
-
-df$Islandtype<-as.factor(df$Islandtype)
-df$logmass<-df$X.logmass
-
-colpalette<-c("Low" = "#9966FF", "High" = "#E69F00")
-
-Mh2<-ggplot(mamdata)+ #geom_point(aes(logmass,RR), color = "grey",
-  #     size = size,shape=16, 
-  #     alpha=I(.3)) +scale_shape_identity()+
-  geom_hline(yintercept= 0, size=1.2, linetype="dashed", color="dark gray")+theme_bw(base_size=18) +
-  geom_line(data=df,aes(logmass,pred,colour=Islandtype, group = Islandtype), size = 1)+
-  geom_ribbon(data=df,aes(logmass,ymin= ci.lb ,ymax=ci.ub ,fill=Islandtype, group = Islandtype), alpha = I(.5))+
-  scale_colour_manual(values = colpalette) + scale_fill_manual(values = colpalette)+
-  theme(element_blank(), legend.position = c(0.70,0.86), axis.text=element_text(size=18))+ 
-  guides(fill=guide_legend(title="Resource seasonality"),colour=guide_legend(title="Resource seasonality"))+ylab("lnRR")+
-  xlab("log10(mass mainland (g))")+ #scale_x_continuous(breaks=seq(0,6,1)) +
-  scale_y_continuous(breaks=seq(-0.8,0.8, by=0.4), limits= c(-0.8,0.8))+
-  ggtitle("") + labs(tag = "h") + Qmtext
-
-tiff(filename = "~/New projects/Island rule/Results/Mammals/Hyp/sdndvi_int.tif")
-Mh2
 dev.off()
 
 # multiplot####
 multimam<-ggarrange(Ma,Mb,Mc,Md,Me2,Mf,Mg,Mh, ncol = 2, nrow = 4, align = "v")
-tiff('~/New projects/Island rule/Results/Figures/Figure_hyp_mam_upd1.tif', res=300, width=3500, height=7000, compression = "lzw")
+tiff('Results/Figures/Figure_hyp_mam_upd.tif', res=300, width=3500, height=7000, compression = "lzw")
 multimam
 dev.off()
 
@@ -946,10 +877,10 @@ logmass <- seq(from = min(birddata$logmass), to = max(birddata$logmass), length.
 #               R = phylocor,method = "REML") 
 # summary(metabird2) 
 # 
-# saveRDS(metabird2, file = "~/New projects/Island rule/Data/Final data/metabird2.Rdata")
+# saveRDS(metabird2, file = "Data/Final data/metabird2.Rdata")
 
 coef<-data.frame(b =metabird2$b, lci = metabird2$ci.lb, uci =  metabird2$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Birds/Coef/coef_area.csv")
+write.csv(coef, "Results/Birds/Coef/coef_area.csv")
 
 #extract Qm
 prednames<-row.names(metabird2$beta)[-1]
@@ -966,7 +897,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Birds/Coef/anova_area.csv")
+write.csv(Qm_tot, "Results/Birds/Coef/anova_area.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -1009,7 +940,7 @@ Ba<-ggplot(birddata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-0.8,0.8, by=0.4), limits= c(-0.8,0.8))+
   ggtitle("") + labs(tag = "a")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Birds/Hyp/area.tif")
+tiff(filename = "Results/Birds/Hyp/area.tif")
 Ba
 dev.off()
 
@@ -1018,12 +949,12 @@ dev.off()
 #               R = phylocor,method = "REML")  
 # summary(metabird3) 
 # 
-# saveRDS(metabird3, file = "~/New projects/Island rule/Data/Final data/metabird3.Rdata")
+# saveRDS(metabird3, file = "Data/Final data/metabird3.Rdata")
 
-metabird3 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metabird3.Rdata")
+metabird3 <- readRDS(file = "Data/Final data/metabird3.Rdata")
 
 coef<-data.frame(b =metabird3$b, lci = metabird3$ci.lb, uci =  metabird3$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Birds/Coef/coef_dist.csv")
+write.csv(coef, "Results/Birds/Coef/coef_dist.csv")
 
 #extract Qm
 prednames<-row.names(metabird3$beta)[-1]
@@ -1040,7 +971,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Birds/Coef/anova_dist.csv")
+write.csv(Qm_tot, "Results/Birds/Coef/anova_dist.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -1082,7 +1013,7 @@ Bb<-ggplot(birddata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-0.8,0.8, by=0.4), limits= c(-0.8,0.8))+
   ggtitle("") + labs(tag = "b")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Birds/Hyp/distance.tif")
+tiff(filename = "Results/Birds/Hyp/distance.tif")
 Bb
 dev.off()
 
@@ -1091,12 +1022,12 @@ dev.off()
 #               R = phylocor, method = "REML")  
 # summary(metabird4)
 # 
-# saveRDS(metabird4, file = "~/New projects/Island rule/Data/Final data/metabird4.Rdata")
+# saveRDS(metabird4, file = "Data/Final data/metabird4.Rdata")
 
-metabird4 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metabird4.Rdata")
+metabird4 <- readRDS(file = "Data/Final data/metabird4.Rdata")
 
 coef<-data.frame(b =metabird4$b, lci = metabird4$ci.lb, uci =  metabird4$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Birds/Coef/coef_dist_area.csv")
+write.csv(coef, "Results/Birds/Coef/coef_dist_area.csv")
 
 #extract Qm
 prednames<-row.names(metabird4$beta)[-1]
@@ -1117,7 +1048,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Birds/Coef/anova_dist_area.csv")
+write.csv(Qm_tot, "Results/Birds/Coef/anova_dist_area.csv")
 
 Qm <- paste0("QM(df = 2) = ", round(as.numeric(test_int3[1]), digits = 3), ", p-val = ", round(as.numeric(test_int3[2]), digits = 3))
 
@@ -1165,7 +1096,7 @@ Bc<-ggplot(birddata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-0.8,0.8, by=0.4), limits= c(-0.8,0.8))+
   ggtitle("") + labs(tag = "c")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Birds/Hyp/distance_area.tif")
+tiff(filename = "Results/Birds/Hyp/distance_area.tif")
 Bc
 dev.off()
 
@@ -1176,10 +1107,10 @@ dev.off()
 #               R = phylocor, method = "REML")  
 # summary(metabird5)
 # 
-# saveRDS(metabird5, file = "~/New projects/Island rule/Data/Final data/metabird5.Rdata")
+# saveRDS(metabird5, file = "Data/Final data/metabird5.Rdata")
 
 coef<-data.frame(b =metabird5$b, lci = metabird5$ci.lb, uci =  metabird5$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Birds/Coef/coef_diet.csv")
+write.csv(coef, "Results/Birds/Coef/coef_diet.csv")
 
 #extract Qm
 prednames<-row.names(metabird5$beta)[-1]
@@ -1196,7 +1127,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Birds/Coef/anova_diet.csv")
+write.csv(Qm_tot, "Results/Birds/Coef/anova_diet.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -1235,7 +1166,7 @@ Bd<-ggplot(birddata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-0.8,0.8, by=0.4), limits= c(-0.8,0.8))+
   ggtitle("")+ labs(tag = "d")+ Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Birds/Hyp/diet.tif")
+tiff(filename = "Results/Birds/Hyp/diet.tif")
 Bd
 dev.off()
 
@@ -1244,10 +1175,10 @@ dev.off()
 #               R = phylocor,method = "REML")  
 # summary(metabird6) 
 # 
-# saveRDS(metabird6, file = "~/New projects/Island rule/Data/Final data/metabird6.Rdata")
+# saveRDS(metabird6, file = "Data/Final data/metabird6.Rdata")
 
 coef<-data.frame(b =metabird6$b, lci = metabird6$ci.lb, uci =  metabird6$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Birds/Coef/coef_tmean.csv")
+write.csv(coef, "Results/Birds/Coef/coef_tmean.csv")
 
 #extract Qm
 prednames<-row.names(metabird6$beta)[-1]
@@ -1264,7 +1195,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Birds/Coef/anova_tmean.csv")
+write.csv(Qm_tot, "Results/Birds/Coef/anova_tmean.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -1307,7 +1238,7 @@ Be<-ggplot(birddata)+ #geom_point(aes(logmass,RR), color = "grey",
   # ylim(-0.7,0.7)+
   ggtitle("") + labs(tag = "e")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Birds/Hyp/tmean.tif") #interactive effect
+tiff(filename = "Results/Birds/Hyp/tmean.tif") #interactive effect
 Be
 dev.off()
 
@@ -1316,12 +1247,12 @@ dev.off()
 #                R = phylocor,method = "REML")  
 # summary(metabird6b)
 # 
-# saveRDS(metabird6b, file = "~/New projects/Island rule/Data/Final data/metabird6b.Rdata")
+# saveRDS(metabird6b, file = "Data/Final data/metabird6b.Rdata")
 
-metabird6b <- readRDS(file = "~/New projects/Island rule/Data/Final data/metabird6b.Rdata")
+metabird6b <- readRDS(file = "Data/Final data/metabird6b.Rdata")
 
 coef<-data.frame(b =metabird6b$b, lci = metabird6b$ci.lb, uci =  metabird6b$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Birds/Coef/coef_tmean_int.csv")
+write.csv(coef, "Results/Birds/Coef/coef_tmean_int.csv")
 
 #extract Qm
 prednames<-row.names(metabird6b$beta)[-1]
@@ -1338,7 +1269,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Birds/Coef/anova_tmean_int.csv")
+write.csv(Qm_tot, "Results/Birds/Coef/anova_tmean_int.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_2pred[1]), digits = 3), ", p-val = ", round(as.numeric(test_2pred[2]), digits = 3))
 
@@ -1381,7 +1312,7 @@ Be2<-ggplot(birddata)+ #geom_point(aes(logmass,RR), color = "grey",
   # ylim(-0.7,0.7)+
   ggtitle("") + labs(tag = "e")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Birds/Hyp/tmean_int.tif") #interactive effect
+tiff(filename = "Results/Birds/Hyp/tmean_int.tif") #interactive effect
 Be2
 dev.off()
 
@@ -1390,10 +1321,10 @@ dev.off()
 #               R = phylocor,method = "REML")  
 # summary(metabird7) 
 # 
-# saveRDS(metabird7, file = "~/New projects/Island rule/Data/Final data/metabird7.Rdata")
+# saveRDS(metabird7, file = "Data/Final data/metabird7.Rdata")
 
 coef<-data.frame(b =metabird7$b, lci = metabird7$ci.lb, uci =  metabird7$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Birds/Coef/coef_tseas.csv")
+write.csv(coef, "Results/Birds/Coef/coef_tseas.csv")
 
 #extract Qm
 prednames<-row.names(metabird7$beta)[-1]
@@ -1410,7 +1341,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Birds/Coef/anova_tseas.csv")
+write.csv(Qm_tot, "Results/Birds/Coef/anova_tseas.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -1452,7 +1383,7 @@ Bf<-ggplot(birddata)+ #geom_point(aes(logmass,RR), color = "grey",
   # ylim(-0.7,0.7)+
   ggtitle("")+ labs(tag = "f")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Birds/Hyp/tseas.tif")
+tiff(filename = "Results/Birds/Hyp/tseas.tif")
 Bf
 dev.off()
 
@@ -1461,10 +1392,10 @@ dev.off()
 #               R = phylocor,method = "REML")  
 # summary(metabird8)
 # 
-# saveRDS(metabird8, file = "~/New projects/Island rule/Data/Final data/metabird8.Rdata")
+# saveRDS(metabird8, file = "Data/Final data/metabird8.Rdata")
 
 coef<-data.frame(b =metabird8$b, lci = metabird8$ci.lb, uci =  metabird8$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Birds/Coef/coef_ndvi.csv")
+write.csv(coef, "Results/Birds/Coef/coef_ndvi.csv")
 
 #extract Qm
 prednames<-row.names(metabird8$beta)[-1]
@@ -1481,7 +1412,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Birds/Coef/anova_ndvi.csv")
+write.csv(Qm_tot, "Results/Birds/Coef/anova_ndvi.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -1522,7 +1453,7 @@ Bg<-ggplot(birddata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-0.8,0.8, by=0.4), limits= c(-0.8,0.8))+
   ggtitle("")+ labs(tag = "g")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Birds/Hyp/ndvi.tif")
+tiff(filename = "Results/Birds/Hyp/ndvi.tif")
 Bg
 dev.off()
 
@@ -1531,12 +1462,12 @@ dev.off()
 #               R = phylocor,method = "REML")  
 # summary(metabird9)
 # 
-# saveRDS(metabird9, file = "~/New projects/Island rule/Data/Final data/metabird9.Rdata")
+# saveRDS(metabird9, file = "Data/Final data/metabird9.Rdata")
 
-metabird9 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metabird9.Rdata")
+metabird9 <- readRDS(file = "Data/Final data/metabird9.Rdata")
 
 coef<-data.frame(b =metabird9$b, lci = metabird9$ci.lb, uci =  metabird9$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Birds/Coef/coef_sdndvi.csv")
+write.csv(coef, "Results/Birds/Coef/coef_sdndvi.csv")
 
 #extract Qm
 prednames<-row.names(metabird9$beta)[-1]
@@ -1553,7 +1484,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Birds/Coef/anova_sdndvi.csv")
+write.csv(Qm_tot, "Results/Birds/Coef/anova_sdndvi.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -1594,14 +1525,14 @@ Bh<-ggplot(birddata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-0.8,0.8, by=0.4), limits= c(-0.8,0.8))+
   ggtitle("")+ labs(tag = "h")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Birds/Hyp/sdndvi.tif")
+tiff(filename = "Results/Birds/Hyp/sdndvi.tif")
 Bh
 dev.off()
 
 
 # multiplot####
 multibird<-ggarrange(Ba,Bb,Bc,Bd,Be2,Bf,Bg,Bh, ncol = 2, nrow = 4, align = "v")
-tiff('~/New projects/Island rule/Results/Figures/Figure_hyp_birds_upd.tif', res=300, width=3500, height=7000, compression = "lzw")
+tiff('Results/Figures/Figure_hyp_birds_upd.tif', res=300, width=3500, height=7000, compression = "lzw")
 multibird
 dev.off()
 toc() #
@@ -1616,12 +1547,12 @@ logmass <- seq(from = min(reptdata$logmass), to = max(reptdata$logmass), length.
 #                   R = phylocor,method = "REML") 
 # summary(metarept2) 
 # 
-# saveRDS(metarept2, file = "~/New projects/Island rule/Data/Final data/metarept2.Rdata")
+# saveRDS(metarept2, file = "Data/Final data/metarept2.Rdata")
 
-metarept2 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metarept2.Rdata")
+metarept2 <- readRDS(file = "Data/Final data/metarept2.Rdata")
 
 coef<-data.frame(b =metarept2$b, lci = metarept2$ci.lb, uci =  metarept2$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Reptiles/Coef/coef_area.csv", row.names = FALSE)
+write.csv(coef, "Results/Reptiles/Coef/coef_area.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metarept2$beta)[-1]
@@ -1638,7 +1569,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Reptiles/Coef/anova_area.csv")
+write.csv(Qm_tot, "Results/Reptiles/Coef/anova_area.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -1681,7 +1612,7 @@ Ra<-ggplot(reptdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-2.4,2.4, by=0.6), limits= c(-2.4,2.4))+
   ggtitle("") + labs(tag = "a")+ Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Reptiles/Hyp/area.tif")
+tiff(filename = "Results/Reptiles/Hyp/area.tif")
 Ra
 dev.off()
 
@@ -1690,12 +1621,12 @@ dev.off()
 #                   R = phylocor,method = "REML")  
 # summary(metarept3) #QM(df = 3) = 22.9852, p-val < .0001
 # 
-# saveRDS(metarept3, file = "~/New projects/Island rule/Data/Final data/metarept3.Rdata")
+# saveRDS(metarept3, file = "Data/Final data/metarept3.Rdata")
 
-metarept3 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metarept3.Rdata")
+metarept3 <- readRDS(file = "Data/Final data/metarept3.Rdata")
 
 coef<-data.frame(b =metarept3$b, lci = metarept3$ci.lb, uci =  metarept3$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Reptiles/Coef/coef_dist.csv", row.names = FALSE)
+write.csv(coef, "Results/Reptiles/Coef/coef_dist.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metarept3$beta)[-1]
@@ -1712,7 +1643,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Reptiles/Coef/anova_dist.csv")
+write.csv(Qm_tot, "Results/Reptiles/Coef/anova_dist.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -1754,7 +1685,7 @@ Rb<-ggplot(reptdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-2.4,2.4, by=0.6), limits= c(-2.4,2.4))+
   ggtitle("") + labs(tag = "b")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Reptiles/Hyp/distance.tif")
+tiff(filename = "Results/Reptiles/Hyp/distance.tif")
 Rb
 dev.off()
 
@@ -1763,12 +1694,12 @@ dev.off()
 #                   R = phylocor, method = "REML")  
 # summary(metarept4)
 # 
-# saveRDS(metarept4, file = "~/New projects/Island rule/Data/Final data/metarept4.Rdata")
+# saveRDS(metarept4, file = "Data/Final data/metarept4.Rdata")
 
-metarept4 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metarept4.Rdata")
+metarept4 <- readRDS(file = "Data/Final data/metarept4.Rdata")
 
 coef<-data.frame(b =metarept4$b, lci = metarept4$ci.lb, uci =  metarept4$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Reptiles/Coef/coef_dist_area.csv", row.names = FALSE)
+write.csv(coef, "Results/Reptiles/Coef/coef_dist_area.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metarept4$beta)[-1]
@@ -1789,7 +1720,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Reptiles/Coef/anova_dist_area.csv")
+write.csv(Qm_tot, "Results/Reptiles/Coef/anova_dist_area.csv")
 
 Qm <- paste0("QM(df = 2) = ", round(as.numeric(test_int3[1]), digits = 3), ", p-val = ", round(as.numeric(test_int3[2]), digits = 3))
 
@@ -1837,7 +1768,7 @@ Rc<-ggplot(reptdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-2.4,2.4, by=0.6), limits= c(-2.4,2.4))+
   ggtitle("") + labs(tag = "c")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Reptiles/Hyp/distance_area.tif")
+tiff(filename = "Results/Reptiles/Hyp/distance_area.tif")
 Rc
 dev.off()
 
@@ -1848,12 +1779,12 @@ dev.off()
 #                   R = phylocor, method = "REML")  
 # summary(metarept5)
 # 
-# saveRDS(metarept5, file = "~/New projects/Island rule/Data/Final data/metarept5.Rdata")
+# saveRDS(metarept5, file = "Data/Final data/metarept5.Rdata")
 
-metarept5 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metarept5.Rdata")
+metarept5 <- readRDS(file = "Data/Final data/metarept5.Rdata")
 
 coef<-data.frame(b =metarept5$b, lci = metarept5$ci.lb, uci =  metarept5$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Reptiles/Coef/coef_diet.csv", row.names = FALSE)
+write.csv(coef, "Results/Reptiles/Coef/coef_diet.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metarept5$beta)[-1]
@@ -1870,7 +1801,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Reptiles/Coef/anova_diet.csv")
+write.csv(Qm_tot, "Results/Reptiles/Coef/anova_diet.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -1909,7 +1840,7 @@ Rd<-ggplot(reptdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-2.4,2.4, by=0.6), limits= c(-2.4,2.4))+
   ggtitle("")+ labs(tag = "d")+ Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Reptiles/Hyp/diet.tif")
+tiff(filename = "Results/Reptiles/Hyp/diet.tif")
 Rd
 dev.off()
 
@@ -1918,12 +1849,12 @@ dev.off()
 #                   R = phylocor,method = "REML")  
 # summary(metarept6) 
 # 
-# saveRDS(metarept6, file = "~/New projects/Island rule/Data/Final data/metarept6.Rdata")
+# saveRDS(metarept6, file = "Data/Final data/metarept6.Rdata")
 
-metarept6 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metarept6.Rdata")
+metarept6 <- readRDS(file = "Data/Final data/metarept6.Rdata")
 
 coef<-data.frame(b =metarept6$b, lci = metarept6$ci.lb, uci =  metarept6$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Reptiles/Coef/coef_tmean.csv", row.names = FALSE)
+write.csv(coef, "Results/Reptiles/Coef/coef_tmean.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metarept6$beta)[-1]
@@ -1940,7 +1871,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Reptiles/Coef/anova_tmean.csv")
+write.csv(Qm_tot, "Results/Reptiles/Coef/anova_tmean.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -1983,7 +1914,7 @@ Re<-ggplot(reptdata)+ #geom_point(aes(logmass,RR), color = "grey",
   # ylim(-0.7,0.7)+
   ggtitle("") + labs(tag = "e")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Reptiles/Hyp/tmean.tif") #interactive effect
+tiff(filename = "Results/Reptiles/Hyp/tmean.tif") #interactive effect
 Re
 dev.off()
 
@@ -1992,12 +1923,12 @@ dev.off()
 #                    R = phylocor,method = "REML")  
 # summary(metarept6b)
 # 
-# saveRDS(metarept6b, file = "~/New projects/Island rule/Data/Final data/metarept6b.Rdata")
+# saveRDS(metarept6b, file = "Data/Final data/metarept6b.Rdata")
 
-metarept6b <- readRDS(file = "~/New projects/Island rule/Data/Final data/metarept6b.Rdata")
+metarept6b <- readRDS(file = "Data/Final data/metarept6b.Rdata")
 
 coef<-data.frame(b =metarept6b$b, lci = metarept6b$ci.lb, uci =  metarept6b$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Reptiles/Coef/coef_tmean_int.csv", row.names = FALSE)
+write.csv(coef, "Results/Reptiles/Coef/coef_tmean_int.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metarept6b$beta)[-1]
@@ -2014,7 +1945,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Reptiles/Coef/anova_tmean_int.csv")
+write.csv(Qm_tot, "Results/Reptiles/Coef/anova_tmean_int.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_2pred[1]), digits = 3), ", p-val = ", round(as.numeric(test_2pred[2]), digits = 3))
 
@@ -2057,7 +1988,7 @@ Re2<-ggplot(reptdata)+ #geom_point(aes(logmass,RR), color = "grey",
   # ylim(-0.7,0.7)+
   ggtitle("") + labs(tag = "e")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Reptiles/Hyp/tmean_int.tif") #interactive effect
+tiff(filename = "Results/Reptiles/Hyp/tmean_int.tif") #interactive effect
 Re2
 dev.off()
 
@@ -2066,12 +1997,12 @@ dev.off()
 #                   R = phylocor,method = "REML")  
 # summary(metarept7) 
 # 
-# saveRDS(metarept7, file = "~/New projects/Island rule/Data/Final data/metarept7.Rdata")
+# saveRDS(metarept7, file = "Data/Final data/metarept7.Rdata")
 
-metarept7 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metarept7.Rdata")
+metarept7 <- readRDS(file = "Data/Final data/metarept7.Rdata")
 
 coef<-data.frame(b =metarept7$b, lci = metarept7$ci.lb, uci =  metarept7$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Reptiles/Coef/coef_tseas.csv", row.names = FALSE)
+write.csv(coef, "Results/Reptiles/Coef/coef_tseas.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metarept7$beta)[-1]
@@ -2088,7 +2019,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Reptiles/Coef/anova_tseas.csv")
+write.csv(Qm_tot, "Results/Reptiles/Coef/anova_tseas.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -2130,7 +2061,7 @@ Rf<-ggplot(reptdata)+ #geom_point(aes(logmass,RR), color = "grey",
   # ylim(-0.7,0.7)+
   ggtitle("")+ labs(tag = "f")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Reptiles/Hyp/tseas.tif")
+tiff(filename = "Results/Reptiles/Hyp/tseas.tif")
 Rf
 dev.off()
 
@@ -2139,13 +2070,13 @@ dev.off()
 #                   R = phylocor,method = "REML")  
 # summary(metarept8)
 # 
-# saveRDS(metarept8, file = "~/New projects/Island rule/Data/Final data/metarept8.Rdata")
+# saveRDS(metarept8, file = "Data/Final data/metarept8.Rdata")
 # 
 
-metarept8 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metarept8.Rdata")
+metarept8 <- readRDS(file = "Data/Final data/metarept8.Rdata")
 
 coef<-data.frame(b =metarept8$b, lci = metarept8$ci.lb, uci =  metarept8$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Reptiles/Coef/coef_ndvi.csv", row.names = FALSE)
+write.csv(coef, "Results/Reptiles/Coef/coef_ndvi.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metarept8$beta)[-1]
@@ -2162,7 +2093,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Reptiles/Coef/anova_ndvi.csv")
+write.csv(Qm_tot, "Results/Reptiles/Coef/anova_ndvi.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -2203,7 +2134,7 @@ Rg<-ggplot(reptdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-2.4,2.4, by=0.6), limits= c(-2.4,2.4))+
   ggtitle("")+ labs(tag = "g")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Reptiles/Hyp/ndvi.tif")
+tiff(filename = "Results/Reptiles/Hyp/ndvi.tif")
 Rg
 dev.off()
 
@@ -2212,12 +2143,12 @@ dev.off()
 #                   R = phylocor,method = "REML")  
 # summary(metarept9)
 # 
-# saveRDS(metarept9, file = "~/New projects/Island rule/Data/Final data/metarept9.Rdata")
+# saveRDS(metarept9, file = "Data/Final data/metarept9.Rdata")
 
-metarept9 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metarept9.Rdata")
+metarept9 <- readRDS(file = "Data/Final data/metarept9.Rdata")
 
 coef<-data.frame(b =metarept9$b, lci = metarept9$ci.lb, uci =  metarept9$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Reptiles/Coef/coef_sdndvi.csv", row.names = FALSE)
+write.csv(coef, "Results/Reptiles/Coef/coef_sdndvi.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metarept9$beta)[-1]
@@ -2234,7 +2165,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Reptiles/Coef/anova_sdndvi.csv")
+write.csv(Qm_tot, "Results/Reptiles/Coef/anova_sdndvi.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -2276,13 +2207,13 @@ Rh<-ggplot(reptdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-2.4,2.4, by=0.6), limits= c(-2.4,2.4))+
   ggtitle("")+ labs(tag = "h")+Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Reptiles/Hyp/sdndvi.tif")
+tiff(filename = "Results/Reptiles/Hyp/sdndvi.tif")
 Rh
 dev.off()
 
 # multiplot####
 multirept<-ggarrange(Ra,Rb,Rc,Rd,Re,Rf,Rg,Rh, ncol = 2, nrow = 4, align = "v")
-tiff('~/New projects/Island rule/Results/Figures/Figure_hyp_rept_upd.tif', res=300, width=3500, height=7000, compression = "lzw")
+tiff('Results/Figures/Figure_hyp_rept_upd.tif', res=300, width=3500, height=7000, compression = "lzw")
 multirept
 dev.off()
 toc()
@@ -2297,12 +2228,12 @@ logmass <- seq(from = min(amphdata$logmass), to = max(amphdata$logmass), length.
 #                   R = phylocor,method = "REML") 
 # summary(metaamph2) 
 # 
-# saveRDS(metaamph2, file = "~/New projects/Island rule/Data/Final data/metaamph2.Rdata")
+# saveRDS(metaamph2, file = "Data/Final data/metaamph2.Rdata")
 
-metaamph2 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metaamph2.Rdata")
+metaamph2 <- readRDS(file = "Data/Final data/metaamph2.Rdata")
 
 coef<-data.frame(b =metaamph2$b, lci = metaamph2$ci.lb, uci =  metaamph2$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Amphibians/Coef/coef_area.csv", row.names = FALSE)
+write.csv(coef, "Results/Amphibians/Coef/coef_area.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metaamph2$beta)[-1]
@@ -2319,7 +2250,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Amphibians/Coef/anova_area.csv")
+write.csv(Qm_tot, "Results/Amphibians/Coef/anova_area.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -2360,7 +2291,7 @@ Aa<-ggplot(amphdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-1.6,1.6, by=0.4), limits= c(-1.6,1.6))+
   ggtitle("") + labs(tag = "a") + Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Amphibians/Hyp/area.tif")
+tiff(filename = "Results/Amphibians/Hyp/area.tif")
 Aa
 dev.off()
 
@@ -2369,12 +2300,12 @@ dev.off()
 #                   R = phylocor,method = "REML")  
 # summary(metaamph3) 
 # 
-# saveRDS(metaamph3, file = "~/New projects/Island rule/Data/Final data/metaamph3.Rdata")
+# saveRDS(metaamph3, file = "Data/Final data/metaamph3.Rdata")
 
-metaamph3 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metaamph3.Rdata")
+metaamph3 <- readRDS(file = "Data/Final data/metaamph3.Rdata")
 
 coef<-data.frame(b =metaamph3$b, lci = metaamph3$ci.lb, uci =  metaamph3$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Amphibians/Coef/coef_distance.csv", row.names = FALSE)
+write.csv(coef, "Results/Amphibians/Coef/coef_distance.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metaamph3$beta)[-1]
@@ -2391,7 +2322,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Amphibians/Coef/anova_dist.csv")
+write.csv(Qm_tot, "Results/Amphibians/Coef/anova_dist.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -2431,7 +2362,7 @@ Ab<-ggplot(amphdata)+
   scale_y_continuous(breaks=seq(-1.6,1.6, by=0.4), limits= c(-1.6,1.6))+
   ggtitle("") + labs(tag = "b") + Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Amphibians/Hyp/distance.tif")
+tiff(filename = "Results/Amphibians/Hyp/distance.tif")
 Ab
 dev.off()
 
@@ -2440,13 +2371,13 @@ dev.off()
 #                   R = phylocor,method = "REML")  
 # summary(metaamph4)
 # 
-# saveRDS(metaamph4, file = "~/New projects/Island rule/Data/Final data/metaamph4.Rdata")
+# saveRDS(metaamph4, file = "Data/Final data/metaamph4.Rdata")
 # 
 
-metaamph4 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metaamph4.Rdata")
+metaamph4 <- readRDS(file = "Data/Final data/metaamph4.Rdata")
 
 coef<-data.frame(b =metaamph4$b, lci = metaamph4$ci.lb, uci =  metaamph4$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Amphibians/Coef/coef_distance_area.csv", row.names = FALSE)
+write.csv(coef, "Results/Amphibians/Coef/coef_distance_area.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metaamph4$beta)[-1]
@@ -2467,7 +2398,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Amphibians/Coef/anova_dist_area.csv")
+write.csv(Qm_tot, "Results/Amphibians/Coef/anova_dist_area.csv")
 
 Qm <- paste0("QM(df = 2) = ", round(as.numeric(test_int3[1]), digits = 3), ", p-val = ", round(as.numeric(test_int3[2]), digits = 3))
 
@@ -2515,7 +2446,7 @@ Ac<-ggplot(amphdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-1.6,1.6, by=0.4), limits= c(-1.6,1.6))+
   ggtitle("") + labs(tag = "c") + Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Amphibians/Hyp/distance_area.tif")
+tiff(filename = "Results/Amphibians/Hyp/distance_area.tif")
 Ac
 dev.off()
 
@@ -2524,12 +2455,12 @@ dev.off()
 #                   R = phylocor,method = "REML")  
 # summary(metaamph5)
 
-# saveRDS(metaamph5, file = "~/New projects/Island rule/Data/Final data/metaamph5.Rdata")
+# saveRDS(metaamph5, file = "Data/Final data/metaamph5.Rdata")
 
-metaamph5 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metaamph5.Rdata")
+metaamph5 <- readRDS(file = "Data/Final data/metaamph5.Rdata")
 
 coef<-data.frame(b =metaamph5$b, lci = metaamph5$ci.lb, uci =  metaamph5$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Amphibians/Coef/coef_prec.csv", row.names = FALSE)
+write.csv(coef, "Results/Amphibians/Coef/coef_prec.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metaamph5$beta)[-1]
@@ -2546,7 +2477,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Amphibians/Coef/anova_prec.csv")
+write.csv(Qm_tot, "Results/Amphibians/Coef/anova_prec.csv")
 
 Qm <- paste0("QM(df = 2) = ", round(as.numeric(test_int3[1]), digits = 3), ", p-val = ", round(as.numeric(test_int3[2]), digits = 3))
 
@@ -2588,7 +2519,7 @@ Ad<-ggplot(amphdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-1.6,1.6, by=0.4), limits= c(-1.6,1.6))+
   ggtitle("") + labs(tag = "d") + Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Amphibians/Hyp/prec.tif")
+tiff(filename = "Results/Amphibians/Hyp/prec.tif")
 Ad
 dev.off()
 
@@ -2597,12 +2528,12 @@ dev.off()
 #                    R = phylocor,method = "REML")  
 # summary(metaamph6)
 # 
-# saveRDS(metaamph6, file = "~/New projects/Island rule/Data/Final data/metaamph6.Rdata")
+# saveRDS(metaamph6, file = "Data/Final data/metaamph6.Rdata")
 
-metaamph6 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metaamph6.Rdata")
+metaamph6 <- readRDS(file = "Data/Final data/metaamph6.Rdata")
 
 coef<-data.frame(b =metaamph6$b, lci = metaamph6$ci.lb, uci =  metaamph6$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Amphibians/Coef/coef_tmean.csv", row.names = FALSE)
+write.csv(coef, "Results/Amphibians/Coef/coef_tmean.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metaamph6$beta)[-1]
@@ -2619,7 +2550,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Amphibians/Coef/anova_tmean.csv")
+write.csv(Qm_tot, "Results/Amphibians/Coef/anova_tmean.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -2660,7 +2591,7 @@ Ae<-ggplot(amphdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-1.6,1.6, by=0.4), limits= c(-1.6,1.6))+
   ggtitle("") + labs(tag = "g") + Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Amphibians/Hyp/tmean.tif")
+tiff(filename = "Results/Amphibians/Hyp/tmean.tif")
 Ae
 dev.off()
 
@@ -2669,13 +2600,13 @@ dev.off()
 #                   R = phylocor,method = "REML")  
 # summary(metaamph6b)
 # 
-# saveRDS(metaamph6b, file = "~/New projects/Island rule/Data/Final data/metaamph6b.Rdata")
+# saveRDS(metaamph6b, file = "Data/Final data/metaamph6b.Rdata")
 
-metaamph6b <- readRDS(file = "~/New projects/Island rule/Data/Final data/metaamph6b.Rdata")
+metaamph6b <- readRDS(file = "Data/Final data/metaamph6b.Rdata")
 
 
 coef<-data.frame(b =metaamph6b$b, lci = metaamph6b$ci.lb, uci =  metaamph6b$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Amphibians/Coef/coef_tmean_int.csv", row.names = FALSE)
+write.csv(coef, "Results/Amphibians/Coef/coef_tmean_int.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metaamph6b$beta)[-1]
@@ -2692,7 +2623,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Amphibians/Coef/anova_tmean_int.csv")
+write.csv(Qm_tot, "Results/Amphibians/Coef/anova_tmean_int.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_2pred[1]), digits = 3), ", p-val = ", round(as.numeric(test_2pred[2]), digits = 3))
 
@@ -2734,7 +2665,7 @@ Ae2<-ggplot(amphdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-1.6,1.6, by=0.4), limits= c(-1.6,1.6))+
   ggtitle("") + labs(tag = "g") + Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Amphibians/Hyp/tmean_intercept.tif") #interactive effect
+tiff(filename = "Results/Amphibians/Hyp/tmean_intercept.tif") #interactive effect
 Ae2
 dev.off()
 
@@ -2743,12 +2674,12 @@ dev.off()
 #                    R = phylocor,method = "REML")  
 # summary(metaamph7) 
 # 
-# saveRDS(metaamph7, file = "~/New projects/Island rule/Data/Final data/metaamph7.Rdata")
+# saveRDS(metaamph7, file = "Data/Final data/metaamph7.Rdata")
 
-metaamph7 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metaamph7.Rdata")
+metaamph7 <- readRDS(file = "Data/Final data/metaamph7.Rdata")
 
 coef<-data.frame(b =metaamph7$b, lci = metaamph7$ci.lb, uci =  metaamph7$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Amphibians/Coef/coef_tseas.csv", row.names = FALSE)
+write.csv(coef, "Results/Amphibians/Coef/coef_tseas.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metaamph7$beta)[-1]
@@ -2765,7 +2696,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Amphibians/Coef/anova_tseas.csv")
+write.csv(Qm_tot, "Results/Amphibians/Coef/anova_tseas.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -2807,7 +2738,7 @@ Af<-ggplot(amphdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-1.6,1.6, by=0.4), limits= c(-1.6,1.6))+
   ggtitle("") + labs(tag = "h") + Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Amphibians/Hyp/tseas.tif")
+tiff(filename = "Results/Amphibians/Hyp/tseas.tif")
 Af
 dev.off()
 
@@ -2816,12 +2747,12 @@ dev.off()
 #                    R = phylocor, method = "REML")  
 # summary(metaamph8)
 # 
-# saveRDS(metaamph8, file = "~/New projects/Island rule/Data/Final data/metaamph8.Rdata")
+# saveRDS(metaamph8, file = "Data/Final data/metaamph8.Rdata")
 
-metaamph8 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metaamph8.Rdata")
+metaamph8 <- readRDS(file = "Data/Final data/metaamph8.Rdata")
 
 coef<-data.frame(b =metaamph8$b, lci = metaamph8$ci.lb, uci =  metaamph8$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Amphibians/Coef/coef_ndvi.csv", row.names = FALSE)
+write.csv(coef, "Results/Amphibians/Coef/coef_ndvi.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metaamph8$beta)[-1]
@@ -2838,7 +2769,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Amphibians/Coef/anova_ndvi.csv")
+write.csv(Qm_tot, "Results/Amphibians/Coef/anova_ndvi.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -2879,7 +2810,7 @@ Ag<-ggplot(amphdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-1.6,1.6, by=0.4), limits= c(-1.6,1.6))+
   ggtitle("") + labs(tag = "e") + Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Amphibians/Hyp/ndvi.tif")
+tiff(filename = "Results/Amphibians/Hyp/ndvi.tif")
 Ag
 dev.off()
 
@@ -2888,12 +2819,12 @@ dev.off()
 #                    R = phylocor, method = "REML")  
 # summary(metaamph9)
 # 
-# saveRDS(metaamph9, file = "~/New projects/Island rule/Data/Final data/metaamph9.Rdata")
+# saveRDS(metaamph9, file = "Data/Final data/metaamph9.Rdata")
 
-metaamph9 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metaamph9.Rdata")
+metaamph9 <- readRDS(file = "Data/Final data/metaamph9.Rdata")
 
 coef<-data.frame(b =metaamph9$b, lci = metaamph9$ci.lb, uci =  metaamph9$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Amphibians/Coef/coef_sdndvi.csv", row.names = FALSE)
+write.csv(coef, "Results/Amphibians/Coef/coef_sdndvi.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metaamph9$beta)[-1]
@@ -2910,7 +2841,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Amphibians/Coef/anova_sdndvi.csv")
+write.csv(Qm_tot, "Results/Amphibians/Coef/anova_sdndvi.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
@@ -2951,7 +2882,7 @@ Ah<-ggplot(amphdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-1.6,1.6, by=0.4), limits= c(-1.6,1.6))+
   ggtitle("") + labs(tag = "f") + Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Amphibians/Hyp/sdndvi.tif")
+tiff(filename = "Results/Amphibians/Hyp/sdndvi.tif")
 Ah
 dev.off()
 
@@ -2960,12 +2891,12 @@ dev.off()
 #                    R = phylocor, method = "REML")  
 # summary(metaamph10)
 # 
-# saveRDS(metaamph10, file = "~/New projects/Island rule/Data/Final data/metaamph10.Rdata")
+# saveRDS(metaamph10, file = "Data/Final data/metaamph10.Rdata")
 
-metaamph10 <- readRDS(file = "~/New projects/Island rule/Data/Final data/metaamph10.Rdata")
+metaamph10 <- readRDS(file = "Data/Final data/metaamph10.Rdata")
 
 coef<-data.frame(b =metaamph10$b, lci = metaamph10$ci.lb, uci =  metaamph10$ci.ub)
-write.csv(coef, "~/New projects/Island rule/Results/Amphibians/Coef/coef_sdndvi_int.csv", row.names = FALSE)
+write.csv(coef, "Results/Amphibians/Coef/coef_sdndvi_int.csv", row.names = FALSE)
 
 #extract Qm
 prednames<-row.names(metaamph10$beta)[-1]
@@ -2982,7 +2913,7 @@ Qm_tot<-cbind(Qm_df,Qmp_df)
 colnames(Qm_tot)<-c("Qm", "p")
 rownames(Qm_tot)<-c(prednames, "fullmodel")
 
-write.csv(Qm_tot, "~/New projects/Island rule/Results/Amphibians/Coef/anova_sdndvi_int.csv")
+write.csv(Qm_tot, "Results/Amphibians/Coef/anova_sdndvi_int.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_2pred[1]), digits = 3), ", p-val = ", round(as.numeric(test_2pred[2]), digits = 3))
 
@@ -3023,15 +2954,20 @@ Ah2<-ggplot(amphdata)+ #geom_point(aes(logmass,RR), color = "grey",
   scale_y_continuous(breaks=seq(-1.6,1.6, by=0.4), limits= c(-1.6,1.6))+
   ggtitle("") + labs(tag = "f") + Qmtext
 
-tiff(filename = "~/New projects/Island rule/Results/Amphibians/Hyp/sdndvi_int.tif")
+tiff(filename = "Results/Amphibians/Hyp/sdndvi_int.tif")
 Ah2
 dev.off()
 
 # multiplot####
 multiamph<-ggarrange(Aa,Ab,Ac,Ad,Ae,Af,Ag,Ah2, ncol = 2, nrow = 4, align = "v")
-tiff('~/New projects/Island rule/Results/Figures/Figure_hyp_amph_upd.tif', res=300, width=3500, height=7000, compression = "lzw")
+tiff('Results/Figures/Figure_hyp_amph_upd.tif', res=300, width=3500, height=7000, compression = "lzw")
 multiamph
 dev.off()
 toc() # 171.12 s
+
+# saving session information with all packages versions for reproducibility purposes
+sink("Data/Final data/meta-regressions_R_session.txt")
+sessionInfo()
+sink()
 
 ### End of script ###

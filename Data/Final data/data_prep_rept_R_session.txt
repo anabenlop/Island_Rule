@@ -1,0 +1,29 @@
+R version 3.5.3 (2019-03-11)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 18362)
+
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252
+[4] LC_NUMERIC=C                            LC_TIME=English_United Kingdom.1252    
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] dplyr_0.8.0.1        janitor_1.1.1        plotly_4.9.0         ggplot2_3.3.0.9000   metafor_2.0-0        Matrix_1.2-17        metagear_0.4        
+[8] RevoUtils_11.0.3     RevoUtilsMath_11.0.0
+
+loaded via a namespace (and not attached):
+ [1] locfit_1.5-9.1       tidyselect_0.2.5     gWidgetsRGtk2_0.0-86 purrr_0.3.2          splines_3.5.3        lattice_0.20-38     
+ [7] colorspace_1.4-1     htmltools_0.3.6      viridisLite_0.3.0    yaml_2.2.0           mgcv_1.8-28          rlang_0.3.4         
+[13] later_0.8.0          pillar_1.3.1         glue_1.3.1           withr_2.1.2          EBImage_4.22.1       BiocGenerics_0.26.0 
+[19] gWidgets_0.0-54      jpeg_0.1-8           stringr_1.4.0        munsell_0.5.0        gtable_0.3.0         htmlwidgets_1.3     
+[25] labeling_0.3         httpuv_1.5.1         crosstalk_1.0.0      Cairo_1.5-10         parallel_3.5.3       Rcpp_1.0.1          
+[31] xtable_1.8-3         promises_1.0.1       scales_1.0.0         jsonlite_1.6         abind_1.4-5          mime_0.6            
+[37] png_0.1-7            digest_0.6.18        stringi_1.4.3        tiff_0.1-5           shiny_1.3.0          grid_3.5.3          
+[43] RGtk2_2.20.35        tools_3.5.3          bitops_1.0-6         magrittr_1.5         RCurl_1.95-4.11      lazyeval_0.2.2      
+[49] tibble_2.1.1         crayon_1.3.4         tidyr_0.8.3          pkgconfig_2.0.2      MASS_7.3-51.1        cairoDevice_2.25    
+[55] data.table_1.12.2    assertthat_0.2.1     httr_1.4.0           rstudioapi_0.10      R6_2.4.0             fftwtools_0.9-8     
+[61] hexView_0.3-3        nlme_3.1-137         compiler_3.5.3      

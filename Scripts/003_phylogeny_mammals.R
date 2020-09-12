@@ -30,14 +30,14 @@ library(rotl)
 library(diagram)
 
 # Clear memory
-# rm(list=ls())
+ rm(list=ls())
 
 ##############################################################
 # Importing datasets
 ##############################################################
 
 # final and clean database 
-mamdata<-read.csv("~/New projects/Island rule/Data/mamdata_def.csv", header = TRUE, stringsAsFactors = FALSE) #1051
+mamdata<-read.csv("Data/mamdata_def.csv", header = TRUE, stringsAsFactors = FALSE) #1051
 
 # generating list of species
 species <- sort(unique(as.character(mamdata$Binomial))) #218 species
@@ -164,7 +164,7 @@ tree_test <- tol_induced_subtree(ott_ids = c("394961",  "238425"), label_format 
 # we fix Miniopterus here
 tree_random$tip.label[tree_random$tip.label =="mrcaott319315ott366155"] <-"Miniopterus schreibersii"
 
-tiff("~/New projects/Island rule/Results/Mammals/Phylogeny/mam_phylogenetic_tree_pruned.tiff",
+tiff("Results/Mammals/Phylogeny/mam_phylogenetic_tree_pruned.tiff",
      height=20, width=10,
      units='cm', compression="lzw", res=800)
 
@@ -173,7 +173,7 @@ plot(tree_random, cex=.5, label.offset =.1, no.margin = TRUE)
 dev.off()
 
 # we can now save the tree
-save(tree_random, file = "~/New projects/Island rule/Data/Final data/mam_tree_random.Rdata")
+save(tree_random, file = "Data/Final data/mam_tree_random.Rdata")
 
 
 ##############################################################
@@ -193,7 +193,7 @@ setdiff(as.character(tree_random$tip.label),mamdata$Binomial)
   mam.tree_random.fixed <- drop.tip(tree_random, drops)
 
 # save the new tree
-write.tree(mam.tree_random.fixed, file = "~/New projects/Island rule/Data/Final data/mam.tree_random.fixed.tre")
+write.tree(mam.tree_random.fixed, file = "Data/Final data/mam.tree_random.fixed.tre")
 
 # compute branch lengths of tree
 phylo_branch <- compute.brlen(mam.tree_random.fixed, method = "Grafen", power = 1)
@@ -218,14 +218,16 @@ SpID$Binomial<-as.character(SpID$Binomial)
 mamdata_ph<-inner_join(mamdata_ph,SpID, by = "Binomial")
 
 # finally, save matrix for future analyses
-save(mam_phylo_cor, file = "~/New projects/Island rule/Data/Final data/mam_phylo_cor.Rdata")
+save(mam_phylo_cor, file = "Data/Final data/mam_phylo_cor.Rdata")
 
 
 # exporting fixed dataset for analyses
 write.csv(mamdata_ph, 
-           "~/New projects/Island rule/Data/Final data/mamdata_ph.csv", row.names = FALSE)
+           "Data/Final data/mamdata_ph.csv", row.names = FALSE)
 
 # saving session information with all packages versions for reproducibility purposes
-sink("~/New projects/Island rule/Data/Final data/mam_phylogeny_R_session.txt")
+sink("Data/Final data/mam_phylogeny_R_session.txt")
 sessionInfo()
 sink()
+
+# End of script ####
