@@ -198,7 +198,7 @@ dev.off()
 ############################################################################
 # Testing several ecological hypotheses underlying insular size shifts #####
 ############################################################################
-# MAMMALS####
+# Mammals####
 tic("Run all models for mammals")
 phylocor<-list(Binomial=mam_phylo_cor)
 logmass <- seq(from = min(mamdata$logmass), to = max(mamdata$logmass), length.out = 1000)
@@ -574,11 +574,13 @@ Me
 dev.off()
 
 # temperature intercept####
-metamam6b<-rma.mv(RR~logmass + tmean,V=Vmam,  data=mamdata,random= RE,
-              R = phylocor,method = "REML")
-summary(metamam6b)
+# metamam6b<-rma.mv(RR~logmass + tmean,V=Vmam,  data=mamdata,random= RE,
+#               R = phylocor,method = "REML")
+# summary(metamam6b)
+# 
+# saveRDS(metamam6b, file = "Data/Final data/metamam6b.Rdata")
 
-saveRDS(metamam6b, file = "Data/Final data/metamam6b.Rdata")
+metamam6b<-readRDS(file = "Data/Final data/metamam6b.Rdata")
 
 coef<-data.frame(b =metamam6b$b, lci = metamam6b$ci.lb, uci =  metamam6b$ci.ub)
 write.csv(coef, "Results/Mammals/Coef/coef_tmean_int.csv")

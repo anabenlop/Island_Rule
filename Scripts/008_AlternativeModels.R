@@ -157,15 +157,15 @@ slo_text<-annotate(geom="text", x= 7, y= 1, label= slo, size = 4)
 logMean_m <- seq(from = min(birddata$logMean_m), to = max(birddata$logMean_m), length.out = 1000)
 
 #predict for vector of mass
-df_m<-predict(metabird_alt, newmods = cbind(logMean_m), addx=TRUE)
-df_m<-data.frame(df_m)
-df_m$logMean_m<-df_m$X.logMean_m
-df_m$Mean_m<-exp(df_m$logMean_m)/1000
-df_m$Mean_i_pred<-exp(df_m$pred)/1000
+df_b<-predict(metabird_alt, newmods = cbind(logMean_m), addx=TRUE)
+df_b<-data.frame(df_b)
+df_b$logMean_m<-df_b$X.logMean_m
+df_b$Mean_m<-exp(df_b$logMean_m)/1000
+df_b$Mean_i_pred<-exp(df_b$pred)/1000
 
 Balt<-ggplot(birddata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+ 
   theme_bw(base_size=18) +
-  geom_line(data=df_m,aes(logMean_m, pred),color="#CC0000", size = 1.2)+
+  geom_line(data=df_b,aes(logMean_m, pred),color="#CC0000", size = 1.2)+
   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("ln(mass mainland (g))")+ ylab("ln(mass island (g))")+ 
   scale_x_continuous(breaks=seq(1,9,2),limits= c(1,9)) + 
   scale_y_continuous(breaks=seq(1,9,2),limits= c(1,9)) + 
@@ -179,7 +179,7 @@ Balt
 # 
 # Balt<-ggplot(birddata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+ 
 #   theme_bw(base_size=18) +
-#   geom_line(data=df_m,aes(Mean_m, Mean_i_pred),color="#CC0000", size = 1)+
+#   geom_line(data=df_b,aes(Mean_m, Mean_i_pred),color="#CC0000", size = 1)+
 #   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("Mass mainland (kg))")+ ylab("Mass island (kg))")+ 
 #   scale_x_continuous(breaks=seq(0,4,1), limits= c(0,4.1)) +
 #   scale_y_continuous(breaks=seq(0,4,1), limits= c(0,4.1)) +
@@ -214,15 +214,15 @@ slo_text<-annotate(geom="text", x= 7, y= -2, label= slo, size = 4)
 logMean_m <- seq(from = min(reptdata$logMean_m), to = max(reptdata$logMean_m), length.out = 1000)
 
 #predict for vector of mass
-df_m<-predict(metarept_alt, newmods = cbind(logMean_m), addx=TRUE)
-df_m<-data.frame(df_m)
-df_m$logMean_m<-df_m$X.logMean_m
-df_m$Mean_m<-exp(df_m$logMean_m)/1000
-df_m$Mean_i_pred<-exp(df_m$pred)/1000
+df_r<-predict(metarept_alt, newmods = cbind(logMean_m), addx=TRUE)
+df_r<-data.frame(df_r)
+df_r$logMean_m<-df_r$X.logMean_m
+df_r$Mean_m<-exp(df_r$logMean_m)/1000
+df_r$Mean_i_pred<-exp(df_r$pred)/1000
 
 Ralt<-ggplot(reptdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+ 
   theme_bw(base_size=18) +
-  geom_line(data=df_m,aes(logMean_m, pred),color="#E69F00", size = 1.2)+
+  geom_line(data=df_r,aes(logMean_m, pred),color="#E69F00", size = 1.2)+
   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("ln(mass mainland (g))")+ ylab("ln(mass island (g))")+ 
   scale_x_continuous(breaks=seq(-2,12,2),limits= c(-2,12)) +
   scale_y_continuous(breaks=seq(-2,12,2),limits= c(-2,12)) +
@@ -240,7 +240,7 @@ Ralt
 # 
 # Ralt<-ggplot(reptdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+ 
 #   theme_bw(base_size=18) +
-#   geom_line(data=df_m,aes(Mean_m, Mean_i_pred),color="#E69F00", size = 1)+
+#   geom_line(data=df_r,aes(Mean_m, Mean_i_pred),color="#E69F00", size = 1)+
 #   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("Mass mainland (kg))")+ ylab("Mass island (kg))")+ 
 #   scale_x_continuous(breaks=seq(0,30,5), limits= c(0,30)) +
 #   scale_y_continuous(breaks=seq(0,30,5), limits= c(0,30)) +
@@ -275,15 +275,15 @@ slo_text<-annotate(geom="text", x= 2, y= -1.5, label= slo, size = 4)
 logMean_m <- seq(from = min(amphdata$logMean_m), to = max(amphdata$logMean_m), length.out = 1000)
 
 #predict for vector of mass
-df_m<-predict(metaamph_alt, newmods = cbind(logMean_m), addx=TRUE)
-df_m<-data.frame(df_m)
-df_m$logMean_m<-df_m$X.logMean_m
-df_m$Mean_m<-exp(df_m$logMean_m)
-df_m$Mean_i_pred<-exp(df_m$pred)
+df_a<-predict(metaamph_alt, newmods = cbind(logMean_m), addx=TRUE)
+df_a<-data.frame(df_a)
+df_a$logMean_m<-df_a$X.logMean_m
+df_a$Mean_m<-exp(df_a$logMean_m)
+df_a$Mean_i_pred<-exp(df_a$pred)
 
 Aalt<-ggplot(reptdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+ 
   theme_bw(base_size=18) +
-  geom_line(data=df_m,aes(logMean_m, pred),color="#009E73", size = 1.2)+
+  geom_line(data=df_a,aes(logMean_m, pred),color="#009E73", size = 1.2)+
   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("ln(mass mainland (g))")+ ylab("ln(mass island (g))")+ 
   scale_x_continuous(breaks=seq(-2,4,1),limits= c(-1.5,4)) +
   scale_y_continuous(breaks=seq(-2,4,1),limits= c(-1.5,4)) +
@@ -301,7 +301,7 @@ Aalt
 # 
 # Aalt<-ggplot(amphdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+ 
 #   theme_bw(base_size=18) +
-#   geom_line(data=df_m,aes(Mean_m, Mean_i_pred),color="#009E73", size = 1)+
+#   geom_line(data=df_a,aes(Mean_m, Mean_i_pred),color="#009E73", size = 1)+
 #   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("Mass mainland (g))")+ ylab("Mass island (g))")+ 
 #   scale_x_continuous(breaks=seq(0,120,20), limits= c(0,120)) +
 #   scale_y_continuous(breaks=seq(0,120,20), limits= c(0,120)) +
