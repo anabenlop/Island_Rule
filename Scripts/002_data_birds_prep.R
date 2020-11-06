@@ -95,7 +95,7 @@ birddata$var_allom<-ifelse(is.na(birddata$sd_m_allom) | is.na(birddata$sd_i_allo
 
 ##DATA IMPUTATION####
 #impute SD
-impute_missingness(birddata) #0.93 % sd_m and 1.1% sd_i missing
+impute_missingness(birddata) #1.03 % sd_m and 1.11% sd_i missing
 data_imp<-impute_SD(birddata,columnSDnames= c("sd_m_allom", "sd_i_allom"),columnXnames=c("Mass_m_allom2", "Mass_i_allom2"), method="Bracken1992")
 
 summary(data_imp$sd_i_allom)
@@ -126,8 +126,8 @@ birddata_temp$guild<-birddata_temp$Diet_cat #change name to common term across d
 
 #Join migratory status database
 birddata_temp <- left_join(birddata_temp, mig_status[,c("Binomial","Migratory_status", "Migratory_status_3")], by=c("Binomial" = "Binomial"))
-nrow(birddata_temp[is.na(birddata_temp$Migratory_status),]) #30 species without mig status assigned
-nrow(birddata_temp[is.na(birddata_temp$Migratory_status_3),]) #30 species without mig status assigned
+nrow(birddata_temp[is.na(birddata_temp$Migratory_status),]) #29 species without mig status assigned
+nrow(birddata_temp[is.na(birddata_temp$Migratory_status_3),]) #29 species without mig status assigned
 
 # fix species without mig status
 birddata_temp[birddata_temp$Binomial == "Aethopyga latouchii", c("Migratory_status", "Migratory_status_3")] <- c("resident","full resident") #based on christinae, which includes latouchii
@@ -175,12 +175,13 @@ birddata_temp$sd_m<-birddata_temp$sd_m_allom #change names to simplify stuff
 birddata_temp$sd_i<-birddata_temp$sd_i_allom #change names to simplify stuff
 
 birddata_def<-birddata_temp[,c("Reference", "ID","CommonControl", "Mainland","Island", "Class", "Order","Family",  
-                               "Binomial","Species_main","Species_island", "guild","Mean_m","Mean_i","sd_m","sd_i","N_m", "N_i", 
+                               "Binomial","Species_main","Species_island", "guild",  "Sex", "Measure",  
+                               "Mean_m","Mean_i","sd_m","sd_i","N_m", "N_i", 
                                "RR","var", "Long_i", "Lat_i", "logmass", "Island_km2", 
-                               "Dist_near_mainland", "NDVI", "SDNDVI", "tmean", "tseas", "prec", "Migratory_status", "Migratory_status_3",
+                               "Dist_near_mainland", "NDVI", "SDNDVI", "tmean", "tseas", "prec", 
                                "Phylogeny", "Data_source_type")]
 
-write.csv(birddata_def,file= "Data/birddata_def.csv", row.names = FALSE) #727 rows
+write.csv(birddata_def,file= "Data/birddata_def.csv", row.names = FALSE) #701 rows
 
 # saving session information with all packages versions for reproducibility purposes
 sink("Data/Final data/data_birdprep_R_session.txt")

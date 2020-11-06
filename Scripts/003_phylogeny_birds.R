@@ -246,7 +246,7 @@ is.ultrametric(phylo_branch) # TRUE
 bird_phylo_cor <- vcv(phylo_branch, cor = T)
 
 # remove rows not in correlation matrix
-birddata_ph <- birddata[which(birddata$Binomial %in% rownames(bird_phylo_cor)),] # 706 we lose Emberiza calandra 
+birddata_ph <- birddata[which(birddata$Binomial %in% rownames(bird_phylo_cor)),]  
 
 ##create Species ID to distinguish later between variation explained by non-phylogenetic and phylogenetic effects
 SpID<-data.frame(Binomial = unique(birddata_ph$Binomial), SPID = paste0("SP",1:length(unique(birddata_ph$Binomial))))

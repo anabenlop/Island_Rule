@@ -37,11 +37,10 @@ library(diagram)
 ##############################################################
 
 # final and clean database 
-mamdata<-read.csv("Data/mamdata_def.csv", header = TRUE, stringsAsFactors = FALSE) #1051
+mamdata<-read.csv("Data/mamdata_def.csv", header = TRUE, stringsAsFactors = FALSE) #1059
 
 # generating list of species
-species <- sort(unique(as.character(mamdata$Binomial))) #218 species
-# species_is <- sort(unique(as.character(mamdata$Species_island))) #328 species
+species <- sort(unique(as.character(mamdata$Binomial))) #217 species
 
 ##############################################################
 # Formatting species data

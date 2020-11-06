@@ -1,6 +1,6 @@
 R version 3.5.3 (2019-03-11)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
-Running under: Windows 10 x64 (build 18362)
+Running under: Windows 10 x64 (build 19041)
 
 Matrix products: default
 
@@ -12,11 +12,13 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] raster_2.7-15        sp_1.3-1             ggplot2_3.3.0.9000   sf_0.7-3             RevoUtils_11.0.3     RevoUtilsMath_11.0.0
+[1] raster_2.8-19        sp_1.3-1             ggplot2_3.3.0.9000   sf_0.7-3             RevoUtils_11.0.3    
+[6] RevoUtilsMath_11.0.0
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.1       pillar_1.3.1     compiler_3.5.3   class_7.3-15     tools_3.5.3      digest_0.6.18    nlme_3.1-137     tibble_2.1.1    
- [9] gtable_0.3.0     lattice_0.20-38  mgcv_1.8-28      pkgconfig_2.0.2  rlang_0.3.4      Matrix_1.2-17    DBI_1.0.0        rstudioapi_0.10 
-[17] rgdal_1.3-6      spData_0.2.9.4   e1071_1.7-0      withr_2.1.2      dplyr_0.8.0.1    classInt_0.2-3   grid_3.5.3       tidyselect_0.2.5
-[25] glue_1.3.1       R6_2.4.0         purrr_0.3.2      magrittr_1.5     scales_1.0.0     codetools_0.2-16 units_0.6-2      splines_3.5.3   
-[33] assertthat_0.2.1 colorspace_1.4-1 labeling_0.3     munsell_0.5.0    crayon_1.3.4    
+ [1] Rcpp_1.0.1       pillar_1.3.1     compiler_3.5.3   class_7.3-15     tools_3.5.3      digest_0.6.18    nlme_3.1-137    
+ [8] tibble_2.1.1     gtable_0.3.0     lattice_0.20-38  mgcv_1.8-28      pkgconfig_2.0.2  rlang_0.3.4      Matrix_1.2-17   
+[15] DBI_1.0.0        rstudioapi_0.10  rgdal_1.4-3      xfun_0.6         spData_0.2.9.4   e1071_1.7-0      withr_2.1.2     
+[22] dplyr_0.8.0.1    classInt_0.2-3   grid_3.5.3       tidyselect_0.2.5 glue_1.3.1       R6_2.4.0         purrr_0.3.2     
+[29] magrittr_1.5     scales_1.0.0     codetools_0.2-16 units_0.6-2      splines_3.5.3    assertthat_0.2.1 colorspace_1.4-1
+[36] labeling_0.3     tinytex_0.12     munsell_0.5.0    crayon_1.3.4    

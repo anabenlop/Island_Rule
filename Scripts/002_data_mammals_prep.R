@@ -103,7 +103,7 @@ mamdata$var_allom<-ifelse(is.na(mamdata$sd_m_allom) | is.na(mamdata$sd_i_allom),
 ##Data imputation             ####
 ##################################
 #impute SD
-impute_missingness(mamdata) #21.01% sd_m 21.97% sd_i
+impute_missingness(mamdata) #20.8% sd_m 21.7% sd_i
 data_imp<-impute_SD(mamdata,columnSDnames= c("sd_m_allom", "sd_i_allom"),columnXnames=c("Mass_m_allom2", "Mass_i_allom2"), method="Bracken1992")
 
 # summary(data_imp$sd_i_allom)
@@ -122,7 +122,7 @@ mamdata_temp<-inner_join(data_imp,uni_shared, by = "Shared_control")
 
 #Join diet database
 mamdata_temp<-left_join(mamdata_temp, diet[,c("Species","guild", "BM")], by=c("Binomial" = "Species"))
-nrow(mamdata_temp[is.na(mamdata_temp$guild),]) #2 rows species with diet not assigned
+nrow(mamdata_temp[is.na(mamdata_temp$guild),]) #3 rows species with diet not assigned
 mamdata_temp[mamdata_temp$Binomial == "Oncifelis guigna", "guild"] <- "Carn" # Leopardus guigna in EltonTraits
 mamdata_temp[mamdata_temp$Binomial == "Galeopterus variegatus", "guild"] <- "Herb" #assign diet based on literature: Agoramoorthy, G., Sha, C. M., & Hsu, M. J. (2006). Population, diet and conservation of Malayan flying lemurs in altered and fragmented habitats in Singapore. Biodiversity & Conservation, 15(7), 2177-2185.
 mamdata_temp[mamdata_temp$guild=="Frug","guild"] <- "Herb" # assign frugivores to herbivores category

@@ -110,6 +110,9 @@ uni_shared<-data.frame(Shared_control = unique(data_imp$Shared_control), CommonC
 uni_shared$Shared_control <-as.character(uni_shared$Shared_control)
 amphdata_temp<-inner_join(data_imp,uni_shared, by = "Shared_control")
 
+#create empty guild column for consistency with the other datasets
+#amphdata_temp$guild <- rep(NA, nrow(amphdata_temp))
+
 #keep only what we need
 amphdata_temp$RR<-amphdata_temp$RR_allom #change names to simplify stuff
 amphdata_temp$var<-amphdata_temp$var_imp #change names to simplify stuff
@@ -123,7 +126,7 @@ amphdata_temp$sd_m<-amphdata_temp$sd_m_allom #change names to simplify stuff
 amphdata_temp$sd_i<-amphdata_temp$sd_i_allom #change names to simplify stuff
 
 amphdata_def<-amphdata_temp[,c("Reference", "ID","CommonControl", "Mainland","Island", "Class", "Order","Family",  
-                               "Binomial","Species_main","Species_island",  "Sex", "Measure",
+                               "Binomial","Species_main","Species_island", "guild", "Sex", "Measure",
                                "Mean_m","Mean_i","sd_m","sd_i","N_m", "N_i", 
                                "RR","var", "Long_i", "Lat_i", "logmass", "Island_km2", 
                                "Dist_near_mainland", "NDVI", "SDNDVI", "tmean", "tseas", "prec", "Phylogeny", "Data_source_type")] 

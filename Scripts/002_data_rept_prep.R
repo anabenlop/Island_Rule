@@ -94,7 +94,7 @@ reptdata$var_allom<-ifelse(is.na(reptdata$sd_m_allom) | is.na(reptdata$sd_i_allo
 
 ##DATA IMPUTATION####
 #impute SD
-impute_missingness(reptdata) #11.5 sd_m 10.94 sd_i % missing
+impute_missingness(reptdata) #11.15 sd_m 10.78 sd_i % missing
 data_imp<-impute_SD(reptdata,columnSDnames= c("sd_m_allom", "sd_i_allom"),columnXnames=c("Mass_m_allom2", "Mass_i_allom2"), method="Bracken1992")
 
 summary(data_imp$sd_i_allom)
@@ -132,8 +132,8 @@ reptdata_temp$diet.y<-as.character(reptdata_temp$diet.y)
 
 reptdata_temp$Diet<-ifelse(reptdata_temp$Diet !="",reptdata_temp$Diet,ifelse(is.na(reptdata_temp$diet.x), reptdata_temp$diet.y, reptdata_temp$diet.x)) #assign a single diet
 
-# nrow(reptdata_temp[is.na(reptdata_temp$Diet),]) #19 species without diet assigned
-# View(reptdata_temp[is.na(reptdata_temp$Diet),]) #19 species without diet assigned
+# nrow(reptdata_temp[is.na(reptdata_temp$Diet),]) #18 species without diet assigned
+# View(reptdata_temp[is.na(reptdata_temp$Diet),]) #18 species without diet assigned
 
 ###Assign diet based on literature (http://reptile-database.reptarium.cz/)
 reptdata_temp[reptdata_temp$Binomial=="Alligator mississippiensis", "Diet"] <- "Carnivorous"

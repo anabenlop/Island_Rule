@@ -71,6 +71,7 @@ taxa[taxa$number_matches != 1,]  #NONE!
 # check synonyms and change name accordingly
 taxa[taxa$is_synonym==TRUE,] # 6 species returned
 
+species[species=="Bufo boulengeri"] <- "Bufotes boulengeri" #synonym
 species[species=="Bufo viridis"] <- "Bufotes viridis" #synonym
 species[species=="Hypogeophis brevis"] <- "Grandisonia brevis" #synonym
 species[species=="Hypsiboas albomarginatus"] <- "Boana albomarginata" #synonym
@@ -78,6 +79,7 @@ species[species=="Leptodactylus marmoratus"] <- "Adenomera marmorata" #synonym
 species[species=="Ololygon trapicheiroi"] <- "Scinax trapicheiroi" #synonym
 species[species=="Rana chalconota"] <- "Hylarana chalconota" #synonym
 
+amphdata[amphdata$Binomial=="Bufo boulengeri","Binomial"] <- "Bufotes boulengeri"
 amphdata[amphdata$Binomial=="Bufo viridis","Binomial"] <- "Bufotes viridis"
 amphdata[amphdata$Binomial=="Hypogeophis brevis","Binomial"] <-  "Grandisonia brevis"
 amphdata[amphdata$Binomial=="Hypsiboas albomarginatus","Binomial"] <-  "Boana albomarginata"

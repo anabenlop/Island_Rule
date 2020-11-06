@@ -42,25 +42,28 @@ birddata<-read.csv("Data/Final data/birddata_ph.csv", header = TRUE)
 reptdata<-read.csv("Data/Final data/reptdata_ph.csv", header = TRUE)
 amphdata<-read.csv("Data/Final data/amphdata_ph.csv", header = TRUE)
 
+# merge datasets
+data<-rbind(mamdata,birddata, reptdata,amphdata)
+
+# save full dataset for Supplementary Dataset 2 in the paper
+write.csv(data, file="Data/Final data/islanddata_ms.csv")
+
+# Keep only the spatial data
 mamdata<-mamdata[,c("Class", "Island", "Long_i", "Lat_i")]
 birddata<-birddata[,c("Class", "Island", "Long_i", "Lat_i")]
 reptdata<-reptdata[,c("Class", "Island", "Long_i", "Lat_i")]
 amphdata<-amphdata[,c("Class", "Island", "Long_i", "Lat_i")]
 
-# merge datasets
-data<-rbind(mamdata,birddata, reptdata,amphdata)
-
-# save full dataset
-# write.csv(data, file=" Data/Final data/islanddata_ms.csv")
+data_sp<-rbind(mamdata,birddata, reptdata,amphdata)
 
 ##############################################################
 # Converting data to SpatialPointsDataFrame               ####
 ##############################################################
-xy <- data[,c("Long_i", "Lat_i")]
-spdata <- SpatialPointsDataFrame(coords = xy, data = data,
+xy <- data_sp[,c("Long_i", "Lat_i")]
+spdata <- SpatialPointsDataFrame(coords = xy, data = data_sp,
                                proj4string = CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
 
-spdata <- st_as_sf(data, coords = c('Long_i', 'Lat_i'),crs = "+init=epsg:4326")
+spdata <- st_as_sf(data_sp, coords = c('Long_i', 'Lat_i'),crs = "+init=epsg:4326")
 
 #import countries
 # country<-st_read("Spatial/country1mVMAP_un2008.shp")

@@ -74,7 +74,7 @@ species[species=="Aspidoscelis lineattissima"] <- "Aspidoscelis lineattissimus" 
 species[species=="Aspidoscelis sexlineata"] <- "Aspidoscelis sexlineatus" #they were an unique species in the past
 species[species=="Eumeces okadae"] <- "Plestiodon latiscutatus" #synonym
 species[species=="Japalura polygonata"] <- "Diploderma polygonatum (species in Holozoa)" #synonym
-# species[species=="Japalura polygonata"] <- "Diploderma polygonatum" #synonym
+species[species=="Lycodryas gaimardii"] <- "Lycodryas gaimardi" #synonym
 species[species=="Japalura swinhonis"] <- "Diploderma swinhonis" #synonym
 species[species=="Mabuya macrorhyncha"] <- "Psychosaura macrorhyncha" #synonym
 species[species=="Podarcis raffoneae"] <- "Podarcis raffonei" #synonym
@@ -85,7 +85,7 @@ reptdata[reptdata$Binomial=="Aspidoscelis lineattissima","Binomial"] <- "Aspidos
 reptdata[reptdata$Binomial=="Aspidoscelis sexlineata","Binomial"] <- "Aspidoscelis sexlineatus"
 reptdata[reptdata$Binomial=="Eumeces okadae","Binomial"] <- "Plestiodon latiscutatus"
 reptdata[reptdata$Binomial=="Japalura polygonata","Binomial"] <-  "Diploderma polygonatum (species in Holozoa)"
-# reptdata[reptdata$Binomial=="Japalura polygonata","Binomial"] <-  "Diploderma polygonatum"
+reptdata[reptdata$Binomial=="Lycodryas gaimardii","Binomial"] <-  "Lycodryas gaimardi"
 reptdata[reptdata$Binomial=="Japalura swinhonis","Binomial"] <- "Diploderma swinhonis"
 reptdata[reptdata$Binomial=="Mabuya macrorhyncha","Binomial"] <-  "Psychosaura macrorhyncha"
 reptdata[reptdata$Binomial=="Podarcis raffoneae","Binomial"] <-  "Podarcis raffonei"
