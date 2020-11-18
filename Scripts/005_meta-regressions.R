@@ -87,7 +87,7 @@ df_m<-predict(metamam, newmods = cbind(logmass), addx=TRUE)
 df_m<-data.frame(df_m)
 df_m$logmass<-df_m$X.logmass
 
-#calculate size of points
+#calculate size of points based on sampling variance only
 wi    <- 1/sqrt(mamdata$var)
 size  <- 2 + 20.0 * (wi - min(wi))/(max(wi) - min(wi))
 
@@ -159,7 +159,7 @@ R<-ggplot(reptdata)+ geom_hline(yintercept= 0, size=1.2, linetype="dashed", colo
 
 #amphibians####
 phylocor<-list(Binomial= amph_phylo_cor)
-metaamph<-rma.mv(RR~logmass ,V=var,  data=amphdata, random= RE, R = phylocor) 
+metaamph<-rma.mv(RR~logmass ,V=Vamph,  data=amphdata, random= RE, R = phylocor) 
 summary(metaamph)
 mR2.func(metaamph)
 cR2.func(metaamph)
@@ -198,7 +198,7 @@ dev.off()
 ############################################################################
 # Testing several ecological hypotheses underlying insular size shifts #####
 ############################################################################
-# Mammals####
+# MAMMALs####
 tic("Run all models for mammals")
 phylocor<-list(Binomial=mam_phylo_cor)
 logmass <- seq(from = min(mamdata$logmass), to = max(mamdata$logmass), length.out = 1000)
@@ -357,6 +357,8 @@ summary(metamam4)
 
 saveRDS(metamam4, file = "Data/Final data/metamam4.Rdata")
 
+metamam4 <- readRDS(file = "Data/Final data/metamam4.Rdata")
+
 coef<-data.frame(b =metamam4$b, lci = metamam4$ci.lb, uci =  metamam4$ci.ub)
 write.csv(coef, "Results/Mammals/Coef/coef_dist_area.csv")
 
@@ -440,6 +442,8 @@ summary(metamam5)
 
 saveRDS(metamam5, file = "Data/Final data/metamam5.Rdata")
 
+metamam5 <- readRDS(file = "Data/Final data/metamam5.Rdata")
+
 coef<-data.frame(b =metamam5$b, lci = metamam5$ci.lb, uci =  metamam5$ci.ub)
 write.csv(coef, "Results/Mammals/Coef/coef_diet.csv")
 
@@ -507,6 +511,8 @@ metamam6<-rma.mv(RR~logmass*tmean,V=Vmam,  data=mamdata,random= RE,
 summary(metamam6)
 
 saveRDS(metamam6, file = "Data/Final data/metamam6.Rdata")
+
+metamam6 <- readRDS(file = "Data/Final data/metamam6.Rdata")
 
 coef<-data.frame(b =metamam6$b, lci = metamam6$ci.lb, uci =  metamam6$ci.ub)
 write.csv(coef, "Results/Mammals/Coef/coef_tmean.csv")
@@ -654,6 +660,8 @@ summary(metamam7)
 
 saveRDS(metamam7, file = "Data/Final data/metamam7.Rdata")
 
+metamam7 <- readRDS(file = "Data/Final data/metamam7.Rdata")
+
 coef<-data.frame(b =metamam7$b, lci = metamam7$ci.lb, uci =  metamam7$ci.ub)
 write.csv(coef, "Results/Mammals/Coef/coef_tseas.csv")
 
@@ -726,6 +734,8 @@ summary(metamam8)
 
 saveRDS(metamam8, file = "Data/Final data/metamam8.Rdata")
 
+metamam8 <- readRDS(file = "Data/Final data/metamam8.Rdata")
+
 coef<-data.frame(b =metamam8$b, lci = metamam8$ci.lb, uci =  metamam8$ci.ub)
 write.csv(coef, "Results/Mammals/Coef/coef_ndvi.csv")
 
@@ -795,6 +805,8 @@ metamam9<-rma.mv(RR~logmass*SDNDVI,V=Vmam,  data=mamdata,  random= RE,
 summary(metamam9)
 
 saveRDS(metamam9, file = "Data/Final data/metamam9.Rdata")
+
+metamam9 <- readRDS(file = "Data/Final data/metamam9.Rdata")
 
 coef<-data.frame(b =metamam9$b, lci = metamam9$ci.lb, uci =  metamam9$ci.ub)
 write.csv(coef, "Results/Mammals/Coef/coef_sdndvi.csv")
@@ -879,6 +891,8 @@ metabird2<-rma.mv(RR~logmass*Island_km2,V = Vbird, data=birddata, random= RE,
 summary(metabird2)
 
 saveRDS(metabird2, file = "Data/Final data/metabird2.Rdata")
+
+metabird2 <- readRDS(file = "Data/Final data/metabird2.Rdata")
 
 coef<-data.frame(b =metabird2$b, lci = metabird2$ci.lb, uci =  metabird2$ci.ub)
 write.csv(coef, "Results/Birds/Coef/coef_area.csv")
@@ -1110,6 +1124,8 @@ summary(metabird5)
 
 saveRDS(metabird5, file = "Data/Final data/metabird5.Rdata")
 
+metabird5 <- readRDS(file = "Data/Final data/metabird5.Rdata")
+
 coef<-data.frame(b =metabird5$b, lci = metabird5$ci.lb, uci =  metabird5$ci.ub)
 write.csv(coef, "Results/Birds/Coef/coef_diet.csv")
 
@@ -1177,6 +1193,8 @@ metabird6<-rma.mv(RR~logmass*tmean,V=Vbird,  data=birddata,random= RE,
 summary(metabird6)
 
 saveRDS(metabird6, file = "Data/Final data/metabird6.Rdata")
+
+metabird6 <- readRDS(file = "Data/Final data/metabird6.Rdata")
 
 coef<-data.frame(b =metabird6$b, lci = metabird6$ci.lb, uci =  metabird6$ci.ub)
 write.csv(coef, "Results/Birds/Coef/coef_tmean.csv")
@@ -1324,6 +1342,8 @@ summary(metabird7)
 
 saveRDS(metabird7, file = "Data/Final data/metabird7.Rdata")
 
+metabird7 <- readRDS(file = "Data/Final data/metabird7.Rdata")
+
 coef<-data.frame(b =metabird7$b, lci = metabird7$ci.lb, uci =  metabird7$ci.ub)
 write.csv(coef, "Results/Birds/Coef/coef_tseas.csv")
 
@@ -1394,6 +1414,8 @@ metabird8<-rma.mv(RR~logmass*NDVI,V=Vbird,  data=birddata,  random= RE,
 summary(metabird8)
 
 saveRDS(metabird8, file = "Data/Final data/metabird8.Rdata")
+
+metabird8 <- readRDS(file = "Data/Final data/metabird8.Rdata")
 
 coef<-data.frame(b =metabird8$b, lci = metabird8$ci.lb, uci =  metabird8$ci.ub)
 write.csv(coef, "Results/Birds/Coef/coef_ndvi.csv")

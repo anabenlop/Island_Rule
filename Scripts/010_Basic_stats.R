@@ -100,7 +100,7 @@ for (i in 1:length(mam_subsp_main)) {
 mam_subsp_all <- mam_subsp_all %>% 
     mutate(Conspecific = if_else(Species_Main == Species_Island, "yes", "no"))
 
-nrow(mam_subsp_all[mam_subsp_all$Conspecific == "no",]) # 76 comparisons (7.26%)
+nrow(mam_subsp_all[mam_subsp_all$Conspecific == "no",]) # 59 comparisons (5.6%)
 
 length(unique(mam_subsp_all[mam_subsp_all$Conspecific == "no",]$Species_Main)) #42 mainland species
 length(unique(mam_subsp_all[mam_subsp_all$Conspecific == "no",]$Species_Island)) #53 insular endemic species (16.16%)

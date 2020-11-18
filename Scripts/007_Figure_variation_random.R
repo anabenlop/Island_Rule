@@ -138,7 +138,7 @@ varexp_island<-ggplot(vardata_t) + geom_bar(aes(Class, value, fill = variable), 
   guides(fill=guide_legend(title=" "))+ ylab("Variation accounted by random factors (%)")+
   xlab(" ") 
 
-tiff('Results/Figures/Fig S3_var_RE.tif', res=300, width=3100, height=3000)
+tiff('Results/Figures/Fig S3_var_RE.tif', res=200, width=2100, height=2000)
 varexp_island
 dev.off()
 

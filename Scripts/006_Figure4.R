@@ -28,7 +28,7 @@ library(ggpubr)
 
 
 #clean memory
-# rm(list=ls())
+ rm(list=ls())
 
 ##############################################################
 # Importing datasets and functions                        ####
@@ -41,7 +41,7 @@ reptdata<-read.csv("Data/Final data/reptdata_ph.csv", header = TRUE, stringsAsFa
 amphdata<-read.csv("Data/Final data/amphdata_ph.csv", header = TRUE, stringsAsFactors = FALSE)
 
 # Load models
-meta4 <- readRDS(file = "Data/Final data/meta4.Rdata")
+metamam4 <- readRDS(file = "Data/Final data/metamam4.Rdata")
 metabird4 <- readRDS(file = "Data/Final data/metabird4.Rdata")
 metarept4 <- readRDS(file = "Data/Final data/metarept4.Rdata")
 metaamph4 <- readRDS(file = "Data/Final data/metaamph4.Rdata")
@@ -54,15 +54,15 @@ source("Scripts/000_Functions.R")
 logmass <- seq(from = min(mamdata$logmass), to = max(mamdata$logmass), length.out = 1000)
 
 #extract Qm
-prednames<-row.names(meta4$beta)[-1]
+prednames<-row.names(metamam4$beta)[-1]
 prednames<-c(prednames,"logmass:dist & logmass:area")
 
-test_1pred<-anova(meta4, btt = 2) 
-test_2pred<-anova(meta4, btt = 3) 
-test_3pred<-anova(meta4, btt = 4) 
-test_int<-anova(meta4, btt = 5) 
-test_int2<-anova(meta4, btt = 6) 
-test_int3<-anova(meta4, btt = c(5,6)) 
+test_1pred<-anova(metamam4, btt = 2) 
+test_2pred<-anova(metamam4, btt = 3) 
+test_3pred<-anova(metamam4, btt = 4) 
+test_int<-anova(metamam4, btt = 5) 
+test_int2<-anova(metamam4, btt = 6) 
+test_int3<-anova(metamam4, btt = c(5,6)) 
 
 Qm_df<- t(data.frame(test_1pred[1],test_2pred[1],test_3pred[1],test_int[1], test_int2[1], test_int3[1]))
 Qmp_df<-t(data.frame(test_1pred[2],test_2pred[2],test_3pred[2],test_int[2], test_int2[2], test_int3[2]))
@@ -80,9 +80,9 @@ large_distance<-quantile(mamdata$Dist_near_mainland, prob = 0.9,names =FALSE) #1
 large_island<-quantile(mamdata$Island_km2, prob = 0.9, names =FALSE) #32900
 small_distance<-quantile(mamdata$Dist_near_mainland, prob = 0.1, names =FALSE) #1.5km
 
-l<-predict(meta4, newmods = cbind(logmass, large_distance, small_island,
+l<-predict(metamam4, newmods = cbind(logmass, large_distance, small_island,
                                   logmass*large_distance, logmass*small_island), addx=TRUE) 
-h<-predict(meta4, newmods = cbind(logmass,small_distance, large_island,
+h<-predict(metamam4, newmods = cbind(logmass,small_distance, large_island,
                                   logmass*small_distance, logmass*large_island), addx=TRUE)
 
 ### merge data frames and plot all together

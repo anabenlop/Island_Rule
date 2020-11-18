@@ -139,7 +139,8 @@ mamdata_def<-mamdata_temp[,c("Reference", "ID","CommonControl", "Mainland","Isla
                              "Binomial","Species_main","Species_island", "guild", "Sex", "Measure",
                              "Mean_m","Mean_i","sd_m","sd_i","N_m", "N_i", 
                              "RR","var", "Long_i", "Lat_i", "logmass", "Island_km2", 
-                             "Dist_near_mainland", "NDVI", "SDNDVI", "tmean", "tseas", "prec","Phylogeny", "Data_source_type")]
+                             "Dist_near_mainland", "NDVI", "SDNDVI", "tmean", "tseas", "prec","Archipielago",
+                             "Phylogeny", "Data_source_type")]
 
 # save data
 write.csv(mamdata_def,file= "Data/mamdata_def.csv", row.names = FALSE) #1047rows

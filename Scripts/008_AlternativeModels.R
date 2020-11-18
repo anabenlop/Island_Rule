@@ -25,6 +25,7 @@ library(metafor)
 library(ggplot2)
 library(ggpubr)
 library(car)
+library(plotly)
 
 #clean memory
 # rm(list=ls())
@@ -84,7 +85,7 @@ summary(metamam_alt)
 tstats <- (1-metamam_alt$beta[2,1])/metamam_alt$se[2]
 # Calculates two tailed probability
 pval<- 2 * pt(abs(tstats), df = df.residual(metamam_alt), lower.tail = FALSE)
-print(pval) # t-test: 5.313 , p: 1.31632e-07
+print(pval) # t-test: 5.19 , p: 2.478329e-07
 
 # Alternatively use LRT, or Wald-type test from car package
 linearHypothesis(metamam_alt, "logMean_m = 1") # Chisq: 28.23   1.077e-07 ***
@@ -115,22 +116,36 @@ Malt<-ggplot(mamdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", 
   labs(tag = "a")
 Malt
 
-# back-transformed
-# int_text<-annotate(geom="text", x= 200, y= 12, label= int, size = 4)
-# slo_text<-annotate(geom="text", x= 200, y= 1, label= slo, size = 4)
-# 
+# back-transformed (in raw scale)
+int_text<-annotate(geom="text", x= 200, y= 12, label= int, size = 4)
+slo_text<-annotate(geom="text", x= 200, y= 1, label= slo, size = 4)
+
+# for species between 1-100 kg
 # Malt_bt<-ggplot(mamdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+
 #   theme_bw(base_size=18) +
 #   geom_line(data=df_m,aes(Mean_m, Mean_i_pred),color="#0072B2", size = 1)+
 #   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("Mass mainland (kg))")+ ylab("Mass island (kg))")+
-#   scale_x_continuous(breaks=seq(0,100,10), limits= c(0,100)) +
-#   scale_y_continuous(breaks=seq(0,100,10), limits= c(0,100)) +
-#   int_text + slo_text +
+#   scale_x_continuous(breaks=seq(1,100,10), limits= c(1,100)) +
+#   scale_y_continuous(breaks=seq(1,100,10), limits= c(1,100)) +
+#   #int_text + slo_text +
 #   labs(tag = "a")
 # Malt_bt
 # 
-# require(plotly)
 # ggplotly(Malt_bt)
+# 
+# 
+# # for species between 10-200 g
+# Malt_bt_sm<-ggplot(mamdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+
+#   theme_bw(base_size=18) +
+#   geom_line(data=df_m,aes(Mean_m*1000, Mean_i_pred*1000),color="#0072B2", size = 1)+
+#   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("Mass mainland (g))")+ ylab("Mass island (g))")+
+#   scale_x_continuous(breaks=seq(10,200,10), limits= c(10,200)) +
+#   scale_y_continuous(breaks=seq(10,200,10), limits= c(10,200)) +
+#   #↨int_text + slo_text +
+#   labs(tag = "a")
+# Malt_bt_sm
+# 
+# ggplotly(Malt_bt_sm)
 
 #birds ####
 phylocor<-list(Binomial= bird_phylo_cor)
@@ -199,7 +214,7 @@ summary(metarept_alt)
 tstats <- (1-metarept_alt$beta[2,1])/metarept_alt$se[2]
 # Calculates two tailed probability
 pval<- 2 * pt(abs(tstats), df = df.residual(metarept_alt), lower.tail = FALSE)
-print(pval) # t-test:  5.326997 , p: 1.484903e-07
+print(pval) # t-test:  5.188 , p: 3.002474e-07 
 
 # Use LRT, or Wald-type test from car package
 linearHypothesis(metarept_alt, "logMean_m = 1") # Chisq: 28.316  1.031e-07 ***
@@ -231,24 +246,23 @@ Ralt<-ggplot(reptdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray",
 Ralt
 
 # back-transformed
-# int_text<-annotate(geom="text", x= 20, y= 3, label= int, size = 4)
-# slo_text<-annotate(geom="text", x= 20, y= 1, label= slo, size = 4)
-# 
-# #calculate size of points
-# wi    <- 1/sqrt(reptdata$var_i)
-# size  <- 2 + 20.0 * (wi - min(wi))/(max(wi) - min(wi))
-# 
-# Ralt<-ggplot(reptdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+ 
-#   theme_bw(base_size=18) +
-#   geom_line(data=df_r,aes(Mean_m, Mean_i_pred),color="#E69F00", size = 1)+
-#   theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("Mass mainland (kg))")+ ylab("Mass island (kg))")+ 
-#   scale_x_continuous(breaks=seq(0,30,5), limits= c(0,30)) +
-#   scale_y_continuous(breaks=seq(0,30,5), limits= c(0,30)) +
-#   int_text + slo_text +
-#   labs(tag = "c")
-# Ralt
-# ggplotly(Ralt)
+int_text<-annotate(geom="text", x= 20, y= 3, label= int, size = 4)
+slo_text<-annotate(geom="text", x= 20, y= 1, label= slo, size = 4)
 
+#calculate size of points
+wi    <- 1/sqrt(reptdata$var_i)
+size  <- 2 + 20.0 * (wi - min(wi))/(max(wi) - min(wi))
+
+Ralt_bt<-ggplot(reptdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray", linetype = "dashed",  size = 0.8)+
+  theme_bw(base_size=18) +
+  geom_line(data=df_r,aes(Mean_m*1000, Mean_i_pred*1000),color="#E69F00", size = 1)+
+  theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("Mass mainland (g))")+ ylab("Mass island (g))")+
+  scale_x_continuous(breaks=seq(0,500,50), limits= c(0,1)) +
+  scale_y_continuous(breaks=seq(0,500,50), limits= c(0,1)) +
+  int_text + slo_text +
+  labs(tag = "c")
+Ralt_bt
+ggplotly(Ralt_bt)
 
 #amphibians ####
 phylocor<-list(Binomial= amph_phylo_cor)
@@ -260,7 +274,7 @@ summary(metaamph_alt)
 tstats <- (1-metaamph_alt$beta[2,1])/metaamph_alt$se[2]
 # Calculates two tailed probability
 pval<- 2 * pt(abs(tstats), df = df.residual(metaamph_alt), lower.tail = FALSE)
-print(pval) # t-test:   1.119695 , p: 0.2643608
+print(pval) # t-test:   0.9615736 , p: 0.3375756
 
 # Use LRT, or Wald-type test from car package
 linearHypothesis(metaamph_alt, "logMean_m = 1") # Chisq: 1.1505     0.2834

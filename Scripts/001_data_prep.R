@@ -29,7 +29,7 @@ library(ggplot2)
 library(raster)
 
 # Clear memory 
-# rm(list=ls())
+ rm(list=ls())
 
 ##############################################################
 # Importing datasets
