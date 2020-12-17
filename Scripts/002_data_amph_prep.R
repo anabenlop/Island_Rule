@@ -93,6 +93,7 @@ amphdata$var_allom<-ifelse(is.na(amphdata$sd_m_allom) | is.na(amphdata$sd_i_allo
 ##DATA IMPUTATION####
 #impute SD
 impute_missingness(amphdata) #7.26% missing sd_i
+amphdata$imputed <- ifelse(is.na(amphdata$sd_m_allom) | is.na(amphdata$sd_i_allom), "Yes", "No")
 data_imp<-impute_SD(amphdata,columnSDnames= c("sd_m_allom", "sd_i_allom"),columnXnames=c("Mass_m_allom2", "Mass_i_allom2"), method="Bracken1992")
 
 summary(data_imp$sd_i_allom)
@@ -130,7 +131,7 @@ amphdata_def<-amphdata_temp[,c("Reference", "ID","CommonControl", "Mainland","Is
                                "Mean_m","Mean_i","sd_m","sd_i","N_m", "N_i", 
                                "RR","var", "Long_i", "Lat_i", "logmass", "Island_km2", 
                                "Dist_near_mainland", "NDVI", "SDNDVI", "tmean", "tseas", "prec","Archipielago",
-                               "Phylogeny", "Data_source_type")] 
+                               "Phylogeny", "Data_source_type", "imputed")] 
 
 write.csv(amphdata_def,file= "Data/amphdata_def.csv", row.names = FALSE)
 

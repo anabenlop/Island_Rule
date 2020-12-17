@@ -157,7 +157,7 @@ summary(metabird_alt)
 tstats <- (1-metabird_alt$beta[2,1])/metabird_alt$se[2]
 # Calculates two tailed probability
 pval<- 2 * pt(abs(tstats), df = df.residual(metabird_alt), lower.tail = FALSE)
-print(pval) # t-test:  4.639717 , p: 4.152556e-06
+print(pval) # t-test:  5.010759 , p: 6.898717e-07 
 
 # Use LRT, or Wald-type test from car package
 linearHypothesis(metabird_alt, "logMean_m = 1") # Chisq: 24.137  8.974e-07 ***

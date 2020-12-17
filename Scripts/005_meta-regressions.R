@@ -62,8 +62,6 @@ is.positive.definite(Vbird) # TRUE
 
 Vrept<- bldiag(lapply(split(reptdata, reptdata$CommonControl), calc.v))
 is.positive.definite(Vrept) # TRUE
-# Vrept<-PDfunc(Vrept)
-# is.positive.definite(Vrept) # TRUE
 
 Vamph<- bldiag(lapply(split(amphdata, amphdata$CommonControl), calc.v))
 is.positive.definite(Vamph) # TRUE
@@ -237,7 +235,7 @@ Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-v
 Qmtext<-annotate(geom="text", x= 2.5, y= -0.8, label= Qm, size = 6)
 
 # Calculation R2
-mR2.func(metamam2) #11.75
+mR2.func(metamam2) 
 
 # island area 
 logmass <- seq(from = min(mamdata$logmass), to = max(mamdata$logmass), length.out = 1000)
@@ -386,7 +384,7 @@ write.csv(Qm_tot, "Results/Mammals/Coef/anova_dist_area.csv")
 Qm <- paste0("QM(df = 2) = ", round(as.numeric(test_int3[1]), digits = 3), ", p-val = ", round(as.numeric(test_int3[2]), digits = 3))
 
 # Calculation R2
-mR2.func(metamam4) #12.3
+mR2.func(metamam4) 
 
 logmass <- seq(from = min(mamdata$logmass), to = max(mamdata$logmass), length.out = 1000)
 
@@ -467,7 +465,7 @@ write.csv(Qm_tot, "Results/Mammals/Coef/anova_diet.csv")
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
 # Calculation R2
-mR2.func(metamam5) #9.93
+mR2.func(metamam5) 
 
 c<-predict(metamam5, newmods = cbind(logmass, 0, 0), addx=TRUE)
 nc<-predict(metamam5, newmods = cbind(logmass, 1, logmass), addx=TRUE)
@@ -684,7 +682,6 @@ write.csv(Qm_tot, "Results/Mammals/Coef/anova_tseas.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
-
 # Calculation R2
 mR2.func(metamam7) 
 
@@ -829,7 +826,6 @@ rownames(Qm_tot)<-c(prednames, "fullmodel")
 write.csv(Qm_tot, "Results/Mammals/Coef/anova_sdndvi.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
-
 
 # Calculation R2
 mR2.func(metamam9)
@@ -1599,7 +1595,7 @@ Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-v
 Qmtext<-annotate(geom="text", x= 1.5, y= -2.4, label= Qm, size = 6)
 
 # Calculation R2
-mR2.func(metarept2) #22.7
+mR2.func(metarept2) 
 
 # island area 
 logmass <- seq(from = min(reptdata$logmass), to = max(reptdata$logmass), length.out = 1000)
@@ -1748,7 +1744,7 @@ write.csv(Qm_tot, "Results/Reptiles/Coef/anova_dist_area.csv")
 Qm <- paste0("QM(df = 2) = ", round(as.numeric(test_int3[1]), digits = 3), ", p-val = ", round(as.numeric(test_int3[2]), digits = 3))
 
 # Calculation R2
-mR2.func(metarept4) #12.3
+mR2.func(metarept4) 
 
 logmass <- seq(from = min(reptdata$logmass), to = max(reptdata$logmass), length.out = 1000)
 
@@ -1899,7 +1895,7 @@ write.csv(Qm_tot, "Results/Reptiles/Coef/anova_tmean.csv")
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
 
 # Calculation R2
-mR2.func(metarept6) #13.41
+mR2.func(metarept6)
 
 #temperature
 tmean<-quantile(reptdata$tmean, prob = 0.9, names = FALSE) #27 degrees
@@ -2094,7 +2090,6 @@ metarept8<-rma.mv(RR~logmass*NDVI,V=Vrept,  data=reptdata,  random= RE,
 summary(metarept8)
 
 saveRDS(metarept8, file = "Data/Final data/metarept8.Rdata")
-# 
 
 metarept8 <- readRDS(file = "Data/Final data/metarept8.Rdata")
 
@@ -2191,7 +2186,6 @@ rownames(Qm_tot)<-c(prednames, "fullmodel")
 write.csv(Qm_tot, "Results/Reptiles/Coef/anova_sdndvi.csv")
 
 Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
-
 
 # Calculation R2
 mR2.func(metarept9) 
@@ -2395,7 +2389,6 @@ metaamph4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vamph,  da
 summary(metaamph4)
 
 saveRDS(metaamph4, file = "Data/Final data/metaamph4.Rdata")
-# 
 
 metaamph4 <- readRDS(file = "Data/Final data/metaamph4.Rdata")
 
@@ -2798,7 +2791,7 @@ Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-v
 Qmtext<- annotate(geom="text", x=0.35, y= -1.6, label= Qm, size = 6)
 
 # Calculation R2
-mR2.func(metaamph8) #22.06
+mR2.func(metaamph8) 
 
 NDVI<-quantile(amphdata$NDVI, prob = 0.1, names=FALSE) #22.38
 l<-predict(metaamph8, newmods = cbind(logmass, NDVI, logmass*NDVI), addx=TRUE)

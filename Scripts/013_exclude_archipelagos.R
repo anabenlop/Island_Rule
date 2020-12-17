@@ -154,7 +154,7 @@ dev.off()
 ##distance####
 metamam3_arch<-rma.mv(RR~logmass*Dist_near_mainland, subset = Archipielago == "No", V=Vmam,  data=mamdata,  random= RE,
                  R = phylocor,method = "REML")
-summary(metamam3_arch) #QM(df = 3) = 22.9852, p-val < .0001
+summary(metamam3_arch)
 
 saveRDS(metamam3_arch, file = "Data/Final data/metamam3_arch.Rdata")
 
@@ -580,7 +580,7 @@ Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-v
 Qmtext<-annotate(geom="text", x= 1.5, y= -2.4, label= Qm, size = 6)
 
 # Calculation R2
-mR2.func(metarept2_arch) #22.7
+mR2.func(metarept2_arch) 
 
 # island area 
 logmass <- seq(from = min(reptdata$logmass), to = max(reptdata$logmass), length.out = 1000)
@@ -623,7 +623,7 @@ dev.off()
 ##distance####
 metarept3_arch<-rma.mv(RR~logmass*Dist_near_mainland, V=Vrept,subset = Archipielago == "No", data=reptdata,  random= RE,
                   R = phylocor,method = "REML")
-summary(metarept3_arch) #QM(df = 3) = 22.9852, p-val < .0001
+summary(metarept3_arch) 
 
 saveRDS(metarept3_arch, file = "Data/Final data/metarept3_arch.Rdata")
 
@@ -730,7 +730,7 @@ write.csv(Qm_tot, "Results/Reptiles/Coef/anova_dist_area_arch.csv")
 Qm <- paste0("QM(df = 2) = ", round(as.numeric(test_int3[1]), digits = 3), ", p-val = ", round(as.numeric(test_int3[2]), digits = 3))
 
 # Calculation R2
-mR2.func(metarept4_arch) #12.3
+mR2.func(metarept4_arch) 
 
 logmass <- seq(from = min(reptdata$logmass), to = max(reptdata$logmass), length.out = 1000)
 

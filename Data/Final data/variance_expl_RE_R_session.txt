@@ -13,10 +13,10 @@ attached base packages:
 
 other attached packages:
  [1] RColorBrewer_1.1-2   reshape2_1.4.3       corpcor_1.6.9        tictoc_1.0           ggpubr_0.1.8        
- [6] magrittr_1.5         diagram_1.6.4        shape_1.4.4          rotl_3.0.4           treebase_0.1.4      
-[11] ape_5.2              raster_2.8-19        sp_1.3-1             sf_0.7-3             dplyr_0.8.0.1       
-[16] janitor_1.1.1        plotly_4.9.0         ggplot2_3.3.0.9000   metafor_2.0-0        Matrix_1.2-17       
-[21] metagear_0.4         RevoUtils_11.0.3     RevoUtilsMath_11.0.0
+ [6] magrittr_1.5         janitor_1.1.1        plotly_4.9.0         metafor_2.0-0        metagear_0.4        
+[11] diagram_1.6.4        shape_1.4.4          rotl_3.0.4           treebase_0.1.4       ape_5.2             
+[16] dplyr_0.8.0.1        raster_2.8-19        sp_1.3-1             ggplot2_3.3.0.9000   sf_0.7-3            
+[21] Matrix_1.2-17        RevoUtils_11.0.3     RevoUtilsMath_11.0.0
 
 loaded via a namespace (and not attached):
  [1] nlme_3.1-137         bitops_1.0-6         EBImage_4.22.1       progress_1.2.0       httr_1.4.0          
@@ -34,5 +34,5 @@ loaded via a namespace (and not attached):
 [61] glue_1.3.1           data.table_1.12.2    png_0.1-7            httpuv_1.5.1         hexView_0.3-3       
 [66] gtable_0.3.0         purrr_0.3.2          tidyr_0.8.3          assertthat_0.2.1     xfun_0.6            
 [71] mime_0.6             xtable_1.8-3         e1071_1.7-0          later_0.8.0          class_7.3-15        
-[76] viridisLite_0.3.0    tibble_2.1.1         tinytex_0.12         gWidgetsRGtk2_0.0-86 units_0.6-2         
+[76] viridisLite_0.3.0    tibble_2.1.1         tinytex_0.12         units_0.6-2          gWidgetsRGtk2_0.0-86
 [81] RGtk2_2.20.35       

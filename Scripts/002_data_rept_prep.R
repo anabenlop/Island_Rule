@@ -95,6 +95,7 @@ reptdata$var_allom<-ifelse(is.na(reptdata$sd_m_allom) | is.na(reptdata$sd_i_allo
 ##DATA IMPUTATION####
 #impute SD
 impute_missingness(reptdata) #11.15 sd_m 10.78 sd_i % missing
+reptdata$imputed <- ifelse(is.na(reptdata$sd_m_allom) | is.na(reptdata$sd_i_allom), "Yes", "No")
 data_imp<-impute_SD(reptdata,columnSDnames= c("sd_m_allom", "sd_i_allom"),columnXnames=c("Mass_m_allom2", "Mass_i_allom2"), method="Bracken1992")
 
 summary(data_imp$sd_i_allom)
@@ -167,7 +168,7 @@ reptdata_def<-reptdata_temp[,c("Reference", "ID","CommonControl", "Mainland","Is
                                "Mean_m","Mean_i","sd_m","sd_i","N_m", "N_i", 
                                "RR","var", "Long_i", "Lat_i", "logmass", "Island_km2", 
                                "Dist_near_mainland", "NDVI", "SDNDVI", "tmean", "tseas", "prec","Archipielago",
-                               "Phylogeny", "Data_source_type")]
+                               "Phylogeny", "Data_source_type","imputed")]
 
 
 write.csv(reptdata_def,file= "Data/reptdata_def.csv", row.names = FALSE) #455 rows

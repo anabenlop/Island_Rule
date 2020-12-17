@@ -209,7 +209,7 @@ is.ultrametric(phylo_branch) # TRUE
 mam_phylo_cor <- vcv(phylo_branch, cor = T)
 
 # remove rows not in correlation matrix
-mamdata_ph <- mamdata[which(mamdata$Binomial %in% rownames(mam_phylo_cor)),] # we lose 1 datapoint (Eulemur fulvus), 1046 rows
+mamdata_ph <- mamdata[which(mamdata$Binomial %in% rownames(mam_phylo_cor)),] # we lose 1 datapoint (Eulemur fulvus)
 
 ##create Species ID to distinguish later between variation explained by non-phylogenetic and phylogenetic effects
 SpID<-data.frame(Binomial = unique(mamdata_ph$Binomial), SPID = paste0("SP",1:length(unique(mamdata_ph$Binomial))))

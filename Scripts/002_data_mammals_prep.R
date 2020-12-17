@@ -6,7 +6,7 @@
 # Email: abenitez81@gmail.com
 
 # Script first created on the 17th of September 2019
-# Modifeied August 2020
+# Modified August 2020, and November 2020
 
 ##############################################################
 # Description of script and instructions
@@ -104,6 +104,7 @@ mamdata$var_allom<-ifelse(is.na(mamdata$sd_m_allom) | is.na(mamdata$sd_i_allom),
 ##################################
 #impute SD
 impute_missingness(mamdata) #20.8% sd_m 21.7% sd_i
+mamdata$imputed <- ifelse(is.na(mamdata$sd_m_allom) | is.na(mamdata$sd_i_allom), "Yes", "No")
 data_imp<-impute_SD(mamdata,columnSDnames= c("sd_m_allom", "sd_i_allom"),columnXnames=c("Mass_m_allom2", "Mass_i_allom2"), method="Bracken1992")
 
 # summary(data_imp$sd_i_allom)
@@ -124,7 +125,9 @@ mamdata_temp<-inner_join(data_imp,uni_shared, by = "Shared_control")
 mamdata_temp<-left_join(mamdata_temp, diet[,c("Species","guild", "BM")], by=c("Binomial" = "Species"))
 nrow(mamdata_temp[is.na(mamdata_temp$guild),]) #3 rows species with diet not assigned
 mamdata_temp[mamdata_temp$Binomial == "Oncifelis guigna", "guild"] <- "Carn" # Leopardus guigna in EltonTraits
-mamdata_temp[mamdata_temp$Binomial == "Galeopterus variegatus", "guild"] <- "Herb" #assign diet based on literature: Agoramoorthy, G., Sha, C. M., & Hsu, M. J. (2006). Population, diet and conservation of Malayan flying lemurs in altered and fragmented habitats in Singapore. Biodiversity & Conservation, 15(7), 2177-2185.
+mamdata_temp[mamdata_temp$Binomial == "Galeopterus variegatus", "guild"] <- "Herb" # Galeopterus variegates in EltonTraits 
+mamdata_temp[mamdata_temp$Binomial == "Oncifelis guigna", "BM"] <- 5.157939 # Leopardus guigna in EltonTraits
+mamdata_temp[mamdata_temp$Binomial == "Galeopterus variegatus", "BM"] <- 1.1122 # Galeopterus variegates in EltonTraits
 mamdata_temp[mamdata_temp$guild=="Frug","guild"] <- "Herb" # assign frugivores to herbivores category
 
 #keep only what we need
@@ -140,10 +143,10 @@ mamdata_def<-mamdata_temp[,c("Reference", "ID","CommonControl", "Mainland","Isla
                              "Mean_m","Mean_i","sd_m","sd_i","N_m", "N_i", 
                              "RR","var", "Long_i", "Lat_i", "logmass", "Island_km2", 
                              "Dist_near_mainland", "NDVI", "SDNDVI", "tmean", "tseas", "prec","Archipielago",
-                             "Phylogeny", "Data_source_type")]
+                             "Phylogeny", "Data_source_type", "imputed")]
 
 # save data
-write.csv(mamdata_def,file= "Data/mamdata_def.csv", row.names = FALSE) #1047rows
+write.csv(mamdata_def,file= "Data/mamdata_def.csv", row.names = FALSE) 
 
 # saving session information with all packages versions for reproducibility purposes
 sink("Data/Final data/data_mamprep_R_session.txt")

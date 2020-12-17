@@ -62,11 +62,14 @@ sigma_o*100 # 35.03.48% variance due within-study effects
 sigma_sp<-metamam$sigma2[3]/sum(metamam$sigma2)
 sigma_sp*100 # 24.36% variance due to between-species variation (non-phylogenetic variaton at species level)
 H2 <-metamam$sigma2[4]/sum(metamam$sigma2) 
-H2 # lamdba or phylogenetic heritability - 0.14
+H2 # lamdba or phylogenetic heritability - 0.20
 H2*100
 
 mam_variance <-data.frame(class = "Mammals", study = sigma_s, species = sigma_sp, phylogeny = H2, observ = sigma_o)
-
+mam_variance2 <- data.frame(class = "Mammals", study = sigma_s*cR2.func(metamam)/100, 
+                            species = sigma_sp*cR2.func(metamam)/100, 
+                            phylogeny = H2*cR2.func(metamam)/100, 
+                            observ = sigma_o*cR2.func(metamam)/100)
 #birds#### 
 # var exp by moderators
 mR2.func(metabird)
@@ -138,7 +141,7 @@ varexp_island<-ggplot(vardata_t) + geom_bar(aes(Class, value, fill = variable), 
   guides(fill=guide_legend(title=" "))+ ylab("Variation accounted by random factors (%)")+
   xlab(" ") 
 
-tiff('Results/Figures/Fig S3_var_RE.tif', res=200, width=2100, height=2000)
+tiff('Results/Figures/Fig S3_var_RE.tif', res=150, width=1600, height=1500)
 varexp_island
 dev.off()
 

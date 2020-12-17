@@ -172,7 +172,7 @@ is.binary.tree(tree) # there are some polytomies
 
 # to take care of these polytomies, we are going to use a 
 # randomization approach
-set.seed(111) #making it replicable, at least for this version of R (i.e. v.3.5.1), I AM USING THE SAME! 
+set.seed(111) #making it replicable, at least for this version of R (i.e. v.3.5.1
 tree_random <- multi2di(tree,random=TRUE)
 is.binary.tree(tree_random)
 
@@ -251,7 +251,7 @@ birddata_ph <- birddata[which(birddata$Binomial %in% rownames(bird_phylo_cor)),]
 ##create Species ID to distinguish later between variation explained by non-phylogenetic and phylogenetic effects
 SpID<-data.frame(Binomial = unique(birddata_ph$Binomial), SPID = paste0("SP",1:length(unique(birddata_ph$Binomial))))
 SpID$Binomial<-as.character(SpID$Binomial)
-birddata_ph<-inner_join(birddata_ph,SpID, by = "Binomial") #706 rows
+birddata_ph<-inner_join(birddata_ph,SpID, by = "Binomial") #695 rows
 
 # finally, save matrix for future analyses
 save(bird_phylo_cor, file = "Data/Final data/bird_phylo_cor.Rdata")

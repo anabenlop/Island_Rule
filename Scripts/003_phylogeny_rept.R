@@ -204,7 +204,7 @@ reptdata_ph<-inner_join(reptdata_ph,SpID, by = "Binomial")
 save(rept_phylo_cor, file = "Data/Final data/rept_phylo_cor.Rdata")
 
 
-# exporting fixed dataset for analyses (NOT NEEDED NOW)
+# exporting fixed dataset for analyses 
 write.csv(reptdata_ph, 
            "Data/Final data/reptdata_ph.csv", row.names = FALSE)
 

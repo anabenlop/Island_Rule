@@ -106,7 +106,6 @@ anova(metabird_bias2, btt = 4)
 
 saveRDS(metabird_bias2, file = "Data/Final data/metabird_bias2.Rdata")
 
-
 #reptiles####
 phylocor<-list(Binomial= rept_phylo_cor)
 metarept_bias<-rma.mv(RR~logmass+Data_source_type,V=Vrept,  data=reptdata,  random= RE, R= phylocor) 

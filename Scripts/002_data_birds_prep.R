@@ -96,6 +96,7 @@ birddata$var_allom<-ifelse(is.na(birddata$sd_m_allom) | is.na(birddata$sd_i_allo
 ##DATA IMPUTATION####
 #impute SD
 impute_missingness(birddata) #1.03 % sd_m and 1.11% sd_i missing
+birddata$imputed <- ifelse(is.na(birddata$sd_m_allom) | is.na(birddata$sd_i_allom), "Yes", "No")
 data_imp<-impute_SD(birddata,columnSDnames= c("sd_m_allom", "sd_i_allom"),columnXnames=c("Mass_m_allom2", "Mass_i_allom2"), method="Bracken1992")
 
 summary(data_imp$sd_i_allom)
@@ -120,11 +121,11 @@ birddata_temp<-inner_join(data_imp,uni_shared, by = "Shared_control")
 
 #Join diet database
 diet <- diet[!duplicated(diet$Species),] #remove duplicates
-birddata_temp<-left_join(birddata_temp, diet[,c("Species","Diet_cat")], by=c("Binomial" = "Species"))
+birddata_temp<-left_join(birddata_temp, diet[,c("Species","Diet_cat", "BM")], by=c("Binomial" = "Species"))
 birddata_temp[is.na(birddata_temp$Diet_cat),] #all species with diet assigned
 birddata_temp$guild<-birddata_temp$Diet_cat #change name to common term across databases
 
-#Join migratory status database
+#Join migratory status database (Eyres et al. 2017); http://dataportal-senckenberg.de/database/metacat/bikf.10058.1/bikf
 birddata_temp <- left_join(birddata_temp, mig_status[,c("Binomial","Migratory_status", "Migratory_status_3")], by=c("Binomial" = "Binomial"))
 nrow(birddata_temp[is.na(birddata_temp$Migratory_status),]) #29 species without mig status assigned
 nrow(birddata_temp[is.na(birddata_temp$Migratory_status_3),]) #29 species without mig status assigned
@@ -179,7 +180,7 @@ birddata_def<-birddata_temp[,c("Reference", "ID","CommonControl", "Mainland","Is
                                "Mean_m","Mean_i","sd_m","sd_i","N_m", "N_i", 
                                "RR","var", "Long_i", "Lat_i", "logmass", "Island_km2", 
                                "Dist_near_mainland", "NDVI", "SDNDVI", "tmean", "tseas", "prec", "Archipielago",
-                               "Phylogeny", "Data_source_type")]
+                               "Phylogeny", "Data_source_type", "imputed")]
 
 write.csv(birddata_def,file= "Data/birddata_def.csv", row.names = FALSE) #701 rows
 
