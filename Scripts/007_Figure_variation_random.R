@@ -136,12 +136,16 @@ vardata_t$value<-round(vardata_t$value*100,2)
 display.brewer.all()
 
 varexp_island<-ggplot(vardata_t) + geom_bar(aes(Class, value, fill = variable), stat ="identity") +
-  scale_fill_brewer(palette = "Spectral") + theme_bw(base_size=24)+
-  theme(element_blank(), axis.text=element_text(size=24)) +
+  scale_fill_brewer(palette = "Spectral") + theme_bw(base_size=18)+
+  theme(element_blank(), axis.text=element_text(size=18, colour ="black")) +
   guides(fill=guide_legend(title=" "))+ ylab("Variation accounted by random factors (%)")+
   xlab(" ") 
 
-tiff('Results/Figures/Fig S3_var_RE.tif', res=150, width=1600, height=1500)
+# tiff('Results/Figures/Fig S3_var_RE.tif', res=150, width=1600, height=1500)
+# varexp_island
+# dev.off()
+
+pdf('Results/Figures/ED_Fig 3.pdf', width= 8, height= 7)
 varexp_island
 dev.off()
 

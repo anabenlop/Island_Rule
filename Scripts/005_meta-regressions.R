@@ -26,6 +26,11 @@ library(metafor)
 library(ggplot2)
 library(ggpubr)
 library(tictoc)
+library(png)
+library(ggimage)
+library(grid)
+library(rsvg)
+library(grImport2)
 
 #clean memory
  rm(list=ls())
@@ -73,30 +78,10 @@ RE = list(~ 1 | Reference,~1|ID, ~1|SPID, ~1| Binomial)
 
 #mammals####
 phylocor<-list(Binomial= mam_phylo_cor)
-metamam<-rma.mv(RR~logmass,V=Vmam, data=mamdata, random= RE,  R = phylocor)
-summary(metamam)
+# metamam<-rma.mv(RR~logmass,V=Vmam, data=mamdata, random= RE,  R = phylocor)
+# summary(metamam)
 mR2.func(metamam)
 cR2.func(metamam)
-
-logmass <- seq(from = min(mamdata$logmass), to = max(mamdata$logmass), length.out = 1000)
-
-#predict for vector of mass
-df_m<-predict(metamam, newmods = cbind(logmass), addx=TRUE)
-df_m<-data.frame(df_m)
-df_m$logmass<-df_m$X.logmass
-
-#calculate size of points based on sampling variance only
-wi    <- 1/sqrt(mamdata$var)
-size  <- 2 + 20.0 * (wi - min(wi))/(max(wi) - min(wi))
-
-M<-ggplot(mamdata)+ geom_hline(yintercept= 0, size=1.2, linetype="dashed", color="dark gray")+theme_bw(base_size=18) +
-  geom_point(aes(logmass,RR), colour= "#0072B2",size = size,shape=20, alpha=I(.3)) +scale_shape_identity()+
-  geom_line(data=df_m,aes(logmass,pred),color="#0072B2", size = 1.2)+
-  geom_ribbon(data=df_m, aes(x=logmass, ymin=ci.lb,ymax=ci.ub), fill = "#0072B2", alpha=I(.4))+
-  theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+xlab("log10(mass mainland (g))")+ ylab("lnRR")+ 
-  scale_x_continuous(breaks=seq(0,6,1)) + 
-  scale_y_continuous(breaks=seq(-1.6,1.6,0.4), limits= c(-1.6,1.6))+ 
-  labs(tag = "a")
 
 #birds#### 
 phylocor<-list(Binomial= bird_phylo_cor)
@@ -105,108 +90,40 @@ summary(metabird)
 mR2.func(metabird)
 cR2.func(metabird)
 
-logmass <- seq(from = min(birddata$logmass), to =  max(birddata$logmass) , length.out = 1000)
-
-#predict for vector of mass
-df_b<-predict(metabird, newmods = cbind(logmass), addx=TRUE)
-df_b<-data.frame(df_b)
-df_b$logmass<-df_b$X.logmass
-
-#calculate size of points
-wi    <- 1/sqrt(birddata$var)
-size  <- 2 + 20.0 * (wi - min(wi))/(max(wi) - min(wi))
-
-B<-ggplot(birddata)+ geom_hline(yintercept= 0, size=1.2, linetype="dashed", color="dark gray")+theme_bw(base_size=18) +
-  geom_point(aes(logmass,RR), size = size,shape=20, color="#CC0000",alpha=I(.3)) +scale_shape_identity()+
-  geom_line(data=df_b,aes(logmass,pred),color="#CC0000", size = 1.2)+
-  geom_ribbon(data=df_b, aes(x=logmass, ymin=ci.lb,ymax=ci.ub), fill = "#CC0000", alpha=I(.4))+
-  theme(element_blank(),axis.text=element_text(size=18,colour ="black"))+ xlab("log10(mass mainland (g))") + ylab("lnRR")+ 
-  scale_x_continuous(breaks=seq(0.6,3.7,0.8), limits = c(0.6,3.7))+ 
-  scale_y_continuous(breaks=seq(-1.4,1.4,0.4), limits= c(-1.4,1.4))+
-  #ylim(-1.3,1.3)+
-  labs(tag = "b")
-B
-
 #reptiles####
 phylocor<-list(Binomial= rept_phylo_cor)
-metarept<-rma.mv(RR~logmass,V=Vrept,  data=reptdata,  random= RE, R=phylocor) 
-summary(metarept)
+# metarept<-rma.mv(RR~logmass,V=Vrept,  data=reptdata,  random= RE, R=phylocor) 
+# summary(metarept)
 mR2.func(metarept)
 cR2.func(metarept)
 
-logmass <- seq(from = min(reptdata$logmass), to = max(reptdata$logmass), length.out = 1000)
-
-#predict for vector of mass
-df_r<-predict(metarept, newmods = cbind(logmass), addx=TRUE)
-df_r<-data.frame(df_r)
-df_r$logmass<-df_r$X.logmass
-
-#calculate size of points
-wi    <- 1/sqrt(reptdata$var)
-size  <- 2 + 20.0 * (wi - min(wi))/(max(wi) - min(wi))
-
-R<-ggplot(reptdata)+ geom_hline(yintercept= 0, size=1.2, linetype="dashed", color="dark gray")+theme_bw(base_size=18) +
-  geom_point(aes(logmass,RR),colour="#E69F00", size = size, shape = 20, alpha=I(.3)) + 
-  geom_line(data=df_r,aes(logmass,pred),color="#E69F00", size = 1.2)+
-  geom_ribbon(data=df_r, aes(x=logmass, ymin=ci.lb,ymax=ci.ub), fill = "#E69F00", alpha=I(.4))+
-  theme(element_blank(),axis.text=element_text(size=18, colour ="black"))+ xlab("log10(mass mainland (g))") + ylab("lnRR")+ 
-  #scale_x_continuous(breaks=seq(-1,4,1)) +
-   scale_y_continuous(breaks=seq(-2.4,2.4, 0.6), limits = c(-2.4,2.4)) +
-  #ylim(-2.3,2.3)+
-  labs(tag = "c")
-
 #amphibians####
 phylocor<-list(Binomial= amph_phylo_cor)
-metaamph<-rma.mv(RR~logmass ,V=Vamph,  data=amphdata, random= RE, R = phylocor) 
-summary(metaamph)
+# metaamph<-rma.mv(RR~logmass ,V=Vamph,  data=amphdata, random= RE, R = phylocor) 
+# summary(metaamph)
 mR2.func(metaamph)
 cR2.func(metaamph)
 
-logmass <- seq(from = min(amphdata$logmass), to = max(amphdata$logmass), length.out = 1000)
-
-#predict for vector of mass
-df_a<-predict(metaamph, newmods = cbind(logmass), addx=TRUE)
-df_a<-data.frame(df_a)
-df_a$logmass<-df_a$X.logmass
-
-#calculate size of points
-wi    <- 1/sqrt(amphdata$var)
-size  <- 2 + 20.0 * (wi - min(wi))/(max(wi) - min(wi))
-
-A<-ggplot(amphdata)+ geom_hline(yintercept= 0, size=1.2, linetype="dashed", color="dark gray")+theme_bw(base_size=18) +
-  geom_point(aes(logmass,RR),colour="#009E73", size = size,shape = 20, alpha=I(.3)) + 
-  geom_line(data=df_a,aes(logmass,pred),color="#009E73", size = 1.2)+
-  geom_ribbon(data=df_a, aes(x=logmass, ymin=ci.lb,ymax=ci.ub), fill = "#009E73", alpha=I(.4))+
-  theme(element_blank(), axis.text=element_text(size=18, colour ="black"))+ xlab("log10(mass mainland (g))") + ylab("lnRR") +
-  # scale_x_continuous(breaks=seq(-0.6,1.7,0.5), limits = c(-0.6,1.7))+
-  scale_y_continuous(breaks=seq(-1.6,1.6,0.4), limits =c(-1.6,1.6)) +
-  labs(tag = "d")
-
+# Save models for plotting figures later
 saveRDS(metamam, file = "Data/Final data/metamam.Rdata")
 saveRDS(metabird, file = "Data/Final data/metabird.Rdata")
 saveRDS(metarept, file = "Data/Final data/metarept.Rdata")
 saveRDS(metaamph, file = "Data/Final data/metaamph.Rdata")
 
-#### FIGURE 3 ####
-multiplot<-ggarrange(M,B,R,A, ncol = 2, nrow = 2, align = "v")
-tiff('Results/Figures/Figure3.tif', res=300, width=3100, height=3000)
-multiplot
-dev.off()
-
 ############################################################################
 # Testing several ecological hypotheses underlying insular size shifts #####
 ############################################################################
-# MAMMALs####
+# MAMMALS####
 tic("Run all models for mammals")
 phylocor<-list(Binomial=mam_phylo_cor)
 logmass <- seq(from = min(mamdata$logmass), to = max(mamdata$logmass), length.out = 1000)
 
 #island area ####
-metamam2<-rma.mv(RR~logmass*Island_km2,V = Vmam, data=mamdata, random= RE,
-              R = phylocor,method = "REML")
-summary(metamam2)
-
-saveRDS(metamam2, file = "Data/Final data/metamam2.Rdata")
+# metamam2<-rma.mv(RR~logmass*Island_km2,V = Vmam, data=mamdata, random= RE,
+#               R = phylocor,method = "REML")
+# summary(metamam2)
+# 
+# saveRDS(metamam2, file = "Data/Final data/metamam2.Rdata")
 
 metamam2 <- readRDS(file = "Data/Final data/metamam2.Rdata")
 
@@ -258,9 +175,17 @@ df$logmass<-df$X.logmass
 
 colpalette<-c("Large"="#9966FF","Small" = "#E69F00") #red yellow palette "Warm no pred"= "#FFCC33", "Cold no pred"= "#0072B2
 
-Ma<-ggplot(mamdata)+ #geom_point(aes(logmass,RR), color = "grey",
-  #     size = size,shape=16, 
-  #     alpha=I(.3)) +scale_shape_identity()+
+# import silhouette
+# raster format
+sil_M <- readPNG("Silhouettes/PhyloPic.72f2f997.Steven-Traver.Cervus-elaphus.png")
+
+Ma<-ggplot(mamdata)+
+  annotation_custom(rasterGrob(sil_M,
+  x = unit(0.14, "npc"),
+  y = unit(0.85, "npc"),
+  width = unit(0.22,"npc"),
+  height = unit(0.27,"npc")),
+  -Inf, Inf, -Inf, Inf) +
   geom_hline(yintercept= 0, size=1.2, linetype="dashed", color="dark gray")+theme_bw(base_size=18) +
   geom_line(data=df,aes(logmass,pred,colour=Islandtype, group = Islandtype), size = 1)+ #small remote, red
   geom_ribbon(data=df,aes(logmass,ymin= ci.lb ,ymax=ci.ub ,fill=Islandtype, group = Islandtype), alpha = I(.5))+
@@ -276,11 +201,11 @@ Ma
 dev.off()
 
 ##distance####
-metamam3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vmam,  data=mamdata,  random= RE,
-              R = phylocor,method = "REML")
-summary(metamam3) #QM(df = 3) = 22.9852, p-val < .0001
-
-saveRDS(metamam3, file = "Data/Final data/metamam3.Rdata")
+# metamam3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vmam,  data=mamdata,  random= RE,
+#               R = phylocor,method = "REML")
+# summary(metamam3) #QM(df = 3) = 22.9852, p-val < .0001
+# 
+# saveRDS(metamam3, file = "Data/Final data/metamam3.Rdata")
 
 metamam3 <- readRDS(file = "Data/Final data/metamam3.Rdata")
 
@@ -304,7 +229,7 @@ rownames(Qm_tot)<-c(prednames, "fullmodel")
 
 write.csv(Qm_tot, "Results/Mammals/Coef/anova_dist.csv")
 
-Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3))
+Qm <- paste0("QM(df = 1) = ", round(as.numeric(test_int[1]), digits = 3), ", p-val = ", round(as.numeric(test_int[2]), digits = 3), "0") #zero added manually
 
 # Calculation R2
 mR2.func(metamam3) 
@@ -349,11 +274,11 @@ Mb
 dev.off()
 
 ##Island area and remoteness####
-metamam4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vmam,  data=mamdata, random= RE,
-              R = phylocor, method = "REML")
-summary(metamam4)
-
-saveRDS(metamam4, file = "Data/Final data/metamam4.Rdata")
+# metamam4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vmam,  data=mamdata, random= RE,
+#               R = phylocor, method = "REML")
+# summary(metamam4)
+# 
+# saveRDS(metamam4, file = "Data/Final data/metamam4.Rdata")
 
 metamam4 <- readRDS(file = "Data/Final data/metamam4.Rdata")
 
@@ -434,11 +359,11 @@ dev.off()
 # diet ####
 mamdata$guild2<- ifelse(mamdata$guild == "Carn", "Carn", "No Carn")
 mamdata$guild2<- factor(mamdata$guild2)
-metamam5<-rma.mv(RR~logmass*guild2,V=Vmam,  data=mamdata,  random= RE,
-              R = phylocor, method = "REML")
-summary(metamam5)
+# metamam5<-rma.mv(RR~logmass*guild2,V=Vmam,  data=mamdata,  random= RE,
+#               R = phylocor, method = "REML")
+# summary(metamam5)
 
-saveRDS(metamam5, file = "Data/Final data/metamam5.Rdata")
+# saveRDS(metamam5, file = "Data/Final data/metamam5.Rdata")
 
 metamam5 <- readRDS(file = "Data/Final data/metamam5.Rdata")
 
@@ -504,11 +429,11 @@ Md
 dev.off()
 
 # temperature####
-metamam6<-rma.mv(RR~logmass*tmean,V=Vmam,  data=mamdata,random= RE,
-               R = phylocor,method = "REML")
-summary(metamam6)
-
-saveRDS(metamam6, file = "Data/Final data/metamam6.Rdata")
+# metamam6<-rma.mv(RR~logmass*tmean,V=Vmam,  data=mamdata,random= RE,
+#                R = phylocor,method = "REML")
+# summary(metamam6)
+# 
+# saveRDS(metamam6, file = "Data/Final data/metamam6.Rdata")
 
 metamam6 <- readRDS(file = "Data/Final data/metamam6.Rdata")
 
@@ -652,11 +577,11 @@ Me2
 dev.off()
 
 # temp seas####
-metamam7<-rma.mv(RR~logmass*tseas,V=Vmam,  data=mamdata,  random= RE,
-               R = phylocor,method = "REML")
-summary(metamam7)
-
-saveRDS(metamam7, file = "Data/Final data/metamam7.Rdata")
+# metamam7<-rma.mv(RR~logmass*tseas,V=Vmam,  data=mamdata,  random= RE,
+#                R = phylocor,method = "REML")
+# summary(metamam7)
+# 
+# saveRDS(metamam7, file = "Data/Final data/metamam7.Rdata")
 
 metamam7 <- readRDS(file = "Data/Final data/metamam7.Rdata")
 
@@ -725,11 +650,11 @@ Mf
 dev.off()
 
 # resource availability####
-metamam8<-rma.mv(RR~logmass*NDVI,V=Vmam,  data=mamdata,  random= RE,
-              R = phylocor,method = "REML")
-summary(metamam8)
-
-saveRDS(metamam8, file = "Data/Final data/metamam8.Rdata")
+# metamam8<-rma.mv(RR~logmass*NDVI,V=Vmam,  data=mamdata,  random= RE,
+#               R = phylocor,method = "REML")
+# summary(metamam8)
+# 
+# saveRDS(metamam8, file = "Data/Final data/metamam8.Rdata")
 
 metamam8 <- readRDS(file = "Data/Final data/metamam8.Rdata")
 
@@ -797,11 +722,11 @@ Mg
 dev.off()
 
 # seasonality in resources####
-metamam9<-rma.mv(RR~logmass*SDNDVI,V=Vmam,  data=mamdata,  random= RE,
-               R = phylocor,method = "REML")
-summary(metamam9)
-
-saveRDS(metamam9, file = "Data/Final data/metamam9.Rdata")
+# metamam9<-rma.mv(RR~logmass*SDNDVI,V=Vmam,  data=mamdata,  random= RE,
+#                R = phylocor,method = "REML")
+# summary(metamam9)
+# 
+# saveRDS(metamam9, file = "Data/Final data/metamam9.Rdata")
 
 metamam9 <- readRDS(file = "Data/Final data/metamam9.Rdata")
 
@@ -870,7 +795,12 @@ dev.off()
 
 # multiplot####
 multimam<-ggarrange(Ma,Mb,Mc,Md,Me2,Mf,Mg,Mh, ncol = 2, nrow = 4, align = "v")
-tiff('Results/Figures/Figure_hyp_mam_upd.tif', res=300, width=3500, height=7000, compression = "lzw")
+tiff('Results/Figures/ED_Fig 5.tif', res=300, width=3500, height=7000, compression = "lzw")
+multimam
+dev.off()
+
+multimam<-ggarrange(Ma,Mb,Mc,Md,Me2,Mf,Mg,Mh, ncol = 2, nrow = 4, align = "v")
+pdf('Results/Figures/ED_Fig 5.pdf', width=12, height=24)
 multimam
 dev.off()
 
@@ -882,11 +812,11 @@ phylocor<-list(Binomial=bird_phylo_cor)
 logmass <- seq(from = min(birddata$logmass), to = max(birddata$logmass), length.out = 1000)
 
 #island area ####
-metabird2<-rma.mv(RR~logmass*Island_km2,V = Vbird, data=birddata, random= RE,
-              R = phylocor,method = "REML")
-summary(metabird2)
-
-saveRDS(metabird2, file = "Data/Final data/metabird2.Rdata")
+# metabird2<-rma.mv(RR~logmass*Island_km2,V = Vbird, data=birddata, random= RE,
+#               R = phylocor,method = "REML")
+# summary(metabird2)
+# 
+# saveRDS(metabird2, file = "Data/Final data/metabird2.Rdata")
 
 metabird2 <- readRDS(file = "Data/Final data/metabird2.Rdata")
 
@@ -938,9 +868,17 @@ df$logmass<-df$X.logmass
 
 colpalette<-c("Large"="#9966FF","Small" = "#E69F00") #red yellow palette "Warm no pred"= "#FFCC33", "Cold no pred"= "#0072B2
 
-Ba<-ggplot(birddata)+ #geom_point(aes(logmass,RR), color = "grey",
-  #     size = size,shape=16, 
-  #     alpha=I(.3)) +scale_shape_identity()+
+# import silhouette
+# raster format
+sil_B<- readPNG("Silhouettes/PhyloPic.67a9ecfd.Sylviidae_Sylvioidea_PublicDom1.0_flipped.png")
+
+Ba<-ggplot(birddata)+ 
+  annotation_custom(rasterGrob(sil_B,
+                   x = unit(0.14, "npc"),
+                   y = unit(0.85, "npc"),
+                   width = unit(0.17,"npc"),
+                   height = unit(0.16,"npc")),
+                  -Inf, Inf, -Inf, Inf) +
   geom_hline(yintercept= 0, size=1.2, linetype="dashed", color="dark gray")+theme_bw(base_size=18) +
   geom_line(data=df,aes(logmass,pred,colour=Islandtype, group = Islandtype), size = 1)+ #small remote, red
   geom_ribbon(data=df,aes(logmass,ymin= ci.lb ,ymax=ci.ub ,fill=Islandtype, group = Islandtype), alpha = I(.5))+
@@ -956,12 +894,12 @@ Ba
 dev.off()
 
 ##distance####
-metabird3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vbird,  data=birddata,  random= RE,
-              R = phylocor,method = "REML")
-summary(metabird3)
-
-saveRDS(metabird3, file = "Data/Final data/metabird3.Rdata")
-
+# metabird3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vbird,  data=birddata,  random= RE,
+#               R = phylocor,method = "REML")
+# summary(metabird3)
+# 
+# saveRDS(metabird3, file = "Data/Final data/metabird3.Rdata")
+# 
 metabird3 <- readRDS(file = "Data/Final data/metabird3.Rdata")
 
 coef<-data.frame(b =metabird3$b, lci = metabird3$ci.lb, uci =  metabird3$ci.ub)
@@ -1029,11 +967,11 @@ Bb
 dev.off()
 
 ##Island area and remoteness####
-metabird4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vbird,  data=birddata, random= RE,
-              R = phylocor, method = "REML")
-summary(metabird4)
-
-saveRDS(metabird4, file = "Data/Final data/metabird4.Rdata")
+# metabird4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vbird,  data=birddata, random= RE,
+#               R = phylocor, method = "REML")
+# summary(metabird4)
+# 
+# saveRDS(metabird4, file = "Data/Final data/metabird4.Rdata")
 
 metabird4 <- readRDS(file = "Data/Final data/metabird4.Rdata")
 
@@ -1114,11 +1052,11 @@ dev.off()
 # diet ####
 birddata$guild2<- ifelse(birddata$guild == "VertFishScav", "Carn", "No Carn")
 birddata$guild2<- factor(birddata$guild2)
-metabird5<-rma.mv(RR~logmass*guild2,V=Vbird,  data=birddata,  random= RE,
-              R = phylocor, method = "REML")
-summary(metabird5)
-
-saveRDS(metabird5, file = "Data/Final data/metabird5.Rdata")
+# metabird5<-rma.mv(RR~logmass*guild2,V=Vbird,  data=birddata,  random= RE,
+#               R = phylocor, method = "REML")
+# summary(metabird5)
+# 
+# saveRDS(metabird5, file = "Data/Final data/metabird5.Rdata")
 
 metabird5 <- readRDS(file = "Data/Final data/metabird5.Rdata")
 
@@ -1184,11 +1122,11 @@ Bd
 dev.off()
 
 # temperature####
-metabird6<-rma.mv(RR~logmass*tmean,V=Vbird,  data=birddata,random= RE,
-              R = phylocor,method = "REML")
-summary(metabird6)
-
-saveRDS(metabird6, file = "Data/Final data/metabird6.Rdata")
+# metabird6<-rma.mv(RR~logmass*tmean,V=Vbird,  data=birddata,random= RE,
+#               R = phylocor,method = "REML")
+# summary(metabird6)
+# 
+# saveRDS(metabird6, file = "Data/Final data/metabird6.Rdata")
 
 metabird6 <- readRDS(file = "Data/Final data/metabird6.Rdata")
 
@@ -1258,12 +1196,12 @@ Be
 dev.off()
 
 # temperature intercept####
-metabird6b<-rma.mv(RR~logmass + tmean,V=Vbird,  data=birddata,random= RE,
-               R = phylocor,method = "REML")
-summary(metabird6b)
-
-saveRDS(metabird6b, file = "Data/Final data/metabird6b.Rdata")
-
+# metabird6b<-rma.mv(RR~logmass + tmean,V=Vbird,  data=birddata,random= RE,
+#                R = phylocor,method = "REML")
+# summary(metabird6b)
+# 
+# saveRDS(metabird6b, file = "Data/Final data/metabird6b.Rdata")
+# 
 metabird6b <- readRDS(file = "Data/Final data/metabird6b.Rdata")
 
 coef<-data.frame(b =metabird6b$b, lci = metabird6b$ci.lb, uci =  metabird6b$ci.ub)
@@ -1332,11 +1270,11 @@ Be2
 dev.off()
 
 # temp seas####
-metabird7<-rma.mv(RR~logmass*tseas,V=Vbird,  data=birddata,  random= RE,
-              R = phylocor,method = "REML")
-summary(metabird7)
-
-saveRDS(metabird7, file = "Data/Final data/metabird7.Rdata")
+# metabird7<-rma.mv(RR~logmass*tseas,V=Vbird,  data=birddata,  random= RE,
+#               R = phylocor,method = "REML")
+# summary(metabird7)
+# 
+# saveRDS(metabird7, file = "Data/Final data/metabird7.Rdata")
 
 metabird7 <- readRDS(file = "Data/Final data/metabird7.Rdata")
 
@@ -1405,11 +1343,11 @@ Bf
 dev.off()
 
 # resource availability####
-metabird8<-rma.mv(RR~logmass*NDVI,V=Vbird,  data=birddata,  random= RE,
-              R = phylocor,method = "REML")
-summary(metabird8)
-
-saveRDS(metabird8, file = "Data/Final data/metabird8.Rdata")
+# metabird8<-rma.mv(RR~logmass*NDVI,V=Vbird,  data=birddata,  random= RE,
+#               R = phylocor,method = "REML")
+# summary(metabird8)
+# 
+# saveRDS(metabird8, file = "Data/Final data/metabird8.Rdata")
 
 metabird8 <- readRDS(file = "Data/Final data/metabird8.Rdata")
 
@@ -1477,11 +1415,11 @@ Bg
 dev.off()
 
 # seasonality in resources####
-metabird9<-rma.mv(RR~logmass*SDNDVI,V=Vbird,  data=birddata,  random= RE,
-              R = phylocor,method = "REML")
-summary(metabird9)
-
-saveRDS(metabird9, file = "Data/Final data/metabird9.Rdata")
+# metabird9<-rma.mv(RR~logmass*SDNDVI,V=Vbird,  data=birddata,  random= RE,
+#               R = phylocor,method = "REML")
+# summary(metabird9)
+# 
+# saveRDS(metabird9, file = "Data/Final data/metabird9.Rdata")
 
 metabird9 <- readRDS(file = "Data/Final data/metabird9.Rdata")
 
@@ -1551,7 +1489,12 @@ dev.off()
 
 # multiplot####
 multibird<-ggarrange(Ba,Bb,Bc,Bd,Be2,Bf,Bg,Bh, ncol = 2, nrow = 4, align = "v")
-tiff('Results/Figures/Figure_hyp_birds_upd.tif', res=300, width=3500, height=7000, compression = "lzw")
+tiff('Results/Figures/ED_Fig 6.tif', res=300, width=3500, height=7000, compression = "lzw")
+multibird
+dev.off()
+toc() #
+
+pdf('Results/Figures/ED_Fig 6.pdf', width=12, height=24)
 multibird
 dev.off()
 toc() #
@@ -1562,11 +1505,11 @@ phylocor<-list(Binomial=rept_phylo_cor)
 logmass <- seq(from = min(reptdata$logmass), to = max(reptdata$logmass), length.out = 1000)
 
 #island area ####
-metarept2<-rma.mv(RR~logmass*Island_km2,V = Vrept, data=reptdata, random= RE,
-                  R = phylocor,method = "REML")
-summary(metarept2)
-
-saveRDS(metarept2, file = "Data/Final data/metarept2.Rdata")
+# metarept2<-rma.mv(RR~logmass*Island_km2,V = Vrept, data=reptdata, random= RE,
+#                   R = phylocor,method = "REML")
+# summary(metarept2)
+# 
+# saveRDS(metarept2, file = "Data/Final data/metarept2.Rdata")
 
 metarept2 <- readRDS(file = "Data/Final data/metarept2.Rdata")
 
@@ -1618,9 +1561,17 @@ df$logmass<-df$X.logmass
 
 colpalette<-c("Large"="#9966FF","Small" = "#E69F00") #red yellow palette "Warm no pred"= "#FFCC33", "Cold no pred"= "#0072B2
 
-Ra<-ggplot(reptdata)+ #geom_point(aes(logmass,RR), color = "grey",
-  #     size = size,shape=16, 
-  #     alpha=I(.3)) +scale_shape_identity()+
+# import silhouette
+# raster format
+sil_R<- readPNG("Silhouettes/Steven-Traver.Varanus_Varanus.png")
+
+Ra<-ggplot(reptdata)+  
+  annotation_custom(rasterGrob(sil_R,
+                    x = unit(0.16, "npc"),
+                    y = unit(0.85, "npc"),
+                    width = unit(0.26,"npc"),
+                    height = unit(0.16,"npc")),
+                    -Inf, Inf, -Inf, Inf) +
   geom_hline(yintercept= 0, size=1.2, linetype="dashed", color="dark gray")+theme_bw(base_size=18) +
   geom_line(data=df,aes(logmass,pred,colour=Islandtype, group = Islandtype), size = 1)+ #small remote, red
   geom_ribbon(data=df,aes(logmass,ymin= ci.lb ,ymax=ci.ub ,fill=Islandtype, group = Islandtype), alpha = I(.5))+
@@ -1636,11 +1587,11 @@ Ra
 dev.off()
 
 ##distance####
-metarept3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vrept,  data=reptdata,  random= RE,
-                  R = phylocor,method = "REML")
-summary(metarept3) #QM(df = 3) = 22.9852, p-val < .0001
-
-saveRDS(metarept3, file = "Data/Final data/metarept3.Rdata")
+# metarept3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vrept,  data=reptdata,  random= RE,
+#                   R = phylocor,method = "REML")
+# summary(metarept3) #QM(df = 3) = 22.9852, p-val < .0001
+# 
+# saveRDS(metarept3, file = "Data/Final data/metarept3.Rdata")
 
 metarept3 <- readRDS(file = "Data/Final data/metarept3.Rdata")
 
@@ -1709,11 +1660,11 @@ Rb
 dev.off()
 
 ##Island area and remoteness####
-metarept4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vrept,  data=reptdata, random= RE,
-                  R = phylocor, method = "REML")
-summary(metarept4)
-
-saveRDS(metarept4, file = "Data/Final data/metarept4.Rdata")
+# metarept4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vrept,  data=reptdata, random= RE,
+#                   R = phylocor, method = "REML")
+# summary(metarept4)
+# 
+# saveRDS(metarept4, file = "Data/Final data/metarept4.Rdata")
 
 metarept4 <- readRDS(file = "Data/Final data/metarept4.Rdata")
 
@@ -1794,11 +1745,11 @@ dev.off()
 # diet ####
 reptdata$guild2<- ifelse(reptdata$guild == "Carnivorous", "Carn", "No Carn")
 reptdata$guild2<- factor(reptdata$guild2)
-metarept5<-rma.mv(RR~logmass*guild2,V=Vrept,  data=reptdata,  random= RE,
-                  R = phylocor, method = "REML")
-summary(metarept5)
-
-saveRDS(metarept5, file = "Data/Final data/metarept5.Rdata")
+# metarept5<-rma.mv(RR~logmass*guild2,V=Vrept,  data=reptdata,  random= RE,
+#                   R = phylocor, method = "REML")
+# summary(metarept5)
+# 
+# saveRDS(metarept5, file = "Data/Final data/metarept5.Rdata")
 
 metarept5 <- readRDS(file = "Data/Final data/metarept5.Rdata")
 
@@ -1864,11 +1815,11 @@ Rd
 dev.off()
 
 # temperature####
-metarept6<-rma.mv(RR~logmass*tmean,V=Vrept,  data=reptdata,random= RE,
-                  R = phylocor,method = "REML")
-summary(metarept6)
-
-saveRDS(metarept6, file = "Data/Final data/metarept6.Rdata")
+# metarept6<-rma.mv(RR~logmass*tmean,V=Vrept,  data=reptdata,random= RE,
+#                   R = phylocor,method = "REML")
+# summary(metarept6)
+# 
+# saveRDS(metarept6, file = "Data/Final data/metarept6.Rdata")
 
 metarept6 <- readRDS(file = "Data/Final data/metarept6.Rdata")
 
@@ -1938,12 +1889,12 @@ Re
 dev.off()
 
 # temperature intercept####
-metarept6b<-rma.mv(RR~logmass + tmean,V=Vrept,  data=reptdata,random= RE,
-                   R = phylocor,method = "REML")
-summary(metarept6b)
-
-saveRDS(metarept6b, file = "Data/Final data/metarept6b.Rdata")
-
+# metarept6b<-rma.mv(RR~logmass + tmean,V=Vrept,  data=reptdata,random= RE,
+#                    R = phylocor,method = "REML")
+# summary(metarept6b)
+# 
+# saveRDS(metarept6b, file = "Data/Final data/metarept6b.Rdata")
+# 
 metarept6b <- readRDS(file = "Data/Final data/metarept6b.Rdata")
 
 coef<-data.frame(b =metarept6b$b, lci = metarept6b$ci.lb, uci =  metarept6b$ci.ub)
@@ -2012,11 +1963,11 @@ Re2
 dev.off()
 
 # temp seas####
-metarept7<-rma.mv(RR~logmass*tseas,V=Vrept,  data=reptdata,  random= RE,
-                  R = phylocor,method = "REML")
-summary(metarept7)
-
-saveRDS(metarept7, file = "Data/Final data/metarept7.Rdata")
+# metarept7<-rma.mv(RR~logmass*tseas,V=Vrept,  data=reptdata,  random= RE,
+#                   R = phylocor,method = "REML")
+# summary(metarept7)
+# 
+# saveRDS(metarept7, file = "Data/Final data/metarept7.Rdata")
 
 metarept7 <- readRDS(file = "Data/Final data/metarept7.Rdata")
 
@@ -2085,11 +2036,11 @@ Rf
 dev.off()
 
 # resource availability####
-metarept8<-rma.mv(RR~logmass*NDVI,V=Vrept,  data=reptdata,  random= RE,
-                  R = phylocor,method = "REML")
-summary(metarept8)
-
-saveRDS(metarept8, file = "Data/Final data/metarept8.Rdata")
+# metarept8<-rma.mv(RR~logmass*NDVI,V=Vrept,  data=reptdata,  random= RE,
+#                   R = phylocor,method = "REML")
+# summary(metarept8)
+# 
+# saveRDS(metarept8, file = "Data/Final data/metarept8.Rdata")
 
 metarept8 <- readRDS(file = "Data/Final data/metarept8.Rdata")
 
@@ -2157,11 +2108,11 @@ Rg
 dev.off()
 
 # seasonality in resources####
-metarept9<-rma.mv(RR~logmass*SDNDVI,V=Vrept,  data=reptdata,  random= RE,
-                  R = phylocor,method = "REML")
-summary(metarept9)
-
-saveRDS(metarept9, file = "Data/Final data/metarept9.Rdata")
+# metarept9<-rma.mv(RR~logmass*SDNDVI,V=Vrept,  data=reptdata,  random= RE,
+#                   R = phylocor,method = "REML")
+# summary(metarept9)
+# 
+# saveRDS(metarept9, file = "Data/Final data/metarept9.Rdata")
 
 metarept9 <- readRDS(file = "Data/Final data/metarept9.Rdata")
 
@@ -2230,7 +2181,12 @@ dev.off()
 
 # multiplot####
 multirept<-ggarrange(Ra,Rb,Rc,Rd,Re,Rf,Rg,Rh, ncol = 2, nrow = 4, align = "v")
-tiff('Results/Figures/Figure_hyp_rept_upd.tif', res=300, width=3500, height=7000, compression = "lzw")
+tiff('Results/Figures/ED_Fig 7.tif', res=300, width=3500, height=7000, compression = "lzw")
+multirept
+dev.off()
+toc()
+
+pdf('Results/Figures/ED_Fig 7.pdf', width=12, height=24)
 multirept
 dev.off()
 toc()
@@ -2241,11 +2197,11 @@ phylocor<-list(Binomial=amph_phylo_cor)
 logmass <- seq(from = min(amphdata$logmass), to = max(amphdata$logmass), length.out = 1000)
 
 #island area ####
-metaamph2<-rma.mv(RR~logmass*Island_km2,V = Vamph, data=amphdata, random= RE,
-                  R = phylocor,method = "REML")
-summary(metaamph2)
-
-saveRDS(metaamph2, file = "Data/Final data/metaamph2.Rdata")
+# metaamph2<-rma.mv(RR~logmass*Island_km2,V = Vamph, data=amphdata, random= RE,
+#                   R = phylocor,method = "REML")
+# summary(metaamph2)
+# 
+# saveRDS(metaamph2, file = "Data/Final data/metaamph2.Rdata")
 
 metaamph2 <- readRDS(file = "Data/Final data/metaamph2.Rdata")
 
@@ -2295,9 +2251,17 @@ df$logmass<-df$X.logmass
 
 colpalette<-c("Large"="#9966FF","Small" = "#E69F00") #red yellow palette "Warm no pred"= "#FFCC33", "Cold no pred"= "#0072B2
 
-Aa<-ggplot(amphdata)+ #geom_point(aes(logmass,RR), color = "grey",
-  #     size = size,shape=16, 
-  #     alpha=I(.3)) +scale_shape_identity()+
+# import silhouette
+# raster format
+sil_A<- readPNG("Silhouettes/Will-Booker.Hyla-versicolor_CC0.1.0.png")
+
+Aa<-ggplot(amphdata)+ 
+  annotation_custom(rasterGrob(sil_A,
+                     x = unit(0.14, "npc"),
+                     y = unit(0.85, "npc"),
+                     width = unit(0.16,"npc"),
+                     height = unit(0.18,"npc")),
+                     -Inf, Inf, -Inf, Inf) +
   geom_hline(yintercept= 0, size=1.2, linetype="dashed", color="dark gray")+theme_bw(base_size=18) +
   geom_line(data=df,aes(logmass,pred,colour=Islandtype, group = Islandtype), size = 1)+ #small remote, red
   geom_ribbon(data=df,aes(logmass,ymin= ci.lb ,ymax=ci.ub ,fill=Islandtype, group = Islandtype), alpha = I(.5))+
@@ -2313,11 +2277,11 @@ Aa
 dev.off()
 
 ##distance####
-metaamph3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vamph,  data=amphdata,  random= RE,
-                  R = phylocor,method = "REML")
-summary(metaamph3)
-
-saveRDS(metaamph3, file = "Data/Final data/metaamph3.Rdata")
+# metaamph3<-rma.mv(RR~logmass*Dist_near_mainland, V=Vamph,  data=amphdata,  random= RE,
+#                   R = phylocor,method = "REML")
+# summary(metaamph3)
+# 
+# saveRDS(metaamph3, file = "Data/Final data/metaamph3.Rdata")
 
 metaamph3 <- readRDS(file = "Data/Final data/metaamph3.Rdata")
 
@@ -2384,11 +2348,11 @@ Ab
 dev.off()
 
 ##island area and remoteness####
-metaamph4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vamph,  data=amphdata, random= RE,
-                  R = phylocor,method = "REML")
-summary(metaamph4)
-
-saveRDS(metaamph4, file = "Data/Final data/metaamph4.Rdata")
+# metaamph4<-rma.mv(RR~logmass*Dist_near_mainland +logmass*Island_km2,V=Vamph,  data=amphdata, random= RE,
+#                   R = phylocor,method = "REML")
+# summary(metaamph4)
+# 
+# saveRDS(metaamph4, file = "Data/Final data/metaamph4.Rdata")
 
 metaamph4 <- readRDS(file = "Data/Final data/metaamph4.Rdata")
 
@@ -2467,10 +2431,10 @@ Ac
 dev.off()
 
 # prec ####
-metaamph5<-rma.mv(RR~logmass*prec ,V=Vamph,  data=amphdata,  random= RE,
-                  R = phylocor,method = "REML")
-summary(metaamph5)
-saveRDS(metaamph5, file = "Data/Final data/metaamph5.Rdata")
+# metaamph5<-rma.mv(RR~logmass*prec ,V=Vamph,  data=amphdata,  random= RE,
+#                   R = phylocor,method = "REML")
+# summary(metaamph5)
+# saveRDS(metaamph5, file = "Data/Final data/metaamph5.Rdata")
 
 metaamph5 <- readRDS(file = "Data/Final data/metaamph5.Rdata")
 
@@ -2539,11 +2503,11 @@ Ad
 dev.off()
 
 # island temperature ####
-metaamph6<-rma.mv(RR~logmass*tmean,V=Vamph,  data=amphdata,random= RE,
-                   R = phylocor,method = "REML")
-summary(metaamph6)
-
-saveRDS(metaamph6, file = "Data/Final data/metaamph6.Rdata")
+# metaamph6<-rma.mv(RR~logmass*tmean,V=Vamph,  data=amphdata,random= RE,
+#                    R = phylocor,method = "REML")
+# summary(metaamph6)
+# 
+# saveRDS(metaamph6, file = "Data/Final data/metaamph6.Rdata")
 
 metaamph6 <- readRDS(file = "Data/Final data/metaamph6.Rdata")
 
@@ -2611,11 +2575,11 @@ Ae
 dev.off()
 
 # temperature intercept####
-metaamph6b<-rma.mv(RR~logmass + tmean,V=Vamph,  data=amphdata,random= RE,
-                  R = phylocor,method = "REML")
-summary(metaamph6b)
-
-saveRDS(metaamph6b, file = "Data/Final data/metaamph6b.Rdata")
+# metaamph6b<-rma.mv(RR~logmass + tmean,V=Vamph,  data=amphdata,random= RE,
+#                   R = phylocor,method = "REML")
+# summary(metaamph6b)
+# 
+# saveRDS(metaamph6b, file = "Data/Final data/metaamph6b.Rdata")
 
 metaamph6b <- readRDS(file = "Data/Final data/metaamph6b.Rdata")
 
@@ -2685,11 +2649,11 @@ Ae2
 dev.off()
 
 # temp seas####
-metaamph7<-rma.mv(RR~logmass*tseas,V=Vamph,  data=amphdata,  random= RE,
-                   R = phylocor,method = "REML")
-summary(metaamph7)
-
-saveRDS(metaamph7, file = "Data/Final data/metaamph7.Rdata")
+# metaamph7<-rma.mv(RR~logmass*tseas,V=Vamph,  data=amphdata,  random= RE,
+#                    R = phylocor,method = "REML")
+# summary(metaamph7)
+# 
+# saveRDS(metaamph7, file = "Data/Final data/metaamph7.Rdata")
 
 metaamph7 <- readRDS(file = "Data/Final data/metaamph7.Rdata")
 
@@ -2758,11 +2722,11 @@ Af
 dev.off()
 
 # resource availability####
-metaamph8<-rma.mv(RR~logmass*NDVI,V=Vamph,  data=amphdata,  random= RE,
-                   R = phylocor, method = "REML")
-summary(metaamph8)
-
-saveRDS(metaamph8, file = "Data/Final data/metaamph8.Rdata")
+# metaamph8<-rma.mv(RR~logmass*NDVI,V=Vamph,  data=amphdata,  random= RE,
+#                    R = phylocor, method = "REML")
+# summary(metaamph8)
+# 
+# saveRDS(metaamph8, file = "Data/Final data/metaamph8.Rdata")
 
 metaamph8 <- readRDS(file = "Data/Final data/metaamph8.Rdata")
 
@@ -2830,11 +2794,11 @@ Ag
 dev.off()
 
 # seasonality in resources####
-metaamph9<-rma.mv(RR~logmass*SDNDVI,V=Vamph,  data= amphdata,  random= RE,
-                   R = phylocor, method = "REML")
-summary(metaamph9)
-
-saveRDS(metaamph9, file = "Data/Final data/metaamph9.Rdata")
+# metaamph9<-rma.mv(RR~logmass*SDNDVI,V=Vamph,  data= amphdata,  random= RE,
+#                    R = phylocor, method = "REML")
+# summary(metaamph9)
+# 
+# saveRDS(metaamph9, file = "Data/Final data/metaamph9.Rdata")
 
 metaamph9 <- readRDS(file = "Data/Final data/metaamph9.Rdata")
 
@@ -2902,11 +2866,11 @@ Ah
 dev.off()
 
 #### seasonality in resources intercept ####
-metaamph10<-rma.mv(RR~logmass + SDNDVI,V=Vamph,  data= amphdata,  random= RE,
-                   R = phylocor, method = "REML")
-summary(metaamph10)
-
-saveRDS(metaamph10, file = "Data/Final data/metaamph10.Rdata")
+# metaamph10<-rma.mv(RR~logmass + SDNDVI,V=Vamph,  data= amphdata,  random= RE,
+#                    R = phylocor, method = "REML")
+# summary(metaamph10)
+# 
+# saveRDS(metaamph10, file = "Data/Final data/metaamph10.Rdata")
 
 metaamph10 <- readRDS(file = "Data/Final data/metaamph10.Rdata")
 
@@ -2975,10 +2939,15 @@ dev.off()
 
 # multiplot####
 multiamph<-ggarrange(Aa,Ab,Ac,Ad,Ae,Af,Ag,Ah2, ncol = 2, nrow = 4, align = "v")
-tiff('Results/Figures/Figure_hyp_amph_upd.tif', res=300, width=3500, height=7000, compression = "lzw")
+tiff('Results/Figures/ED_Fig 8.tif', res=300, width=3500, height=7000, compression = "lzw")
 multiamph
 dev.off()
 toc() # 171.12 s
+
+pdf('Results/Figures/ED_Fig 8.pdf', width = 12, height = 24)
+multiamph
+dev.off()
+toc() #
 
 # saving session information with all packages versions for reproducibility purposes
 sink("Data/Final data/meta-regressions_R_session.txt")

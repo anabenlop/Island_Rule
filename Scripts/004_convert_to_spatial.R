@@ -28,6 +28,10 @@ library(dplyr)
 library(sf)
 library(sp)
 library(mapview)
+library(ggspatial) 
+library(ggrepel)
+library(tidyverse)
+
 
 #clean memory
  rm(list=ls())
@@ -70,7 +74,7 @@ spdata <- st_as_sf(data_sp, coords = c('Long_i', 'Lat_i'),crs = "+init=epsg:4326
 # mapview(spdata, zcol = "Class", legend = TRUE)+ mapview(country)
 
 #save spatialpoints dataframe --> island locations, give full path
-st_write(spdata, "Spatial/spdata.shp", update=TRUE)
+# st_write(spdata, "Spatial/spdata.shp", update=TRUE)
 
 #############################################################################################
 # Make points of different size depending on the number of insular populations included ####
@@ -113,13 +117,38 @@ spdata_group <- SpatialPointsDataFrame(coords = xy, data = data_group,
                                  proj4string = CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
 
 #import countries
-# country<-st_read("Spatial/country1mVMAP_un2008.shp")
+country<-st_read("Spatial/country1mVMAP_un2008.shp")
 # mapview(spdata_group, zcol = "Class", legend = TRUE)+ mapview(country)
 
 spdata_group <- st_as_sf(data_group, coords = c('Long_i', 'Lat_i'),crs = "+init=epsg:4326")
 
 #save spatialpoints dataframe --> island locations, give full path
-st_write(spdata_group, "Spatial/spdata_group.shp")
+# st_write(spdata_group, "Spatial/spdata_group.shp")
+
+# map ---------------------------------------------------------------------
+# library(viridis)
+colpalette <-c("Mammals" = "#0072B2", "Birds" = "#FF5412", "Reptiles" = "#E69F00", "Amphibians" = "#009E73")
+map <- ggplot() +
+  geom_sf(data = country, color = "light grey") +
+  scale_colour_manual(values = colpalette) + scale_fill_manual(values = colpalette)+
+  geom_point(data = data_group, aes(Long_i, Lat_i, color = Class, size = count), alpha = .7, pch = 20) +
+  # ggrepel::geom_label_repel(data = occ, aes(x = Lon, y = Lat, label = Site)) +
+  labs(x = "Longitude", y = "Latitude", colour = "Class") +
+  # annotation_scale(location = "bl", width_hint = .3) +
+  # annotation_north_arrow(location = "bl", which_north = "true", 
+  #                        pad_x = unit(0, "cm"), pad_y = unit(.8, "cm"),
+  #                        style = north_arrow_fancy_orienteering) +
+  theme_bw() +
+  theme(title = element_text(size = 12, face = "bold"),
+        legend.title = element_text(size = 12, face = "bold"),
+        legend.position = c(0.2, 0.2),
+        axis.title = element_text(size = 15, face = "plain"))
+
+
+# export
+ggsave("Results/Figures/Fig2.pdf", map, wi = 20, he = 20, un = "cm", dpi = 300, comp = "lzw")
+
+
 
 # saving session information with all packages versions for reproducibility purposes
 sink("Data/Final data/convert_to_spatial_data_R_session.txt")
