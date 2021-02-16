@@ -373,9 +373,9 @@ Aalt<-ggplot(reptdata)+ geom_abline(intercept = 0, slope = 1, col = "dark gray",
 # ggplotly(Aalt)
 
 multi_alt<-ggarrange(Malt, Balt, Ralt, Aalt, ncol = 2, nrow = 2, align = "hv")
-# tiff('Results/Figures/ED_Fig2.tif', res=300, width=3000, height=3000, compression = "lzw")
-# multi_alt
-# dev.off()
+tiff('Results/Figures/ED_Fig2.tif', res=300, width=3000, height=3000)
+multi_alt
+dev.off()
 
 pdf('Results/Figures/ED_Fig 2.pdf', width=10, height=9.5)
 multi_alt

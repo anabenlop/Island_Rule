@@ -142,12 +142,11 @@ amphplot <- ggplot(RE_amph_sp) + geom_boxplot(aes(Family, intrcpt, colour = size
 # dev.off()
 
 #### FIGURE 3 ####
-# multiplot<-ggarrange(mamplot,birdplot,reptplot,amphplot, ncol = 2, nrow = 2, align = "v")
-# tiff('Results/Figures/ED_Fig_4.tif', res=300, width=3100, height=3000)
-# multiplot
-# dev.off()
-
 multiplot<-ggarrange(mamplot,birdplot,reptplot,amphplot, ncol = 2, nrow = 2, align = "v")
+tiff('Results/Figures/ED_Fig_4.tif', res=300, width=3100, height=3000)
+multiplot
+dev.off()
+
 pdf('Results/Figures/ED_Fig_4.pdf', width=10, height=9.5)
 multiplot
 dev.off()

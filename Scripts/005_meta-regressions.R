@@ -795,7 +795,7 @@ dev.off()
 
 # multiplot####
 multimam<-ggarrange(Ma,Mb,Mc,Md,Me2,Mf,Mg,Mh, ncol = 2, nrow = 4, align = "v")
-tiff('Results/Figures/ED_Fig 5.tif', res=300, width=3500, height=7000, compression = "lzw")
+tiff('Results/Figures/ED_Fig 5.tif', res=300, width=3500, height=7000)
 multimam
 dev.off()
 
@@ -1489,7 +1489,7 @@ dev.off()
 
 # multiplot####
 multibird<-ggarrange(Ba,Bb,Bc,Bd,Be2,Bf,Bg,Bh, ncol = 2, nrow = 4, align = "v")
-tiff('Results/Figures/ED_Fig 6.tif', res=300, width=3500, height=7000, compression = "lzw")
+tiff('Results/Figures/ED_Fig 6.tif', res=300, width=3500, height=7000)
 multibird
 dev.off()
 toc() #
@@ -2181,7 +2181,7 @@ dev.off()
 
 # multiplot####
 multirept<-ggarrange(Ra,Rb,Rc,Rd,Re,Rf,Rg,Rh, ncol = 2, nrow = 4, align = "v")
-tiff('Results/Figures/ED_Fig 7.tif', res=300, width=3500, height=7000, compression = "lzw")
+tiff('Results/Figures/ED_Fig 7.tif', res=300, width=3500, height=7000)
 multirept
 dev.off()
 toc()
@@ -2939,7 +2939,7 @@ dev.off()
 
 # multiplot####
 multiamph<-ggarrange(Aa,Ab,Ac,Ad,Ae,Af,Ag,Ah2, ncol = 2, nrow = 4, align = "v")
-tiff('Results/Figures/ED_Fig 8.tif', res=300, width=3500, height=7000, compression = "lzw")
+tiff('Results/Figures/ED_Fig 8.tif', res=300, width=3500, height=7000)
 multiamph
 dev.off()
 toc() # 171.12 s
