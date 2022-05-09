@@ -78,16 +78,16 @@ colpalette<-c("Close and large islands" = "#9966FF","Small and remote islands"="
 
 # import silhouette
 # raster format
-sil_M <- readPNG("Silhouettes/PhyloPic.72f2f997.Steven-Traver.Cervus-elaphus.png")
+# sil_M <- readPNG("Silhouettes/PhyloPic.72f2f997.Steven-Traver.Cervus-elaphus.png")
 
 Mc<-ggplot(mamdata)+ 
   geom_hline(yintercept= 0, size=1.2, linetype="dashed", color="dark gray")+theme_bw(base_size=18) +
-  annotation_custom(rasterGrob(sil_M,
-                               x = unit(0.14, "npc"),
-                               y = unit(0.15, "npc"),
-                               width = unit(0.22,"npc"),
-                               height = unit(0.27,"npc")),
-                              -Inf, Inf, -Inf, Inf) +
+  # annotation_custom(rasterGrob(sil_M,
+  #                              x = unit(0.14, "npc"),
+  #                              y = unit(0.15, "npc"),
+  #                              width = unit(0.22,"npc"),
+  #                              height = unit(0.27,"npc")),
+  #                             -Inf, Inf, -Inf, Inf) +
   geom_line(data=df,aes(logmass,pred,colour=Islandtype, group = Islandtype), size = 1)+ 
   geom_ribbon(data=df,aes(logmass,ymin= ci.lb ,ymax=ci.ub ,fill=Islandtype, group = Islandtype), alpha = I(.5))+
   scale_colour_manual(values = colpalette) + scale_fill_manual(values = colpalette)+
@@ -130,16 +130,16 @@ colpalette<-c("Close and large islands" = "#9966FF","Small and remote islands"="
 
 # import silhouette
 # raster format
-sil_B<- readPNG("Silhouettes/PhyloPic.67a9ecfd.Sylviidae_Sylvioidea_PublicDom1.0_flipped.png")
+# sil_B<- readPNG("Silhouettes/PhyloPic.67a9ecfd.Sylviidae_Sylvioidea_PublicDom1.0_flipped.png")
 
 Bc<-ggplot(birddata)+ 
   geom_hline(yintercept= 0, size=1.2, linetype="dashed", color="dark gray")+theme_bw(base_size=18) +
-  annotation_custom(rasterGrob(sil_B,
-                               x = unit(0.14, "npc"),
-                               y = unit(0.13, "npc"),
-                               width = unit(0.17,"npc"),
-                               height = unit(0.16,"npc")),
-                              -Inf, Inf, -Inf, Inf) +
+  # annotation_custom(rasterGrob(sil_B,
+  #                              x = unit(0.14, "npc"),
+  #                              y = unit(0.13, "npc"),
+  #                              width = unit(0.17,"npc"),
+  #                              height = unit(0.16,"npc")),
+  #                             -Inf, Inf, -Inf, Inf) +
   geom_line(data=df,aes(logmass,pred,colour=Islandtype, group = Islandtype), size = 1)+ 
   geom_ribbon(data=df,aes(logmass,ymin= ci.lb ,ymax=ci.ub ,fill=Islandtype, group = Islandtype), alpha = I(.5))+
   scale_colour_manual(values = colpalette) + scale_fill_manual(values = colpalette)+
@@ -180,16 +180,16 @@ colpalette<-c("Close and large islands" = "#9966FF","Small and remote islands"="
 
 # import silhouette
 # raster format
-sil_R<- readPNG("Silhouettes/Steven-Traver.Varanus_Varanus.png")
+# sil_R<- readPNG("Silhouettes/Steven-Traver.Varanus_Varanus.png")
 
 Rc<-ggplot(reptdata)+ 
   geom_hline(yintercept= 0, size=1.2, linetype="dashed", color="dark gray")+theme_bw(base_size=18) +
-  annotation_custom(rasterGrob(sil_R,
-                               x = unit(0.16, "npc"),
-                               y = unit(0.14, "npc"),
-                               width = unit(0.26,"npc"),
-                               height = unit(0.16,"npc")),
-                              -Inf, Inf, -Inf, Inf) +
+  # annotation_custom(rasterGrob(sil_R,
+  #                              x = unit(0.16, "npc"),
+  #                              y = unit(0.14, "npc"),
+  #                              width = unit(0.26,"npc"),
+  #                              height = unit(0.16,"npc")),
+  #                             -Inf, Inf, -Inf, Inf) +
   geom_line(data=df,aes(logmass,pred,colour=Islandtype, group = Islandtype), size = 1)+ 
   geom_ribbon(data=df,aes(logmass,ymin= ci.lb ,ymax=ci.ub ,fill=Islandtype, group = Islandtype), alpha = I(.5))+
   scale_colour_manual(values = colpalette) + scale_fill_manual(values = colpalette)+
@@ -229,16 +229,16 @@ colpalette<-c("Close and large islands" = "#9966FF","Small and remote islands"="
 
 # import silhouette
 # raster format
-sil_A<- readPNG("Silhouettes/Will-Booker.Hyla-versicolor_CC0.1.0.png")
+# sil_A<- readPNG("Silhouettes/Will-Booker.Hyla-versicolor_CC0.1.0.png")
 
 Ac<-ggplot(amphdata)+ 
   geom_hline(yintercept= 0, size=1.2, linetype="dashed", color="dark gray")+theme_bw(base_size=18) +
-  annotation_custom(rasterGrob(sil_A,
-                               x = unit(0.14, "npc"),
-                               y = unit(0.15, "npc"),
-                               width = unit(0.16,"npc"),
-                               height = unit(0.18,"npc")),
-                                -Inf, Inf, -Inf, Inf) +
+  # annotation_custom(rasterGrob(sil_A,
+  #                              x = unit(0.14, "npc"),
+  #                              y = unit(0.15, "npc"),
+  #                              width = unit(0.16,"npc"),
+  #                              height = unit(0.18,"npc")),
+  #                               -Inf, Inf, -Inf, Inf) +
   geom_line(data=df,aes(logmass,pred,colour=Islandtype, group = Islandtype), size = 1)+ 
   geom_ribbon(data=df,aes(logmass,ymin= ci.lb ,ymax=ci.ub ,fill=Islandtype, group = Islandtype), alpha = I(.5))+
   scale_colour_manual(values = colpalette) + scale_fill_manual(values = colpalette)+

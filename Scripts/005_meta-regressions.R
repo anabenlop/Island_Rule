@@ -79,13 +79,15 @@ RE = list(~ 1 | Reference,~1|ID, ~1|SPID, ~1| Binomial)
 #mammals####
 phylocor<-list(Binomial= mam_phylo_cor)
 # metamam<-rma.mv(RR~logmass,V=Vmam, data=mamdata, random= RE,  R = phylocor)
-# summary(metamam)
+metamam <- readRDS(file = "Data/Final data/metamam.Rdata")
+summary(metamam)
 mR2.func(metamam)
 cR2.func(metamam)
 
 #birds#### 
 phylocor<-list(Binomial= bird_phylo_cor)
-metabird<-rma.mv(RR~logmass,V=Vbird,  data=birddata, random= RE, R = phylocor)
+# metabird<-rma.mv(RR~logmass,V=Vbird,  data=birddata, random= RE, R = phylocor)
+metabird <- readRDS(file = "Data/Final data/metabird.Rdata")
 summary(metabird)
 mR2.func(metabird)
 cR2.func(metabird)
@@ -93,14 +95,16 @@ cR2.func(metabird)
 #reptiles####
 phylocor<-list(Binomial= rept_phylo_cor)
 # metarept<-rma.mv(RR~logmass,V=Vrept,  data=reptdata,  random= RE, R=phylocor) 
-# summary(metarept)
+metarept <- readRDS(file = "Data/Final data/metarept.Rdata")
+summary(metarept)
 mR2.func(metarept)
 cR2.func(metarept)
 
 #amphibians####
 phylocor<-list(Binomial= amph_phylo_cor)
 # metaamph<-rma.mv(RR~logmass ,V=Vamph,  data=amphdata, random= RE, R = phylocor) 
-# summary(metaamph)
+metaamph <- readRDS(file = "Data/Final data/metaamph.Rdata")
+summary(metaamph)
 mR2.func(metaamph)
 cR2.func(metaamph)
 

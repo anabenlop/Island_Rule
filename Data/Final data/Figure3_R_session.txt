@@ -13,16 +13,19 @@ attached base packages:
 [1] grid      stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] grImport2_0.1-4      rsvg_1.3             ggimage_0.2.1        png_0.1-7            RColorBrewer_1.1-2  
- [6] dplyr_0.8.0.1        reshape2_1.4.3       ggpubr_0.1.8         magrittr_1.5         ggplot2_3.3.0.9000  
-[11] metafor_2.0-0        Matrix_1.2-17        RevoUtils_11.0.3     RevoUtilsMath_11.0.0
+ [1] grImport2_0.1-4      rsvg_1.3             ggimage_0.2.1        png_0.1-7           
+ [5] RColorBrewer_1.1-2   dplyr_0.8.0.1        reshape2_1.4.3       ggpubr_0.1.8        
+ [9] magrittr_1.5         ggplot2_3.3.0.9000   metafor_2.0-0        Matrix_1.2-17       
+[13] RevoUtils_11.0.3     RevoUtilsMath_11.0.0
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.1         pillar_1.3.1       compiler_3.5.3     plyr_1.8.4         base64enc_0.1-3   
- [6] tools_3.5.3        digest_0.6.18      jsonlite_1.6       tibble_2.1.1       nlme_3.1-137      
-[11] gtable_0.3.0       lattice_0.20-38    pkgconfig_2.0.2    rlang_0.3.4        ggplotify_0.0.3   
-[16] rstudioapi_0.10    magick_2.0         rvcheck_0.1.1      xfun_0.6           withr_2.1.2       
-[21] stringr_1.4.0      gridGraphics_0.3-0 cowplot_0.9.3      tidyselect_0.2.5   glue_1.3.1        
-[26] R6_2.4.0           jpeg_0.1-8         XML_3.98-1.16      purrr_0.3.2        scales_1.0.0      
-[31] assertthat_0.2.1   colorspace_1.4-1   labeling_0.3       tinytex_0.12       stringi_1.4.3     
-[36] munsell_0.5.0      crayon_1.3.4      
+ [1] Rcpp_1.0.1         pillar_1.3.1       compiler_3.5.3     plyr_1.8.4        
+ [5] base64enc_0.1-3    tools_3.5.3        digest_0.6.18      jsonlite_1.6      
+ [9] tibble_2.1.1       nlme_3.1-137       gtable_0.3.0       lattice_0.20-38   
+[13] pkgconfig_2.0.2    rlang_0.3.4        ggplotify_0.0.3    rstudioapi_0.10   
+[17] magick_2.0         rvcheck_0.1.1      xfun_0.6           stringr_1.4.0     
+[21] withr_2.1.2        raster_2.8-19      gridGraphics_0.3-0 cowplot_0.9.4     
+[25] tidyselect_0.2.5   glue_1.3.1         R6_2.4.0           jpeg_0.1-8        
+[29] XML_3.98-1.16      sp_1.3-1           purrr_0.3.2        scales_1.0.0      
+[33] codetools_0.2-16   assertthat_0.2.1   colorspace_1.4-1   labeling_0.3      
+[37] tinytex_0.12       stringi_1.4.3      munsell_0.5.0      crayon_1.3.4      

@@ -26,7 +26,7 @@ calc.v <- function(x) {
 }
 
 # R2 - Nakagawa & Schielzeth 2013
-
+# marginal
 mR2.func <- function(model){
   fix<-var(as.numeric(as.vector(model$b) %*% t(as.matrix(model$X))))
   R2m<-fix/(fix+sum(model$sigma2))
@@ -34,10 +34,18 @@ mR2.func <- function(model){
   return(x)
 }
 
-
-cR2.func <- function(model){
+# random
+rR2.func <- function(model){
   fix<-var(as.numeric(as.vector(model$b) %*% t(as.matrix(model$X))))
   R2c<-(sum(model$sigma2) - model$sigma2[2])/(fix+sum(model$sigma2))
+  x <- round(100*R2c, 2)
+  return(x)
+}
+
+# conditional (fixed + random)
+cR2.func <- function(model){
+  fix<-var(as.numeric(as.vector(model$b) %*% t(as.matrix(model$X))))
+  R2c<- (fix + (sum(model$sigma2) - model$sigma2[2]))/(fix+sum(model$sigma2))
   x <- round(100*R2c, 2)
   return(x)
 }
